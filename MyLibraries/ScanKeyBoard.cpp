@@ -5,8 +5,6 @@
 #include <stdio.h>
 #include <unistd.h>
 
-using namespace std;
-
 int scanKeyboard()
 {
   //  struct termios
@@ -22,18 +20,6 @@ int scanKeyboard()
   //  #define _HAVE_STRUCT_TERMIOS_C_ISPEED 1
   //  #define _HAVE_STRUCT_TERMIOS_C_OSPEED 1
   //    };
-
-  /*
-  up 65
-  down 66
-  left 68
-  right 67
-
-  w 119
-  a 97
-  s 115
-  d 100
-  */
   int in;
   struct termios new_settings;
   struct termios stored_settings;
@@ -57,42 +43,7 @@ int main(int argc, char *argv[])
 {
 
     while(1){
-        //cout << "\033c" << endl;
-        int Key = scanKeyboard();
-
-        switch (Key)
-        {
-        case 'w':
-            {
-                cout << "\033c" << endl;
-                cout << "\033[47m\033[30m" << "w" << "\033[0m";
-                break;  
-            }
-        case 's':
-            {
-                cout << "\033c" << endl;
-                cout << "\033[47m\033[30m" << "s" << "\033[0m";
-                break;  
-            }
-        case 'a':
-            {
-                cout << "\033c" << endl;
-                cout << "\033[47m\033[30m" << "a" << "\033[0m";
-                break;  
-            }
-        case 'd':
-            {
-                cout << "\033c" << endl;
-                cout << "\033[47m\033[30m" << "d" << "\033[0m";
-                break;  
-            }
-        default:
-            break;
-        }
-
-        //printf(":%d\r\n",Key);
-
-        
+        printf(":%d\r\n",scanKeyboard());
     }
     return 0;
 }
