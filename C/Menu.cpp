@@ -121,9 +121,12 @@ Node* CreatMenu()
 //打印菜单
 void printMenus(Node* nodefirst)
 {
+    int count = 1,esc;
+
     if(nodefirst == NULL)
     {
         cout << "还没有任何菜单！" <<endl;
+        getchar();
         return;
     }
 
@@ -131,10 +134,13 @@ void printMenus(Node* nodefirst)
     Node* pEnd = nodefirst->pLast;
     while (pNode != pEnd)
     {
-        cout << pNode->pNodeMenu->getText() << endl; 
+        cout << count << pNode->pNodeMenu->getText() << endl; 
         pNode = pNode->pNext;
+        count ++;
     }
-    cout << pNode->pNodeMenu->getText() << endl; 
+    cout << pNode->pNodeMenu->getText() << endl;
+
+    getchar();
     
 }
 
@@ -170,13 +176,11 @@ void MainMenu()
 int main()
 {
     Node* pHead = NULL;
-    int Choice;
     while(1)
     {
         MainMenu();
-        Choice = scanKeyboard();
 
-        switch (Choice)
+        switch (scanKeyboard())
         {
         case 49:
             {
@@ -188,8 +192,7 @@ int main()
         case 50:
             {
                 cout << "\x1b[H\x1b[2J" <<endl;
-                cout << "2222222222J" <<endl;
-                //printMenus(pHead);
+                printMenus(pHead);
                 break;
             }
 
