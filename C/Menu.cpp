@@ -92,7 +92,7 @@ Node* CreatMenu()
         string text;
 
         cout << "\x1b[H\x1b[2J" <<endl;
-        cout << "\033[47m" << ">正在创建第" << count << "个菜单"<< "\033[0m" << endl;
+        cout << "\033[47m\033[30m" << ">正在创建第" << count << "个菜单"<< "\033[0m" << endl;
         count ++;
 
         cout <<"-输入菜单内容:";
@@ -152,7 +152,7 @@ void printMenus(Node* nodefirst)
 
     if(nodefirst == NULL)
     {
-        cout << "还没有任何菜单！" <<endl;
+        cout << "\033[31m" << "还没有任何菜单！" <<endl;
         getchar();
         return;
     }
