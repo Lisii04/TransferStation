@@ -15,17 +15,16 @@ class Menu
         string text;
 
     public:
-        Menu* SubMenus;
+        
 
         Menu()
         {
             
         }
 
-        Menu(string text,Menu* SubMenus = NULL)
+        Menu(string text)
         {
             this->text = text;
-            this->SubMenus = SubMenus;
         }
 
         void changeText(string text)
@@ -44,6 +43,7 @@ class Menu
 typedef struct Node
 {
     Menu* pNodeMenu;
+    Node* SubMenus;
     struct Node* pLast;
     struct Node* pNext;
 }Node;
@@ -98,6 +98,7 @@ Node* CreatMenu()
         cout <<"-输入菜单内容:";
         cin >> text;
         normal->pNodeMenu->changeText(text);
+        normal->SubMenus = NULL;
         cout << "----------------------------------" << endl;
         getchar();
 
@@ -118,10 +119,36 @@ Node* CreatMenu()
 }
 
 
-//打印菜单
+void addSubmenu(Node* nodefirst)
+{
+
+    //选择菜单加入子菜单
+    Node* pNode;
+    int number;
+    cout << "\033[2m" <<"|>请输入要加入子菜单的菜单序号：" << "\033[0m";
+    cin >> number;
+    pNode = nodefirst;
+
+    for(int i = 0;i < number; i++)
+    {
+        pNode = pNode->pNext;
+    }
+
+    pNode->SubMenus = CreatMenu();
+
+    cout << ">创建成功！" <<endl;
+
+    getchar();
+
+}
+
+
+//打印和添加菜单
 void printMenus(Node* nodefirst)
 {
-    int count = 1,esc;
+    int count = 1,IsSub = 0;
+
+    cout << "\x1b[H\x1b[2J" <<endl;
 
     if(nodefirst == NULL)
     {
@@ -130,24 +157,86 @@ void printMenus(Node* nodefirst)
         return;
     }
 
-    Node* pNode = nodefirst;
+    Node* pNode = nodefirst->pNext;
     Node* pEnd = nodefirst->pLast;
+
+    cout << "\033[47m\033[30m" << "|  所有菜单 [带下划线表示有子菜单] |" << "\033[0m\n" << endl;
+
     while (pNode != pEnd)
     {
-        cout << count << pNode->pNodeMenu->getText() << endl; 
-        pNode = pNode->pNext;
-        count ++;
+        if(pNode->SubMenus != NULL)
+        {
+            cout << "\033[4m" << count << " " << pNode->pNodeMenu->getText() << "\033[0m" << endl;
+            pNode = pNode->pNext;
+            count ++;
+            IsSub = 1;
+        }else
+        {
+            cout << count << " " << pNode->pNodeMenu->getText() << endl; 
+            pNode = pNode->pNext;
+            count ++;
+        }
     }
-    cout << pNode->pNodeMenu->getText() << endl;
 
-    getchar();
-    
+    if(pNode->SubMenus != NULL)
+    {
+        cout << "\033[4m" << count << " " << pNode->pNodeMenu->getText() << "\033[0m" << endl;
+        IsSub = 1;
+    }else
+    {
+        cout << count << " " << pNode->pNodeMenu->getText() << endl; 
+    }
+
+    cout << "\033[32m"<< "按 1 以添加子菜单|按其他键继续查看" << "\033[0m" <<endl;
+    int IsAdd = scanKeyboard();
+
+    if(IsAdd == 49)
+    {
+        addSubmenu(pNode);
+        return;
+    }
+
+    if(IsSub == 1)
+    {
+        int number = 0;
+        cout << "\033[2m"<< ">请输入要查看子菜单的序号[输入0以退出]：" << "\033[0m";
+        cin >> number;
+        pNode = nodefirst;
+
+        if(number == 0)
+        {
+            return;
+        }
+
+        for(int i = 0;i < number; i++)
+        {
+            pNode = pNode->pNext;
+        }
+
+        if(pNode->SubMenus != NULL)
+        {
+            printMenus(pNode->SubMenus);
+            printMenus(nodefirst);
+        }else
+        {
+            cout << "选择的项目无子菜单！" << endl;
+            getchar();
+            getchar();
+            printMenus(nodefirst);
+        }
+
+    }else
+    {
+        getchar();
+        getchar();
+    }  
 }
 
 
+void MainMenu()
+{
 
-
-
+}
 
 
 
@@ -159,15 +248,16 @@ void printMenus(Node* nodefirst)
 
 
 //主菜单
-void MainMenu()
+void UI()
 {
     cout << "\x1b[H\x1b[2J" <<endl;
-    cout << "------------------"<<endl;
-    cout << ">1 创建菜单"<<endl;
-    cout << ">2 打印所有菜单"<<endl;
-    cout << ">3 开始使用"<<endl;
-    cout << "|按下要进行的操作[1/2/3/Esc]";   
+    cout << "\033[47m" <<">1 创建菜单               "<<endl;
+    cout << ">2 显示所有菜单/添加子菜单"<<endl;
+    cout << ">3 进入菜单界面           "<< "\033[0m" << endl;
+    cout << "\033[32m\033[?25l" << "按下要进行的操作[1/2/3/Esc] " << "\033[0m"<< endl;
 }
+
+
 //定义结束--
 
 
@@ -178,7 +268,7 @@ int main()
     Node* pHead = NULL;
     while(1)
     {
-        MainMenu();
+        UI();
 
         switch (scanKeyboard())
         {
@@ -199,9 +289,13 @@ int main()
         case 51:
             {
                 cout << "\x1b[H\x1b[2J" <<endl;
+                MainMenu();
                 break;
             }
 
+        case 27:
+            break;
+        
         default:
             break;
         }
