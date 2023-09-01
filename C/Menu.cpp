@@ -144,7 +144,7 @@ void addSubmenu(Node* nodefirst)
 
 
 //打印和添加菜单
-void printMenus(Node* nodefirst)
+void ChangeMenus(Node* nodefirst)
 {
     int count = 1,IsSub = 0;
 
@@ -215,14 +215,14 @@ void printMenus(Node* nodefirst)
 
         if(pNode->SubMenus != NULL)
         {
-            printMenus(pNode->SubMenus);
-            printMenus(nodefirst);
+            ChangeMenus(pNode->SubMenus);
+            ChangeMenus(nodefirst);
         }else
         {
             cout << "选择的项目无子菜单！" << endl;
             getchar();
             getchar();
-            printMenus(nodefirst);
+            ChangeMenus(nodefirst);
         }
 
     }else
@@ -232,19 +232,88 @@ void printMenus(Node* nodefirst)
     }  
 }
 
-
-void MainMenu()
+//显示菜单
+void printMenus(Node* pCurrentNode,Node* HeadNode)
 {
+    cout << "\x1b[H\x1b[2J" <<endl;
 
+    if(HeadNode == NULL)
+    {
+        cout << "\033[31m" << "还没有任何菜单！" <<endl;
+        getchar();
+        return;
+    }
+
+    Node* pNode = HeadNode->pNext;
+    Node* pEnd = HeadNode->pLast;
+
+    while (pNode != pEnd)
+    {
+        if(pCurrentNode == pNode)
+        {
+            cout << "\033[47m\033[30m" <<  " " << pNode->pNodeMenu->getText() << "\033[0m" << endl;
+            pNode = pNode->pNext;
+        }else
+        {
+            cout << " " << pNode->pNodeMenu->getText() << endl; 
+            pNode = pNode->pNext;
+        }
+    }
+
+    if(pCurrentNode == pNode)
+    {
+        cout << "\033[47m\033[30m" <<  " " << pNode->pNodeMenu->getText() << "\033[0m" << endl;
+    }else
+    {
+        cout << " " << pNode->pNodeMenu->getText() << endl; 
+    }
 }
 
 
-
-
-
-
-
-
+void MainMenu(Node* HeadNode)
+{
+    Node* pCurrentNode;
+    pCurrentNode = HeadNode->pNext;
+    printMenus(pCurrentNode,HeadNode);
+    while (1)
+    {
+        int input = scanKeyboard();
+        if(input == 57)break;
+        switch (input)
+        {
+        case 49:
+            {
+                pCurrentNode = pCurrentNode->pLast;
+                if(pCurrentNode == HeadNode)
+                {
+                    pCurrentNode = pCurrentNode->pLast;
+                }
+                printMenus(pCurrentNode,HeadNode);
+                break;
+            }
+        case 50:
+            {
+                pCurrentNode = pCurrentNode->pNext;
+                if(pCurrentNode == HeadNode)
+                {
+                    pCurrentNode = pCurrentNode->pNext;
+                }
+                printMenus(pCurrentNode,HeadNode);
+                break;
+            } 
+        case 48:
+            {
+                if(pCurrentNode->SubMenus != NULL)
+                {
+                    MainMenu(pCurrentNode->SubMenus);
+                }
+                break;
+            }
+        default:
+            break;
+        }
+    }
+}
 
 
 //主菜单
@@ -282,14 +351,14 @@ int main()
         case 50:
             {
                 cout << "\x1b[H\x1b[2J" <<endl;
-                printMenus(pHead);
+                ChangeMenus(pHead);
                 break;
             }
 
         case 51:
             {
                 cout << "\x1b[H\x1b[2J" <<endl;
-                MainMenu();
+                MainMenu(pHead);
                 break;
             }
 
