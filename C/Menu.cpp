@@ -1,9 +1,13 @@
 #include <iostream>
 #include <string>
+#include <fstream>
+#include <list>
+#include <sstream>
+#include <vector>
 
+#include <unistd.h>
 #include <termio.h>
 #include <stdio.h>
-#include <unistd.h>
 
 using namespace std;
 
@@ -13,6 +17,8 @@ class Menu
 {
     private:
         string text;
+        string No;
+        string FatherNo;
 
     public:
         
@@ -22,9 +28,11 @@ class Menu
             
         }
 
-        Menu(string text)
+        Menu(string text,string No,string FatherNo)
         {
             this->text = text;
+            this->No = No;
+            this->FatherNo = FatherNo;
         }
 
         void changeText(string text)
@@ -32,23 +40,107 @@ class Menu
             this->text = text;
         }
 
+        void changeNo(string NO)
+        {
+            this->No = No;
+        }
+
+        void changeFatherNo(string FatherNo)
+        {
+            this->FatherNo = FatherNo;
+        }
+
         string getText()
         {
             return text;
         }
 
+        string getNo()
+        {
+            return No;
+        }
+
+        string getFatherNo()
+        {
+            return FatherNo;
+        }
+
 
 };
 
-typedef struct Node
+typedef struct Info
 {
-    Menu* pNodeMenu;
-    Node* SubMenus;
-    struct Node* pLast;
-    struct Node* pNext;
-}Node;
+    string No;
+    string FartherNo;
+    string Text;
+}Info;
+
 
 //定义结束--
+
+vector<Info> read_from_file(char const *fileName)
+{
+    char Texts[256];
+    
+    int lineCount = 0;
+
+    vector<Info> Infos;
+
+    ifstream in;
+
+    in.open(fileName);
+    if(!in.is_open())
+    {
+        cout << "file not exist" << endl;
+    }
+    while(in.getline(Texts,256))
+    {
+        int i = 0,j = 0;
+        Info* info = new Info;
+        Infos.push_back(*info);
+        char numbers[256]={};
+        char content[256]={};
+        string No,FartherNo,Text;
+
+        while(Texts[i] != '\0')
+        {
+            if(Texts[i] == '[')
+            {
+                i++;
+                while (Texts[i] != ']')
+                {
+                    numbers[i-1] = Texts[i];
+                    i++;
+                }
+                No = numbers;
+                Infos[lineCount].No = No;
+                
+                if(No.size() > 1)
+                {
+                    No.pop_back();
+                    No.pop_back();
+                    FartherNo = No;
+                    Infos[lineCount].FartherNo = FartherNo;
+                }else{
+                    FartherNo = "0";
+                    Infos[lineCount].FartherNo = FartherNo;
+                }
+            }
+            i++;
+            content[j] = Texts[i]; 
+            j++;
+        }
+        Text = content;
+
+       
+        
+        Infos[lineCount].Text = Text;
+        lineCount ++;
+    }
+
+    return Infos;
+}
+
 
 
 //函数定义-----
@@ -74,257 +166,131 @@ int scanKeyboard()
 }
 
 
-
 //创建菜单
-Node* CreatMenu()
+vector<Menu> CreatMenu(vector<Info> Infos)
 {
-    Node *head,*normal,*end;
-    head = (Node*)malloc(sizeof(Node));
-    head->pNodeMenu=(Menu*)malloc(sizeof(Menu));
-    end=head;
+    vector<Menu> Menus;
 
-    int count = 1;
-
-    while(1)
+    for(int i = 0;i < Infos.size();i++)
     {
-        normal=(Node*)malloc(sizeof(Node));
-        normal->pNodeMenu=(Menu*)malloc(sizeof(Menu));
-        string text;
-
-        cout << "\x1b[H\x1b[2J" <<endl;
-        cout << "\033[47m\033[30m" << ">正在创建第" << count << "个菜单"<< "\033[0m" << endl;
-        count ++;
-
-        cout <<"-输入菜单内容:";
-        cin >> text;
-        normal->pNodeMenu->changeText(text);
-        normal->SubMenus = NULL;
-        cout << "----------------------------------" << endl;
-        getchar();
-
-        end->pNext=normal; 
-        normal->pLast=end;
-        end=normal;
-
-        cout << "按任意键继续创建[按下Esc退出]" << endl;
-
-        if(scanKeyboard() == 27)
-        {
-            break;
-        }
+        Menu* newMenu = new Menu;
+        *newMenu = Menu(Infos[i].Text,Infos[i].No,Infos[i].FartherNo);
+        Menus.push_back(*newMenu);
     }
-    end->pNext=head;
-    head->pLast=end;
-    return head;
+    return Menus;
 }
 
 
-void addSubmenu(Node* nodefirst)
+
+vector<Menu> PrintedMenus(vector<Menu> Menus,string FatherNo)
 {
+    vector<Menu> CurrentMenus;
 
-    //选择菜单加入子菜单
-    Node* pNode;
-    int number;
-    cout << "\033[2m" <<"|>请输入要加入子菜单的菜单序号：" << "\033[0m";
-    cin >> number;
-    pNode = nodefirst;
+    int j = 0,IsExist = 0;
 
-    for(int i = 0;i < number; i++)
+    for (int i = 0; i < Menus.size(); i++)
     {
-        pNode = pNode->pNext;
+        if(Menus[i].getFatherNo().compare(FatherNo) == 0)
+        {
+            CurrentMenus.push_back(Menus[i]);
+            j++;
+            IsExist ++;
+        }
     }
-
-    pNode->SubMenus = CreatMenu();
-
-    cout << ">创建成功！" <<endl;
-
-    getchar();
-
+    if(IsExist == 0)
+    {
+        
+    }
+    return CurrentMenus;
 }
 
-
-//打印和添加菜单
-void ChangeMenus(Node* nodefirst)
+vector<Menu> FatherMenus(vector<Menu> Menus,vector<Menu> CurrentMenus)
 {
-    int count = 1,IsSub = 0;
+    vector<Menu> CurMenus;
 
-    cout << "\x1b[H\x1b[2J" <<endl;
+    int j = 0,IsExist = 0;
+    int size = CurrentMenus[0].getFatherNo().size();
 
-    if(nodefirst == NULL)
+    for (int i = 0; i < Menus.size(); i++)
     {
-        cout << "\033[31m" << "还没有任何菜单！" <<endl;
-        getchar();
-        return;
-    }
-
-    Node* pNode = nodefirst->pNext;
-    Node* pEnd = nodefirst->pLast;
-
-    cout << "\033[47m\033[30m" << "|  所有菜单 [带下划线表示有子菜单] |" << "\033[0m\n" << endl;
-
-    while (pNode != pEnd)
-    {
-        if(pNode->SubMenus != NULL)
+        if(Menus[i].getNo().size() == size)
         {
-            cout << "\033[4m" << count << " " << pNode->pNodeMenu->getText() << "\033[0m" << endl;
-            pNode = pNode->pNext;
-            count ++;
-            IsSub = 1;
-        }else
-        {
-            cout << count << " " << pNode->pNodeMenu->getText() << endl; 
-            pNode = pNode->pNext;
-            count ++;
+            CurMenus.push_back(Menus[i]);
+            j++;
+            IsExist ++;
         }
     }
-
-    if(pNode->SubMenus != NULL)
+    if(IsExist == 0)
     {
-        cout << "\033[4m" << count << " " << pNode->pNodeMenu->getText() << "\033[0m" << endl;
-        IsSub = 1;
-    }else
-    {
-        cout << count << " " << pNode->pNodeMenu->getText() << endl; 
+        
     }
-
-    cout << "\033[32m"<< "按 1 以添加子菜单|按其他键继续查看" << "\033[0m" <<endl;
-    int IsAdd = scanKeyboard();
-
-    if(IsAdd == 49)
-    {
-        addSubmenu(pNode);
-        return;
-    }
-
-    if(IsSub == 1)
-    {
-        int number = 0;
-        cout << "\033[2m"<< ">请输入要查看子菜单的序号[输入0以退出]：" << "\033[0m";
-        cin >> number;
-        pNode = nodefirst;
-
-        if(number == 0)
-        {
-            return;
-        }
-
-        for(int i = 0;i < number; i++)
-        {
-            pNode = pNode->pNext;
-        }
-
-        if(pNode->SubMenus != NULL)
-        {
-            ChangeMenus(pNode->SubMenus);
-            ChangeMenus(nodefirst);
-        }else
-        {
-            cout << "选择的项目无子菜单！" << endl;
-            getchar();
-            getchar();
-            ChangeMenus(nodefirst);
-        }
-
-    }else
-    {
-        getchar();
-        getchar();
-    }  
+    return CurMenus;
 }
 
 //显示菜单
-void printMenus(Node* pCurrentNode,Node* HeadNode)
+void printMenu(int choice,vector<Menu> CurrentMenus)
 {
-    cout << "\x1b[H\x1b[2J" <<endl;
-
-    if(HeadNode == NULL)
+    for (int i = 0; i < CurrentMenus.size(); i++)
     {
-        cout << "\033[31m" << "还没有任何菜单！" <<endl;
-        getchar();
-        return;
-    }
 
-    Node* pNode = HeadNode->pNext;
-    Node* pEnd = HeadNode->pLast;
-
-    while (pNode != pEnd)
-    {
-        if(pCurrentNode == pNode)
+        if(i == choice)
         {
-            cout << "\033[47m\033[30m" <<  " " << pNode->pNodeMenu->getText() << "\033[0m" << endl;
-            pNode = pNode->pNext;
+            cout << "\033[47m\033[30m" << CurrentMenus[i].getText() << "\033[0m" << endl;
         }else
         {
-            cout << " " << pNode->pNodeMenu->getText() << endl; 
-            pNode = pNode->pNext;
+            cout << CurrentMenus[i].getText() << endl;
         }
-    }
 
-    if(pCurrentNode == pNode)
-    {
-        cout << "\033[47m\033[30m" <<  " " << pNode->pNodeMenu->getText() << "\033[0m" << endl;
-    }else
-    {
-        cout << " " << pNode->pNodeMenu->getText() << endl; 
     }
+    
 }
 
-
-void MainMenu(Node* HeadNode)
+void Visual(vector<Menu> Menus)
 {
-    Node* pCurrentNode;
-    pCurrentNode = HeadNode->pNext;
-    printMenus(pCurrentNode,HeadNode);
+    vector<Menu> CurrentMenus = PrintedMenus(Menus,"0");
+    int choice = 0;
     while (1)
     {
-        int input = scanKeyboard();
-        if(input == 57)break;
-        switch (input)
+        cout << "\033c" << endl;
+        printMenu(choice,CurrentMenus);
+        switch (scanKeyboard())
         {
-        case 49:
+        case '1':
             {
-                pCurrentNode = pCurrentNode->pLast;
-                if(pCurrentNode == HeadNode)
-                {
-                    pCurrentNode = pCurrentNode->pLast;
-                }
-                printMenus(pCurrentNode,HeadNode);
+                if(choice > 0)
+                    choice--;
                 break;
             }
-        case 50:
+           
+        case '2':
             {
-                pCurrentNode = pCurrentNode->pNext;
-                if(pCurrentNode == HeadNode)
-                {
-                    pCurrentNode = pCurrentNode->pNext;
-                }
-                printMenus(pCurrentNode,HeadNode);
-                break;
-            } 
-        case 48:
-            {
-                if(pCurrentNode->SubMenus != NULL)
-                {
-                    MainMenu(pCurrentNode->SubMenus);
-                }
+                if(choice < CurrentMenus.size()-1)
+                    choice++;
                 break;
             }
+
+        case '0':
+            {
+                CurrentMenus = PrintedMenus(Menus,CurrentMenus[choice].getNo());
+                break;
+            }
+
+        case '9':
+            {
+                CurrentMenus = FatherMenus(Menus,CurrentMenus);
+                break;
+            }
+
         default:
             break;
         }
     }
+    
 }
 
+    
 
-//主菜单
-void UI()
-{
-    cout << "\x1b[H\x1b[2J" <<endl;
-    cout << "\033[47m\033[30m" <<">1 创建菜单               "<<endl;
-    cout << ">2 显示所有菜单/添加子菜单"<<endl;
-    cout << ">3 进入菜单界面           "<< "\033[0m" << endl;
-    cout << "\033[32m\033[?25l" << "按下要进行的操作[1/2/3/Esc] " << "\033[0m"<< endl;
-}
+
 
 
 //定义结束--
@@ -334,43 +300,16 @@ void UI()
 
 int main()
 {
-    Node* pHead = NULL;
-    while(1)
-    {
-        UI();
+    char fileName[] = "./123.txt";
 
-        switch (scanKeyboard())
-        {
-        case 49:
-            {
-                cout << "\x1b[H\x1b[2J" <<endl;
-                pHead = CreatMenu();
-                break;
-            }
-            
-        case 50:
-            {
-                cout << "\x1b[H\x1b[2J" <<endl;
-                ChangeMenus(pHead);
-                break;
-            }
+    vector<Info> Infos = read_from_file(fileName);
+    
+    vector<Menu> Menus = CreatMenu(Infos);
 
-        case 51:
-            {
-                cout << "\x1b[H\x1b[2J" <<endl;
-                MainMenu(pHead);
-                break;
-            }
+    Visual(Menus);
 
-        case 27:
-            break;
-        
-        default:
-            break;
-        }
-
-    }
-
-
+    
+    
+    
     return 0;
 }
