@@ -92,7 +92,7 @@ Node* CreatMenu()
         string text;
 
         cout << "\x1b[H\x1b[2J" <<endl;
-        cout << ">正在创建第" << count << "个菜单" << endl;
+        cout << "\033[47m" << ">正在创建第" << count << "个菜单"<< "\033[0m" << endl;
         count ++;
 
         cout <<"-输入菜单内容:";
@@ -251,7 +251,7 @@ void MainMenu()
 void UI()
 {
     cout << "\x1b[H\x1b[2J" <<endl;
-    cout << "\033[47m" <<">1 创建菜单               "<<endl;
+    cout << "\033[47m\033[30m" <<">1 创建菜单               "<<endl;
     cout << ">2 显示所有菜单/添加子菜单"<<endl;
     cout << ">3 进入菜单界面           "<< "\033[0m" << endl;
     cout << "\033[32m\033[?25l" << "按下要进行的操作[1/2/3/Esc] " << "\033[0m"<< endl;
