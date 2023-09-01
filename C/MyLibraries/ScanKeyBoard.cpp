@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
 {
 
     while(1){
-        printf(":%d\r\n",scanKeyboard());
+        printf(":%d\n",scanKeyboard());
     }
     return 0;
 }
