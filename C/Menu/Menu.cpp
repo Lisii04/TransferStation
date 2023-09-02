@@ -2,7 +2,7 @@
 
 //函数定义-----
 
-//读取文件信息
+//读取菜单的TXT文件信息并存储在Info类型的vector内
 vector<Info> read_from_file(char const *fileName)
 {
     char Texts[256];
@@ -66,8 +66,7 @@ vector<Info> read_from_file(char const *fileName)
     return Infos;
 }
 
-
-//获取键盘输入
+//获取键盘输入并返回对应int值
 int scanKeyboard()
 {
   int in;
@@ -88,7 +87,7 @@ int scanKeyboard()
 }
 
 
-//创建菜单
+//根据vector<Info>为每一组Info创建菜单类
 vector<Menu> CreatMenu(vector<Info> Infos)
 {
     vector<Menu> Menus;
@@ -102,8 +101,7 @@ vector<Menu> CreatMenu(vector<Info> Infos)
     return Menus;
 }
 
-
-//找到要显示的菜单
+//找出当前要显示的菜单
 vector<Menu> FindCurrentMenus(vector<Menu> Menus,string FatherNo,vector<Menu> CurrentMenus)
 {
     vector<Menu> CurMenus;
@@ -126,7 +124,7 @@ vector<Menu> FindCurrentMenus(vector<Menu> Menus,string FatherNo,vector<Menu> Cu
     return CurMenus;
 }
 
-//找到上一级菜单
+//找到当前菜单的上一级菜单
 vector<Menu> FatherMenus(vector<Menu> Menus,vector<Menu> CurrentMenus)
 {
     vector<Menu> CurMenus;
@@ -152,7 +150,8 @@ vector<Menu> FatherMenus(vector<Menu> Menus,vector<Menu> CurrentMenus)
     return FindCurrentMenus(Menus,FatherMenu->getFatherNo(),CurrentMenus);
 }
 
-//找到光标位置
+
+//根据光标所在位置显示菜单
 void printMenu(int choice,vector<Menu> CurrentMenus)
 {
     for (int i = 0; i < CurrentMenus.size(); i++)
@@ -170,7 +169,7 @@ void printMenu(int choice,vector<Menu> CurrentMenus)
     
 }
 
-//显示菜单的判断函数
+//光标位置的判断以及显示菜单的主函数
 void Visual(vector<Menu> Menus)
 {
     vector<Menu> CurrentMenus;
