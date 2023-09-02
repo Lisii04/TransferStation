@@ -11,7 +11,14 @@
 
 using namespace std;
 
-//定义菜单链表-----
+
+#define FILENAME "./Menu.txt"
+
+
+
+
+
+//定义菜单类-----
 
 class Menu
 {
@@ -68,6 +75,7 @@ class Menu
 
 };
 
+//定义读取信息存放的结构体
 typedef struct Info
 {
     string No;
@@ -78,6 +86,9 @@ typedef struct Info
 
 //定义结束--
 
+//函数定义-----
+
+//读取文件信息
 vector<Info> read_from_file(char const *fileName)
 {
     char Texts[256];
@@ -142,9 +153,6 @@ vector<Info> read_from_file(char const *fileName)
 }
 
 
-
-//函数定义-----
-
 //获取键盘输入
 int scanKeyboard()
 {
@@ -181,10 +189,10 @@ vector<Menu> CreatMenu(vector<Info> Infos)
 }
 
 
-
-vector<Menu> PrintedMenus(vector<Menu> Menus,string FatherNo)
+//找到要显示的菜单
+vector<Menu> PrintedMenus(vector<Menu> Menus,string FatherNo,vector<Menu> CurrentMenus)
 {
-    vector<Menu> CurrentMenus;
+    vector<Menu> CurMenus;
 
     int j = 0,IsExist = 0;
 
@@ -192,42 +200,45 @@ vector<Menu> PrintedMenus(vector<Menu> Menus,string FatherNo)
     {
         if(Menus[i].getFatherNo().compare(FatherNo) == 0)
         {
-            CurrentMenus.push_back(Menus[i]);
-            j++;
-            IsExist ++;
-        }
-    }
-    if(IsExist == 0)
-    {
-        
-    }
-    return CurrentMenus;
-}
-
-vector<Menu> FatherMenus(vector<Menu> Menus,vector<Menu> CurrentMenus)
-{
-    vector<Menu> CurMenus;
-
-    int j = 0,IsExist = 0;
-    int size = CurrentMenus[0].getFatherNo().size();
-
-    for (int i = 0; i < Menus.size(); i++)
-    {
-        if(Menus[i].getNo().size() == size)
-        {
             CurMenus.push_back(Menus[i]);
             j++;
-            IsExist ++;
+            IsExist = 1;
         }
     }
     if(IsExist == 0)
     {
-        
+        return CurrentMenus;
     }
     return CurMenus;
 }
 
-//显示菜单
+//找到上一级菜单
+vector<Menu> FatherMenus(vector<Menu> Menus,vector<Menu> CurrentMenus)
+{
+    vector<Menu> CurMenus;
+    Menu* FatherMenu = new Menu;
+
+    int j = 0,IsExist = 0;
+    string FatherNo = CurrentMenus[0].getFatherNo();
+
+    for (int i = 0; i < Menus.size(); i++)
+    {
+        if(Menus[i].getNo().compare(FatherNo) == 0)
+        {
+            *FatherMenu = Menus[i];
+            IsExist = 1;
+        }
+    }
+    
+
+    if(IsExist == 0)
+    {
+        return CurrentMenus;
+    }
+    return PrintedMenus(Menus,FatherMenu->getFatherNo(),CurrentMenus);
+}
+
+//找到光标位置
 void printMenu(int choice,vector<Menu> CurrentMenus)
 {
     for (int i = 0; i < CurrentMenus.size(); i++)
@@ -245,13 +256,15 @@ void printMenu(int choice,vector<Menu> CurrentMenus)
     
 }
 
+//显示菜单的判断函数
 void Visual(vector<Menu> Menus)
 {
-    vector<Menu> CurrentMenus = PrintedMenus(Menus,"0");
+    vector<Menu> CurrentMenus;
+    CurrentMenus = PrintedMenus(Menus,"0",CurrentMenus);
     int choice = 0;
     while (1)
     {
-        cout << "\033c" << endl;
+        cout << "\033c\033[?25l" << endl;
         printMenu(choice,CurrentMenus);
         switch (scanKeyboard())
         {
@@ -271,13 +284,15 @@ void Visual(vector<Menu> Menus)
 
         case '0':
             {
-                CurrentMenus = PrintedMenus(Menus,CurrentMenus[choice].getNo());
+                CurrentMenus = PrintedMenus(Menus,CurrentMenus[choice].getNo(),CurrentMenus);
+                choice = 0;
                 break;
             }
 
         case '9':
             {
                 CurrentMenus = FatherMenus(Menus,CurrentMenus);
+                choice = 0;
                 break;
             }
 
@@ -288,10 +303,6 @@ void Visual(vector<Menu> Menus)
     
 }
 
-    
-
-
-
 
 //定义结束--
 
@@ -300,16 +311,14 @@ void Visual(vector<Menu> Menus)
 
 int main()
 {
-    char fileName[] = "./123.txt";
-
+    //读取文件
+    char fileName[] = FILENAME;
+    //从文件读取菜单信息
     vector<Info> Infos = read_from_file(fileName);
-    
+    //创建所有菜单节点
     vector<Menu> Menus = CreatMenu(Infos);
-
+    //显示菜单
     Visual(Menus);
 
-    
-    
-    
     return 0;
 }
