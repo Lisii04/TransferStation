@@ -1,90 +1,4 @@
-#include <iostream>
-#include <string>
-#include <fstream>
-#include <list>
-#include <sstream>
-#include <vector>
-
-#include <unistd.h>
-#include <termio.h>
-#include <stdio.h>
-
-using namespace std;
-
-
-#define FILENAME "./Menu.txt"
-
-
-
-
-
-//定义菜单类-----
-
-class Menu
-{
-    private:
-        string text;
-        string No;
-        string FatherNo;
-
-    public:
-        
-
-        Menu()
-        {
-            
-        }
-
-        Menu(string text,string No,string FatherNo)
-        {
-            this->text = text;
-            this->No = No;
-            this->FatherNo = FatherNo;
-        }
-
-        void changeText(string text)
-        {
-            this->text = text;
-        }
-
-        void changeNo(string NO)
-        {
-            this->No = No;
-        }
-
-        void changeFatherNo(string FatherNo)
-        {
-            this->FatherNo = FatherNo;
-        }
-
-        string getText()
-        {
-            return text;
-        }
-
-        string getNo()
-        {
-            return No;
-        }
-
-        string getFatherNo()
-        {
-            return FatherNo;
-        }
-
-
-};
-
-//定义读取信息存放的结构体
-typedef struct Info
-{
-    string No;
-    string FartherNo;
-    string Text;
-}Info;
-
-
-//定义结束--
+#include "Menu.hpp"
 
 //函数定义-----
 
@@ -190,7 +104,7 @@ vector<Menu> CreatMenu(vector<Info> Infos)
 
 
 //找到要显示的菜单
-vector<Menu> PrintedMenus(vector<Menu> Menus,string FatherNo,vector<Menu> CurrentMenus)
+vector<Menu> FindCurrentMenus(vector<Menu> Menus,string FatherNo,vector<Menu> CurrentMenus)
 {
     vector<Menu> CurMenus;
 
@@ -235,7 +149,7 @@ vector<Menu> FatherMenus(vector<Menu> Menus,vector<Menu> CurrentMenus)
     {
         return CurrentMenus;
     }
-    return PrintedMenus(Menus,FatherMenu->getFatherNo(),CurrentMenus);
+    return FindCurrentMenus(Menus,FatherMenu->getFatherNo(),CurrentMenus);
 }
 
 //找到光标位置
@@ -260,8 +174,8 @@ void printMenu(int choice,vector<Menu> CurrentMenus)
 void Visual(vector<Menu> Menus)
 {
     vector<Menu> CurrentMenus;
-    CurrentMenus = PrintedMenus(Menus,"0",CurrentMenus);
-    int choice = 0;
+    CurrentMenus = FindCurrentMenus(Menus,"0",CurrentMenus);
+    int choice = 0,lastchoice = 0;
     while (1)
     {
         cout << "\033c\033[?25l" << endl;
@@ -284,7 +198,8 @@ void Visual(vector<Menu> Menus)
 
         case '0':
             {
-                CurrentMenus = PrintedMenus(Menus,CurrentMenus[choice].getNo(),CurrentMenus);
+                CurrentMenus = FindCurrentMenus(Menus,CurrentMenus[choice].getNo(),CurrentMenus);
+                lastchoice = choice;
                 choice = 0;
                 break;
             }
@@ -292,7 +207,7 @@ void Visual(vector<Menu> Menus)
         case '9':
             {
                 CurrentMenus = FatherMenus(Menus,CurrentMenus);
-                choice = 0;
+                choice = lastchoice;
                 break;
             }
 
@@ -303,22 +218,4 @@ void Visual(vector<Menu> Menus)
     
 }
 
-
 //定义结束--
-
-
-//主程序-----
-
-int main()
-{
-    //读取文件
-    char fileName[] = FILENAME;
-    //从文件读取菜单信息
-    vector<Info> Infos = read_from_file(fileName);
-    //创建所有菜单节点
-    vector<Menu> Menus = CreatMenu(Infos);
-    //显示菜单
-    Visual(Menus);
-
-    return 0;
-}
