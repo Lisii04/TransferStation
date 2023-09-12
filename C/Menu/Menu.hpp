@@ -17,6 +17,10 @@ using namespace std;
 
 
 #define FILENAME "./Menu.txt"
+#define UP 'w'
+#define DOWN 's'
+#define BACK 'a'
+#define DOWN 'd'
 
 
 //定义菜单类-----------------
