@@ -1,0 +1,1 @@
+/usr/bin/c++ -g -rdynamic CMakeFiles/Menu.dir/main.cpp.o CMakeFiles/Menu.dir/Menu.cpp.o -o Menu 

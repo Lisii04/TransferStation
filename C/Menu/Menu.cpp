@@ -174,7 +174,9 @@ void Visual(vector<Menu> Menus)
 {
     vector<Menu> CurrentMenus;
     CurrentMenus = FindCurrentMenus(Menus,"0",CurrentMenus);
-    int choice = 0,lastchoice = 0;
+    int choice = 0;
+    vector<int> LastChioces;
+
     while (1)
     {
         cout << "\033c\033[?25l" << endl;
@@ -198,7 +200,7 @@ void Visual(vector<Menu> Menus)
         case '0':
             {
                 CurrentMenus = FindCurrentMenus(Menus,CurrentMenus[choice].getNo(),CurrentMenus);
-                lastchoice = choice;
+                LastChioces.push_back(choice);
                 choice = 0;
                 break;
             }
@@ -206,7 +208,8 @@ void Visual(vector<Menu> Menus)
         case '9':
             {
                 CurrentMenus = FatherMenus(Menus,CurrentMenus);
-                choice = lastchoice;
+                choice = *(LastChioces.end()-1);
+                LastChioces.pop_back();
                 break;
             }
 
