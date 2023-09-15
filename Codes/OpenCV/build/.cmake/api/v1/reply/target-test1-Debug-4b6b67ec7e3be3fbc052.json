@@ -90,11 +90,6 @@
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "/usr/local/lib/libopencv_gapi.so.4.8.0",
-				"role" : "libraries"
-			},
-			{
-				"backtrace" : 2,
 				"fragment" : "/usr/local/lib/libopencv_highgui.so.4.8.0",
 				"role" : "libraries"
 			},
@@ -135,12 +130,12 @@
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "/usr/local/lib/libopencv_dnn.so.4.8.0",
+				"fragment" : "/usr/local/lib/libopencv_calib3d.so.4.8.0",
 				"role" : "libraries"
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "/usr/local/lib/libopencv_calib3d.so.4.8.0",
+				"fragment" : "/usr/local/lib/libopencv_dnn.so.4.8.0",
 				"role" : "libraries"
 			},
 			{
