@@ -1,4 +1,4 @@
-#include <opencv2/opencv.hpp>
+#include <opencv4/opencv2/opencv.hpp>
 #include <iostream>
 #include <numeric>
 #include <math.h>
@@ -49,21 +49,44 @@ cv::Mat ImgProcess(cv::Mat src,int count)
 
     for (int i = 0; i < contours.size(); i++)
     {
+        int num = 0;
+        double cenX = 0,cenY = 0,tempX = 0,tempY = 0;
         for (int j = 0; j < contours[i].size(); j++)
         {
             if(cv::contourArea(contours[i]) > 200)
             cv::circle(src,contours[i][j],3,cv::Scalar(0,255,0),-1,8,0);
+            tempX += contours[i][j].x;
+            tempY += contours[i][j].y;
+            num ++;
         }
-        
+        cenX = tempX / num;
+        cenY = tempY / num;
+        cv::Point center = cv::Point(cenX,cenY);
+
 
         if(cv::contourArea(contours[i]) > 200)
         {     
             std::vector<cv::Point2f> points;
             cv::approxPolyDP(contours[i], points, 10.0, true);
-            for (int i = 0;i < points.size()-1 ; i++) {
-                //cv::line(src,points[i],points[i+1],cv::Scalar(255,0,0),5,8,0);   
-                cv::circle(src,points[i],5,cv::Scalar(0,255,0),-1,8,0);
+
+            switch (points.size())
+            {
+            case 3:
+                cv::putText(src,"3",center,1,3,cv::Scalar(255,0,0),1,8,false);
+                break;
+            case 4:
+                cv::putText(src,"4",center,1,3,cv::Scalar(255,0,0),1,8,false);
+                break;
+            default:
+                cv::putText(src,"round",center,1,3,cv::Scalar(255,0,0),1,8,false);
+                break;
             }
+
+
+            // for (int i = 0;i < points.size()-1 ; i++) {
+            //     //cv::line(src,points[i],points[i+1],cv::Scalar(255,0,0),5,8,0);   
+            //     cv::circle(src,points[i],5,cv::Scalar(255,0,0),-1,8,0);
+            // }
             
         }
         
@@ -80,53 +103,57 @@ cv::Mat ImgProcess(cv::Mat src,int count)
 int main()
 {
 
-    // cv::Mat src = cv::imread("/home/lisii/Documents/Github_repos/TransferStation/Codes/OpenCV/build/ex1.png");
-    // if(src.empty())
+    cv::Mat src = cv::imread("ex1.png");
+    if(src.empty())
+    {
+        std::cout << "open picture error!" << std::endl;
+        return -1;
+    }
+
+    src = ImgProcess(src,1);
+    cv::imshow("aaa",src);
+    cv::waitKey();
+    
+
+
+
+
+    // cv::VideoCapture video;
+    // video.open("123.mp4");
+    // int count = 0;
+    // std::vector<cv::Mat> frames;
+
+    // while (1)
     // {
-    //     std::cout << "open picture error!" << std::endl;
-    //     return -1;
+        
+    //     count++;
+    //     cv::Mat frame;
+    //     video >> frame;
+
+    //     if (frame.empty())break;
+    //     frames.push_back(ImgProcess(frame,count));
     // }
 
-    // ImgProcess(src);
-    // cv::waitKey();
+    // video.release();
+
+
+
+    // video.open("123.mp4");
+    // cv::namedWindow("aaa",0);
+    // cv::resizeWindow("aaa",600,1200);
+
+    // count = 0;
+
+    // while (1)
+    // {
+    //     count++;
+    //     cv::imshow("aaa",frames[count]);
+    //     if (frames[count].empty())break;
+	// 	if (cv::waitKey(16) >= 0) break;
+    // }
     
 
-    cv::VideoCapture video;
-    video.open("123.mp4");
-    int count = 0;
-    std::vector<cv::Mat> frames;
-
-    while (1)
-    {
-        
-        count++;
-        cv::Mat frame;
-        video >> frame;
-
-        if (frame.empty())break;
-        frames.push_back(ImgProcess(frame,count));
-    }
-
-    video.release();
-
-
-
-    video.open("123.mp4");
-    cv::namedWindow("aaa",0);
-    cv::resizeWindow("aaa",600,1200);
-
-    count = 0;
-
-    while (1)
-    {
-        count++;
-        cv::imshow("aaa",frames[count]);
-        if (frames[count].empty())break;
-		if (cv::waitKey(16) >= 0) break;
-    }
-    
-
-    video.release();
+    // video.release();
 
         
     return 0;
