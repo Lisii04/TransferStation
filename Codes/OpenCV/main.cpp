@@ -27,43 +27,53 @@ void dfs(cv::Mat &drawer,
     }
 }
 
-void ImgProcess(cv::Mat src)
+cv::Mat ImgProcess(cv::Mat src,int count)
 {
 
     
-    cv::Mat dst,dst1;
+    cv::Mat dst,dst1,dst2;
+
+    cv::GaussianBlur(src,dst,cv::Size(7, 7), 0, 0);
+
+    cv::threshold(dst,dst1,100,255,cv::THRESH_BINARY);
+
+
+
     
-    cv::Canny(src, dst1,200,200,3);
+    cv::Canny(dst1, dst2,200,200,3);
     //cv::imshow("aaa",dst1);
 
     std::vector<std::vector<cv::Point>> contours;
     std::vector<cv::Vec4i> hierachy;
-    cv::findContours(dst1, contours, hierachy, cv::RETR_TREE, cv::CHAIN_APPROX_NONE);
+    cv::findContours(dst2, contours, hierachy, cv::RETR_TREE, cv::CHAIN_APPROX_NONE);
 
     for (int i = 0; i < contours.size(); i++)
     {
-        std::vector<cv::Point2f> points;
-        cv::approxPolyDP(contours[i], points, 10.0, true);
-
-        
-        for (int i = 0;i < contours.size() ; i++) {
-            std::vector<cv::Vec4f> lines;
-            cv::HoughLines(contours[i],lines,1,1,10,40,20);
-            std::cout << lines.size() << std::endl;
+        for (int j = 0; j < contours[i].size(); j++)
+        {
+            if(cv::contourArea(contours[i]) > 200)
+            cv::circle(src,contours[i][j],3,cv::Scalar(0,255,0),-1,8,0);
         }
+        
 
-        // cv::Mat temp;
-        // for (int i = 0;i < points.size()-1 ; i++) {
-        //     cv::line(temp,points[i],points[i+1],cv::Scalar(255,0,0),3,8,0);    
-        // }
+        if(cv::contourArea(contours[i]) > 200)
+        {     
+            std::vector<cv::Point2f> points;
+            cv::approxPolyDP(contours[i], points, 10.0, true);
+            for (int i = 0;i < points.size()-1 ; i++) {
+                //cv::line(src,points[i],points[i+1],cv::Scalar(255,0,0),5,8,0);   
+                cv::circle(src,points[i],5,cv::Scalar(0,255,0),-1,8,0);
+            }
+            
+        }
+        
+       
 
-
-        // temp.release();
     }
     
    
-
-    //cv::imshow("aaa",src);
+    std::cout << "frame" << count << std::endl;
+    return src;
 }
 
 
@@ -82,16 +92,36 @@ int main()
     
 
     cv::VideoCapture video;
-    video.open("ex.mp4");
-    cv::namedWindow("aaa",0);
-    cv::resizeWindow("aaa",400,800);
+    video.open("123.mp4");
+    int count = 0;
+    std::vector<cv::Mat> frames;
 
     while (1)
     {
+        
+        count++;
         cv::Mat frame;
         video >> frame;
-        ImgProcess(frame);
+
         if (frame.empty())break;
+        frames.push_back(ImgProcess(frame,count));
+    }
+
+    video.release();
+
+
+
+    video.open("123.mp4");
+    cv::namedWindow("aaa",0);
+    cv::resizeWindow("aaa",600,1200);
+
+    count = 0;
+
+    while (1)
+    {
+        count++;
+        cv::imshow("aaa",frames[count]);
+        if (frames[count].empty())break;
 		if (cv::waitKey(16) >= 0) break;
     }
     
