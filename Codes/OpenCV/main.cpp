@@ -3,121 +3,101 @@
 #include <numeric>
 #include <math.h>
 #include <vector>
-#include <unistd.h>
- 
-using namespace cv;
-using namespace std;
- 
- 
-double VectorVar(const vector<double> &A)
+
+/***** 求两点间距离*****/
+float getDistance(cv::Point pointO, cv::Point pointA)
 {
-	double sum = accumulate(begin(A),end(A), 0.0);
-    double mean =  sum / A.size();
-    
-	double variance  = 0.0;
-    for (uint16_t i = 0 ; i < A.size() ; i++)
-    {
-        variance = variance + pow(A[i]-mean,2);
-    }
-    variance = variance/A.size();
-    return variance;
+    float distance;
+    distance = powf((pointO.x - pointA.x), 2) + powf((pointO.y - pointA.y), 2);
+    distance = sqrtf(distance);
+    return distance;
 }
 
-int main(int argc,char** argv)
+
+void dfs(cv::Mat &drawer,
+         const std::vector< std::vector<cv::Point> > &contours,
+         const std::vector< cv::Vec4i > &hierachy,
+         const int &id,
+         const int &depth) {
+    if (id == -1) return;
+    static cv::Scalar COLOR_LIST[3] = { {220, 20, 20}, {20, 220, 20}, {20, 20, 220} };
+    cv::drawContours(drawer, contours, id, COLOR_LIST[depth % 3], 1);
+    for (int i = hierachy[id][2]; i + 1; i = hierachy[i][0]) {
+        dfs(drawer, contours, hierachy, i, depth + 1);  // 向内部的子轮廓递归
+    }
+}
+
+void ImgProcess(cv::Mat src)
 {
-    VideoCapture video;
-    video.open("ex3.mp4");
-    Mat frame;
-    namedWindow("video-demo", 0);
-    resizeWindow("video-demo",1000,1600);
-    while(1)
-    {
-        
-        video >> frame;
-        if (frame.empty())break;
-
-        Mat src = frame;
-        //Mat src = imread("ex1.png");
-        if(src.empty())
-        {
-            cout << "open picture error!" << endl;
-            return -1;
-        }
-        
-        //分离
-        Mat src_hsv,dst1,dst2;
-        vector<Vec3f> circles;
-        
-        //inRange(src_hsv, cv::Scalar(0, 43, 46), cv::Scalar(10, 255, 255), dst);
-        //threshold(dst,dst1,125,255,THRESH_BINARY);
-        Mat dst = Mat::zeros(src.size(), src.type());//声明新图像，大小通道与输入图像一致，初始化为0
-
-        double alpha = 3; //简单的对比度控制参数
-        int beta = -300;       //简单的亮度控制参数
-
-        
-        //src.convertTo(dst, -1, alpha, beta);
-
-        
-
-        //imshow("video-demo",dst);
-
-
-        Canny(src, dst2,150,150,3);
-        //imshow("video-demo",dst2);
-        std::vector<std::vector<cv::Point>> contours;
-        std::vector<cv::Vec4i> hierachy;
-        cv::findContours(dst2, contours, hierachy, cv::RETR_LIST, cv::CHAIN_APPROX_NONE);
-       
-
-        for(int i=0;i<contours.size();i++)
-        {
-            int maxX = 0,maxY = 0,minX = 1000,minY = 1000,Isround = 0;
 
     
-           
+    cv::Mat dst,dst1;
+    
+    cv::Canny(src, dst1,200,200,3);
+    //cv::imshow("aaa",dst1);
 
-            if(contourArea(contours[i]) > 0)
-            {
-                //绘制出contours向量内所有的像素点   
-                for(int j=0;j<contours[i].size();j++) 
-                {
-                    Point P=Point(contours[i][j].x,contours[i][j].y);
-                    if(maxX < contours[i][j].x) maxX = contours[i][j].x;
-                    if(maxY < contours[i][j].y) maxY = contours[i][j].y;
-                    if(minX > contours[i][j].x) minX = contours[i][j].x;
-                    if(minY > contours[i][j].y) minY = contours[i][j].y;
-                    circle(src,P,3,Scalar(255,0,0),-1);
-                   
-                }
-                int cenX = (maxX+minX)/2;
-                int cenY = (maxY+minY)/2;
-                
+    std::vector<std::vector<cv::Point>> contours;
+    std::vector<cv::Vec4i> hierachy;
+    cv::findContours(dst1, contours, hierachy, cv::RETR_TREE, cv::CHAIN_APPROX_NONE);
 
-                vector<double> distances;
-                
-                for(int j=0;j<contours[i].size();j++) 
-                {
-                    double distance = sqrt( (contours[i][j].x - cenX)*(contours[i][j].x - cenX) + (contours[i][j].y - cenY)*(contours[i][j].y - cenY) );
-                    distances.push_back(distance);
-                }
+    for (int i = 0; i < contours.size(); i++)
+    {
+        std::vector<cv::Point2f> points;
+        cv::approxPolyDP(contours[i], points, 10.0, true);
 
-                // if(VectorVar(distances) < 50)
-                // {
-                //     string counts ="Round";
-                //     putText(src,counts,Point(cenX,cenY),1,3,Scalar(255,0,0),3,8);
-                //     circle(src,Point(cenX,cenY),3,Scalar(255,0,0),-1);
-
-                // }
-            }    
+        
+        for (int i = 0;i < contours.size() ; i++) {
+            std::vector<cv::Vec4f> lines;
+            cv::HoughLines(contours[i],lines,1,1,10,40,20);
+            std::cout << lines.size() << std::endl;
         }
 
-        
-        
-        imshow("video-demo",src);
-        if (waitKey(16) >= 0) break;
-        
+        // cv::Mat temp;
+        // for (int i = 0;i < points.size()-1 ; i++) {
+        //     cv::line(temp,points[i],points[i+1],cv::Scalar(255,0,0),3,8,0);    
+        // }
+
+
+        // temp.release();
     }
+    
+   
+
+    //cv::imshow("aaa",src);
+}
+
+
+int main()
+{
+
+    // cv::Mat src = cv::imread("/home/lisii/Documents/Github_repos/TransferStation/Codes/OpenCV/build/ex1.png");
+    // if(src.empty())
+    // {
+    //     std::cout << "open picture error!" << std::endl;
+    //     return -1;
+    // }
+
+    // ImgProcess(src);
+    // cv::waitKey();
+    
+
+    cv::VideoCapture video;
+    video.open("ex.mp4");
+    cv::namedWindow("aaa",0);
+    cv::resizeWindow("aaa",400,800);
+
+    while (1)
+    {
+        cv::Mat frame;
+        video >> frame;
+        ImgProcess(frame);
+        if (frame.empty())break;
+		if (cv::waitKey(16) >= 0) break;
+    }
+    
+
     video.release();
+
+        
     return 0;
 }

@@ -55,7 +55,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/lisii/Documents/Codes/OpenCV/build"
+			"value" : "/home/lisii/Documents/Github_repos/TransferStation/Codes/OpenCV/build"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -92,6 +92,22 @@
 			],
 			"type" : "INTERNAL",
 			"value" : "1"
+		},
+		{
+			"name" : "CMAKE_COLOR_MAKEFILE",
+			"properties" : 
+			[
+				{
+					"name" : "ADVANCED",
+					"value" : "1"
+				},
+				{
+					"name" : "HELPSTRING",
+					"value" : "Enable/Disable color output during build."
+				}
+			],
+			"type" : "BOOL",
+			"value" : "ON"
 		},
 		{
 			"name" : "CMAKE_COMMAND",
@@ -402,18 +418,6 @@
 			"value" : "CMAKE_DLLTOOL-NOTFOUND"
 		},
 		{
-			"name" : "CMAKE_EDIT_COMMAND",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Path to cache edit program executable."
-				}
-			],
-			"type" : "INTERNAL",
-			"value" : "/usr/bin/cmake-gui"
-		},
-		{
 			"name" : "CMAKE_EXECUTABLE_FORMAT",
 			"properties" : 
 			[
@@ -539,7 +543,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "Ninja"
+			"value" : "Unix Makefiles"
 		},
 		{
 			"name" : "CMAKE_GENERATOR_INSTANCE",
@@ -587,7 +591,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/lisii/Documents/Codes/OpenCV"
+			"value" : "/home/lisii/Documents/Github_repos/TransferStation/Codes/OpenCV"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
@@ -639,11 +643,11 @@
 				},
 				{
 					"name" : "HELPSTRING",
-					"value" : "Program used to build from build.ninja files."
+					"value" : "Path to a program."
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/usr/bin/ninja"
+			"value" : "/usr/bin/gmake"
 		},
 		{
 			"name" : "CMAKE_MODULE_LINKER_FLAGS",
@@ -1126,42 +1130,6 @@
 			"value" : "[/usr/local][v4.8.0()]"
 		},
 		{
-			"name" : "ImageShow_BINARY_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "/home/lisii/Documents/Codes/OpenCV/build"
-		},
-		{
-			"name" : "ImageShow_IS_TOP_LEVEL",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "ON"
-		},
-		{
-			"name" : "ImageShow_SOURCE_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "/home/lisii/Documents/Codes/OpenCV"
-		},
-		{
 			"name" : "OpenCV_DIR",
 			"properties" : 
 			[
@@ -1183,7 +1151,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/lisii/Documents/Codes/OpenCV/build"
+			"value" : "/home/lisii/Documents/Github_repos/TransferStation/Codes/OpenCV/build"
 		},
 		{
 			"name" : "test1_IS_TOP_LEVEL",
@@ -1207,7 +1175,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/lisii/Documents/Codes/OpenCV"
+			"value" : "/home/lisii/Documents/Github_repos/TransferStation/Codes/OpenCV"
 		}
 	],
 	"kind" : "cache",
