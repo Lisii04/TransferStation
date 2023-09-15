@@ -1,7 +1,7 @@
 [
 {
-  "directory": "/home/lisii/Documents/Github-Repos/TransferStation/Codes/OpenCV/build",
-  "command": "/usr/bin/g++ -isystem /usr/local/include/opencv4 -g -std=gnu++11 -o CMakeFiles/test1.dir/main.cpp.o -c /home/lisii/Documents/Github-Repos/TransferStation/Codes/OpenCV/main.cpp",
-  "file": "/home/lisii/Documents/Github-Repos/TransferStation/Codes/OpenCV/main.cpp"
+  "directory": "/home/lisii/Documents/Github_repos/TransferStation/Codes/OpenCV/build",
+  "command": "/usr/bin/g++  -isystem /usr/local/include/opencv4 -g -std=gnu++11 -o CMakeFiles/test1.dir/main.cpp.o -c /home/lisii/Documents/Github_repos/TransferStation/Codes/OpenCV/main.cpp",
+  "file": "/home/lisii/Documents/Github_repos/TransferStation/Codes/OpenCV/main.cpp"
 }
 ]
