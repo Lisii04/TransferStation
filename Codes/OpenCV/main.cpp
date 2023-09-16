@@ -24,21 +24,18 @@ void dfs(cv::Mat &drawer,
         frame:要处理的帧
         drawMat：要绘制轮廓的图像
 */
-cv::Mat FrameProcess(cv::Mat frame,cv::Mat drawMat)
+cv::Mat FrameProcess(cv::Mat frame,cv::Mat drawMat,std::string Color)
 {
     
     /***************  识别前 图像处理  ***************/
-    cv::Mat dst, dst1, dst2,dst3;
+    cv::Mat origin, dst, dst1, dst2, dst3, hsv;
 
     cv::GaussianBlur(frame, dst, cv::Size(7, 7), 0, 0); // 对图像进行高斯模糊
 
     cv::threshold(dst, dst1, 100, 255, cv::THRESH_BINARY); // 阈值化处理
 
-
-    // cv::Mat element = cv::getStructuringElement(cv::MORPH_CROSS, cv::Size(1, 1));
-    // cv::erode(dst1, dst2, element);//腐蚀处理(无效，已去除)
-
-    cv::Canny(dst1, dst3, 250, 250, 3); // Canny边缘检测
+    
+    cv::Canny(dst1, dst3, 300, 300, 3); // Canny边缘检测
 
     /***************  识别前 图像处理结束  ***************/
 
@@ -67,9 +64,23 @@ cv::Mat FrameProcess(cv::Mat frame,cv::Mat drawMat)
             }
             /****    绘制图形轮廓结束    ****/
 
+
+            /**** 中心点计算 ****/
             cenX = tempX / num;
             cenY = tempY / num;
             cv::Point center = cv::Point(cenX, cenY);
+            if(!Color.compare("YELLOW"))
+            {
+                //cv::rectangle(drawMat, cv::Point(center.x-5,center.y+50), cv::Point(center.x + 130,center.y+10), cv::Scalar(200,0, 0),-1);
+                cv::putText(drawMat,Color,cv::Point(center.x,center.y+40),1,2,cv::Scalar(0,255,255),4,8,false);
+            }
+            if(!Color.compare("RED"))
+            {
+                //cv::rectangle(drawMat, cv::Point(center.x-5,center.y+50), cv::Point(center.x + 65,center.y+10), cv::Scalar(200, 0,0),-1);
+                cv::putText(drawMat,Color,cv::Point(center.x,center.y+40),1,2,cv::Scalar(0,0,255),4,8,false);
+            }
+            /**** 中心点计算结束 ****/
+
 
             /**** 不同形状分类 ****/
             std::vector<cv::Point2f> points;
@@ -89,13 +100,13 @@ cv::Mat FrameProcess(cv::Mat frame,cv::Mat drawMat)
                 cv::putText(drawMat, "Round", center, 1, 3, cv::Scalar(255, 0, 0), 3, 8, false); 
                 break;
             }
-            /**** 不同形状分类结束 ****/
+            /**** 形状分类结束 ****/
 
             /**** 绘制多边形顶点 ****/
             if (points.size() < 5)
             {
                 for (int i = 0; i < points.size() - 1; i++) {
-                    cv::circle(drawMat, points[i], 5, cv::Scalar(255, 0, 0), -1, 8, 0); // 绘制角点
+                    cv::circle(drawMat, points[i], 4, cv::Scalar(255, 0, 0), -1, 8, 0); // 绘制角点
                 }
             }
             /**** 绘制多边形顶点结束 ****/
@@ -113,8 +124,8 @@ void VideoProcess(cv::VideoCapture video)
     cv::namedWindow("a", 0);
     cv::resizeWindow("a",1000,500);
     
-    cv::namedWindow("b", 0);
-    cv::resizeWindow("b",1000,500);
+    // cv::namedWindow("b", 0);
+    // cv::resizeWindow("b",1000,500);
 
    
     int count = 0;
@@ -122,25 +133,40 @@ void VideoProcess(cv::VideoCapture video)
     {
 
         count++;
+       
         cv::Mat frame;
         video >> frame; // 从视频中读取一帧图像
         if (frame.empty()) break; // 如果图像为空，表示已经读取完所有帧，跳出循环
 
-        std::vector<cv::Mat> channels;
-        split(frame, channels);
-        cv::Mat blue, green, red;
 
-        blue = channels.at(0);
-        green = channels.at(1);
-        red = channels.at(2);
+        /****  分离不同颜色  ****/
+        cv::Mat hsv,mask_red_1,mask_red_2,mask_yellow;
+        cv::cvtColor(frame,hsv,cv::COLOR_BGR2HSV);
 
-        
-        frame = FrameProcess(blue,frame);
+        cv::Scalar Yellow_low = cv::Scalar(26,43,46);
+        cv::Scalar Yellow_high = cv::Scalar(34,255,255);
+        cv::Scalar Red_low_1 = cv::Scalar(0,43,46);
+        cv::Scalar Red_high_1 = cv::Scalar(10,255,255);
+        cv::Scalar Red_low_2 = cv::Scalar(156,43,46);
+        cv::Scalar Red_high_2 = cv::Scalar(180,255,255);
+
+        cv::inRange(hsv,Yellow_low,Yellow_high,mask_yellow); //黄色分离
+        cv::inRange(hsv,Red_low_1,Red_high_1,mask_red_1);
+        cv::inRange(hsv,Red_low_2,Red_high_2,mask_red_2); //红色分离
+
+        /****  分离颜色完成  ****/
+
+
+        frame = FrameProcess(mask_red_1,frame,"RED");
+        frame = FrameProcess(mask_red_2,frame,"RED");
+        frame = FrameProcess(mask_yellow,frame,"YELLOW");
 
         cv::imshow("a", frame);
+        // cv::imshow("b", mask_red_2);
         cv::waitKey(1);
 
         std::cout << "Processing frame " << count << std::endl;
+        
 
     }
 
