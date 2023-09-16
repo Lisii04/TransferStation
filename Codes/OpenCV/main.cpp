@@ -52,7 +52,7 @@ cv::Mat FrameProcess(cv::Mat frame,cv::Mat drawMat,std::string Color)
         int num = 0;
         double cenX = 0, cenY = 0, tempX = 0, tempY = 0;
 
-        if (cv::contourArea(contours[i]) > 1000 && cv::contourArea(contours[i]) < 500000)//按轮廓面积筛选
+        if (cv::contourArea(contours[i]) > 3500 && cv::contourArea(contours[i]) < 500000)//按轮廓面积筛选
         {
             /**** 绘制图形轮廓并计算中心点 ****/
             for (int j = 0; j < contours[i].size(); j++)
@@ -134,16 +134,16 @@ void VideoProcess(cv::VideoCapture video)
 
         count++;
        
-        cv::Mat frame;
+        cv::Mat frame,dst;
         video >> frame; // 从视频中读取一帧图像
         if (frame.empty()) break; // 如果图像为空，表示已经读取完所有帧，跳出循环
 
-
+        //cv::threshold(frame, dst, 110, 255, cv::THRESH_BINARY);//二值化以分离颜色
         /****  分离不同颜色  ****/
-        cv::Mat hsv,mask_red_1,mask_red_2,mask_yellow;
+        cv::Mat hsv,mask_red_1,mask_red_2,mask_yellow,red;
         cv::cvtColor(frame,hsv,cv::COLOR_BGR2HSV);
 
-        cv::Scalar Yellow_low = cv::Scalar(26,43,46);
+        cv::Scalar Yellow_low = cv::Scalar(10,43,46);
         cv::Scalar Yellow_high = cv::Scalar(34,255,255);
         cv::Scalar Red_low_1 = cv::Scalar(0,43,46);
         cv::Scalar Red_high_1 = cv::Scalar(10,255,255);
@@ -154,15 +154,15 @@ void VideoProcess(cv::VideoCapture video)
         cv::inRange(hsv,Red_low_1,Red_high_1,mask_red_1);
         cv::inRange(hsv,Red_low_2,Red_high_2,mask_red_2); //红色分离
 
+        cv::bitwise_or(mask_red_1,mask_red_2,red);
         /****  分离颜色完成  ****/
 
 
-        frame = FrameProcess(mask_red_1,frame,"RED");
-        frame = FrameProcess(mask_red_2,frame,"RED");
+        frame = FrameProcess(red,frame,"RED");
         frame = FrameProcess(mask_yellow,frame,"YELLOW");
 
         cv::imshow("a", frame);
-        // cv::imshow("b", mask_red_2);
+        //cv::imshow("b", dst);
         cv::waitKey(1);
 
         std::cout << "Processing frame " << count << std::endl;
@@ -176,7 +176,7 @@ void VideoProcess(cv::VideoCapture video)
 int main()
 {
     cv::VideoCapture video;
-    video.open("123.mp4"); // 打开视频文件/摄像头
+    video.open("2.mp4"); // 打开视频文件/摄像头
     
     VideoProcess(video); // 处理视频帧
 
