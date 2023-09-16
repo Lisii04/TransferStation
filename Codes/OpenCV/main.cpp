@@ -19,34 +19,41 @@ void dfs(cv::Mat &drawer,
     }
 }
 
-std::vector<cv::Mat> FrameProcess(cv::VideoCapture video)
+void FrameProcess(cv::VideoCapture video)
 {
-    std::vector<cv::Mat> frames; // 存储处理后的帧图像
+    cv::namedWindow("aaa", 1);
+    cv::namedWindow("bbb", 1);
+
+   
     int count = 0;
     while (1)
     {
+
         count++;
         cv::Mat frame;
         video >> frame; // 从视频中读取一帧图像
 
         if (frame.empty()) break; // 如果图像为空，表示已经读取完所有帧，跳出循环
 
-        cv::Mat dst, dst1, dst2;
+        cv::Mat dst, dst1, dst2,dst3;
 
         cv::GaussianBlur(frame, dst, cv::Size(7, 7), 0, 0); // 对图像进行高斯模糊
         cv::threshold(dst, dst1, 100, 255, cv::THRESH_BINARY); // 阈值化处理
         cv::Canny(dst1, dst2, 200, 200, 3); // Canny边缘检测
 
+        cv::Mat element = cv::getStructuringElement(cv::MORPH_CROSS, cv::Size(1, 1));
+        cv::erode(dst2, dst3, element);
+
         std::vector<std::vector<cv::Point>> contours; // 存储轮廓
         std::vector<cv::Vec4i> hierachy; // 存储轮廓层级信息
-        cv::findContours(dst2, contours, hierachy, cv::RETR_TREE, cv::CHAIN_APPROX_NONE); // 查找轮廓
+        cv::findContours(dst3, contours, hierachy, cv::RETR_TREE, cv::CHAIN_APPROX_NONE); // 查找轮廓
 
         for (int i = 0; i < contours.size(); i++)
         {
             int num = 0;
             double cenX = 0, cenY = 0, tempX = 0, tempY = 0;
 
-            if (cv::contourArea(contours[i]) > 1000 && cv::contourArea(contours[i]) < 500000)
+            if (cv::contourArea(contours[i]) > 1000 && cv::contourArea(contours[i]) < 500000)//按轮廓面积筛选
             {
                 for (int j = 0; j < contours[i].size(); j++)
                 {
@@ -71,13 +78,13 @@ std::vector<cv::Mat> FrameProcess(cv::VideoCapture video)
                     switch (points.size())
                     {
                     case 3:
-                        cv::putText(frame, "Triangle", center, 1, 3, cv::Scalar(255, 0, 0), 1, 8, false); 
+                        cv::putText(frame, "Triangle", center, 1, 3, cv::Scalar(255, 0, 0), 3, 8, false); 
                         break;
                     case 4:
-                        cv::putText(frame, "Rectangle", center, 1, 3, cv::Scalar(255, 0, 0), 1, 8, false); 
+                        cv::putText(frame, "Rectangle", center, 1, 3, cv::Scalar(255, 0, 0), 3, 8, false); 
                         break;
                     default:
-                        cv::putText(frame, "Round", center, 1, 3, cv::Scalar(255, 0, 0), 1, 8, false); 
+                        cv::putText(frame, "Round", center, 1, 3, cv::Scalar(255, 0, 0), 3, 8, false); 
                         break;
                     }
 
@@ -92,36 +99,39 @@ std::vector<cv::Mat> FrameProcess(cv::VideoCapture video)
             }
         }
 
-        frames.push_back(frame); // 将处理后的帧图像添加到向量中
+        
+        cv::imshow("aaa", frame);
+        cv::imshow("bbb", dst3);
+        cv::waitKey(30);
         std::cout << "Processing frame " << count << std::endl;
+
     }
 
-    return frames; // 返回处理后的帧图像向量
+    
 }
 
 int main()
 {
     cv::VideoCapture video;
-    video.open("123.mp4"); // 打开视频文件
+    video.open(0); // 打开视频文件
     int count = 0;
-    std::vector<cv::Mat> frames;
-
-    frames = FrameProcess(video); // 处理视频帧
+    
+    
+    FrameProcess(video); // 处理视频帧
 
     video.release(); // 关闭视频文件
 
-    cv::namedWindow("aaa", 0);
-    cv::resizeWindow("aaa", 1600, 800);
+    
 
-    while (1)
-    {
-        count++;
+    // while (1)
+    // {
+    //     count++;
 
-        if (frames[count].empty()) break; // 如果帧为空，表示已经显示完所有帧，跳出循环
-        cv::imshow("aaa", frames[count]); // 显示帧图像
+    //     if (frames[count].empty()) break; // 如果帧为空，表示已经显示完所有帧，跳出循环
+    //     cv::imshow("aaa", frames[count]); // 显示帧图像
 
-        if (cv::waitKey(33) >= 0) break; // 等待33毫秒，如果按下键盘任意键，跳出循环
-    }
+    //     if (cv::waitKey(33) >= 0) break; // 等待33毫秒，如果按下键盘任意键，跳出循环
+    // }
 
     return 0;
 }
