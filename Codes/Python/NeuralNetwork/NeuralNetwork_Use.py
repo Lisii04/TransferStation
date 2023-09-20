@@ -7,8 +7,8 @@ import tkinter.filedialog
 
 inputnodes = 784
 hiddennodes = 100
-outputnodes = 10
-learningrate = 0.2
+outputnodes = 3
+learningrate = 0.05
 
 
 class NeuralNetwork:
@@ -106,7 +106,7 @@ while 1:
 
     img_array = numpy.array(small_img.convert('L'))
 
-    img_array = 255 - img_array
+    # img_array = 255 - img_array
 
     # matplotlib.pyplot.imshow(img_array, cmap='Greys', interpolation='None')
     # matplotlib.pyplot.waitforbuttonpress()

@@ -15,8 +15,8 @@ def selectPath():
 
 inputnodes = 784
 hiddennodes = 100
-outputnodes = 10
-learningrate = 0.2
+outputnodes = 3
+learningrate = 0.05
 
 
 class NeuralNetwork:
@@ -90,11 +90,17 @@ TEST_FILE_PATH = selectPath()
 print("\033[0;32m" + ">>Test datas selected in :" + TEST_FILE_PATH + "\033[0m" + "\n")
 
 # INIT
+
 rows = inputnodes
 columns = hiddennodes
 
 n = NeuralNetwork(inputnodes, hiddennodes, outputnodes, learningrate)
 
+# who = numpy.load('who.npy')
+#
+# wih = numpy.load('wih.npy')
+#
+# n.set_data(who, wih)
 # TRAIN
 
 print('>Opening train data...')
@@ -104,7 +110,7 @@ data = numpy.loadtxt(open(TRAIN_FILE_PATH, "rb"), delimiter=",")
 targetlist = numpy.loadtxt(open(TRAIN_FILE_PATH, "rb"), delimiter=",", usecols=[0])
 
 length = len(targetlist)
-output_nodes = 10
+output_nodes = outputnodes
 i = 0
 
 print("\033[0;32m" + '>>Train data opened in : ' + TRAIN_FILE_PATH + "\033[0m" + "\n")
@@ -146,7 +152,9 @@ for record2 in tqdm(tests):
     correct = testTargetlist[i]
 
     label = numpy.argmax(result)
-    
+
+    # print(str(result) + " " + str(label) + " " + str(correct))
+
     if label == correct:
         score += 1
     else:
