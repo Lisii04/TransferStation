@@ -23,7 +23,7 @@ IMAGES_FILE_PATH = selectPath()
 
 print(">Dir selected ： " + IMAGES_FILE_PATH)
 
-fl = open("save.csv", "a+")
+fl = open("Train.csv", "a+")
 
 root = tk.Tk()
 
