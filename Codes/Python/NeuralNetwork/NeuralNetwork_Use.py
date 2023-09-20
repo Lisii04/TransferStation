@@ -91,7 +91,7 @@ def selectPath():
     return path_
 
 
-while (1):
+while 1:
     print(">Select image ：[Enter]")
 
     input()

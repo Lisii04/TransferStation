@@ -7,13 +7,10 @@ import tkinter as tk
 import tkinter.filedialog
 
 def selectPath():
-    # 选择文件path_接收文件地址
     path_ = tk.filedialog.askopenfilename()
 
-    # 通过replace函数替换绝对文件地址中的/来使文件可被程序读取
-    # 注意：\\转义后为\，所以\\\\转义后为\\
     path_ = path_.replace("\\", "/")
-    # path设置path_的值
+
     return path_
 
 inputnodes = 784
@@ -84,8 +81,6 @@ TRAIN_FILE_PATH = selectPath()
 
 print("\033[0;32m" + ">>Train datas selected in :" + TRAIN_FILE_PATH + "\033[0m" + "\n")
 
-# "/home/lisii/Documents/Github-Repos/TransferStation/Codes/Python/mnist_train.csv"
-
 print(">Select test datas :[Enter]")
 
 input()
@@ -93,8 +88,6 @@ input()
 TEST_FILE_PATH = selectPath()
 
 print("\033[0;32m" + ">>Test datas selected in :" + TEST_FILE_PATH + "\033[0m" + "\n")
-
-# "/home/lisii/Documents/Github-Repos/TransferStation/Codes/Python/mnist_test.csv"
 
 # INIT
 rows = inputnodes
@@ -153,8 +146,7 @@ for record2 in tqdm(tests):
     correct = testTargetlist[i]
 
     label = numpy.argmax(result)
-    # print(label, "network's answer")
-    # print(correct, "correct answer")
+    
     if label == correct:
         score += 1
     else:
