@@ -1,0 +1,3 @@
+/home/lisii/Documents/Github-Repos/TransferStation/Codes/build/CMakeFiles/test1.dir
+/home/lisii/Documents/Github-Repos/TransferStation/Codes/build/CMakeFiles/edit_cache.dir
+/home/lisii/Documents/Github-Repos/TransferStation/Codes/build/CMakeFiles/rebuild_cache.dir
