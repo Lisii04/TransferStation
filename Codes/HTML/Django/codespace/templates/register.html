@@ -71,11 +71,12 @@
         }
 
         .btn {
-            width: 92%;
+            width: 97%;
             flex: 1 1 auto;
             margin-top: 30px;
             padding: 10px;
             border-radius: 5px;
+            border-style: none;
             text-align: center;
             text-transform: uppercase;
             position: relative;
@@ -168,37 +169,32 @@
     <div class="container">
         <div class="login-wrapper">
             <div class="header">账号注册</div>
-            <div class="form-wrapper">
+            <form action="" method="POST" class="form-wrapper">
+                {% csrf_token %}
+                <input type="text" name="studentID" id="studentID" class="input-item" placeholder="请输入学号">
 
-                <input type="text" name="number" id="username" class="input-item" placeholder="请输入学号">
+                <input type="text" name="username" id="username" class="input-item" placeholder="请输入你的姓名">
 
-                <input type="text" name="number" id="name" class="input-item" placeholder="请输入你的姓名">
+                <input type="text" name="group" id="group" class="input-item" placeholder="请输入你的组别">
 
-                <input type="text" name="number" id="group" class="input-item" placeholder="请输入你的组别">
+                <input type="text" name="grade" id="grade" class="input-item" placeholder="请输入你的年级（如：22级）">
 
-                <input type="text" name="number" id="grade" class="input-item" placeholder="请输入你的年级（如：22级）">
+                <input type="password" name="password" id="pwd" class="input-item" placeholder="请输入密码">
 
-                <input type="password" name="number" id="pwd" class="input-item" placeholder="请输入密码">
-
-                <input type="password" name="number" id="identfy-pwd" class="input-item" placeholder="请再次输入密码">
+                <input type="password" name="repassword" id="identfy-pwd" class="input-item" placeholder="请再次输入密码">
                 <br>
-                <button class="jump" onclick="window.location.href='login.html'">返回登录</button>
+                <input type="button" class="jump" id="jump" onclick="window.location.href='return'" value="返回登录">
                 <br>
-                <div class="btn" onclick="submits(this)">注册</div>
-            </div>
-
+                <input type="submit" class="btn" onclick="empty(this)" value="注册">
+            </form>
         </div>
     </div>
+    {% if messages %}
     <script>
-        function submits(btn) {
-            var username = document.getElementById("username").value;
-            var pwd = document.getElementById("pwd").value;
-            console.log(username);
-            console.log(pwd);
-            alert('注册成功！');
-            window.location.href = 'login.html';
-        };
+        {% for msg in messages %}
+        alert('{{ msg.message }}');
+        {% endfor %}
     </script>
-</body>
+    {% endif %}
 
 </html>
