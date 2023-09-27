@@ -43,6 +43,17 @@
 
         }
 
+        .remember {
+            color: #ffffff;
+            margin-top: 7px;
+            font-weight: bolder;
+            border-radius: 5px;
+            position: relative;
+            text-align: center;
+            font-size: 90%;
+        }
+
+
         .header {
             font-family: sans-serif;
             font-size: 30px;
@@ -122,22 +133,6 @@
 
 
 
-        .remember {
-            width: 23%;
-            flex: 1 1 auto;
-            padding: 5px;
-            border-radius: 5px;
-            text-align: center;
-            text-transform: uppercase;
-            position: relative;
-            overflow: hidden;
-            transition: 0.3s;
-            background: #ffffff75;
-            color: #222222;
-            font-family: Arial, Helvetica, sans-serif;
-            z-index: 0;
-            border: none;
-        }
 
 
         .jump {
@@ -192,9 +187,14 @@
             {% csrf_token %}
             <div class="header">Alliance Codespace</div>
             <div class="form-wrapper">
-                <input type="text" name="studentID" id="studentID" class="input-item" placeholder="请输入学号" value="{{studentID}}">
-                <input type="password" name="password" id="password" class="input-item" placeholder="请输入密码">
-                <input type="button" class="remember" id="rememberpwd" onclick="remember(this)" value="记住密码"></button>
+                <input type="text" name="studentID" id="studentID" class="input-item" placeholder="请输入学号"
+                    value="{{studentID}}">
+                <input type="password" name="password" id="password" class="input-item" placeholder="请输入密码"
+                    value="{{password}}">
+
+                <input type="checkbox" id="remember_password" class="remember" name="remember_password" value="yes">
+                <label for="remember_password" class="remember">记住密码</label>
+
                 <input type="button" class="jump" onclick="window.location.href='../register'" value="没有账号？注册一个吧">
                 <input type="submit" class="btn" onclick="submits(this)" value="登入">
             </div>

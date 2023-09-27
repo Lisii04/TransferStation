@@ -7,7 +7,6 @@ from django.http import HttpResponse
 def if_login(func):
     def alr_login(request, *args, **kwargs):
         studentID = request.session.get('studentID')
-        print(studentID)
         # 判断是否已经登录了
         if studentID:
             return func(request, *args, **kwargs)
@@ -22,6 +21,7 @@ def login(request):
     if request.method == "POST":
         get_studentID = request.POST.get('studentID')
         get_password = request.POST.get('password')
+        if_remember_password = request.POST.get('remember_password')
         try:
             password = models.UserInfo.objects.get(studentID=get_studentID).password
             Isfound = 1
@@ -35,12 +35,24 @@ def login(request):
             if password == get_password:
                 request.session['studentID'] = get_studentID
                 request.session.set_expiry(1800)
+                if if_remember_password == 'yes':
+                    print("saved password")
+                    request.session['password'] = get_password
+                    request.session.set_expiry(1800)
                 return redirect('../transfer/')
             else:
                 messages.error(request, "密码错误！")
                 return render(request, 'login.html', {'studentID': get_studentID})
 
-    return render(request, 'login.html')
+    password = request.session.get('password')
+    print(password)
+    studentID = request.session.get('studentID')
+    if studentID == 'None':
+        studentID = ""
+    if password == 'None':
+        password = ""
+
+    return render(request, 'login.html', {'studentID': studentID, 'password': password})
 
 
 def register(request):
