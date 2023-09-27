@@ -19,7 +19,6 @@ def if_login(func):
 
 # Create your views here.
 def login(request):
-    request.session.flush()
     if request.method == "POST":
         get_studentID = request.POST.get('studentID')
         get_password = request.POST.get('password')
@@ -31,12 +30,12 @@ def login(request):
 
         if Isfound == 0:
             messages.error(request, "该用户不存在！")
-            return render(request, 'login.html')
+            return render(request, 'login.html', {'studentID': get_studentID})
         else:
             if password == get_password:
                 request.session['studentID'] = get_studentID
                 request.session.set_expiry(1800)
-                return redirect('../transfer')
+                return redirect('../transfer/')
             else:
                 messages.error(request, "密码错误！")
                 return render(request, 'login.html', {'studentID': get_studentID})
@@ -79,7 +78,7 @@ def register(request):
             models.UserInfo.objects.create(username=get_username, password=get_password, studentID=get_studentID,
                                            group=get_group, grade=get_grade)
             messages.error(request, "注册成功！")
-            return render(request, 'login.html')
+            return redirect('../login/')
         elif (Isfound == 0) and (Isallow == 0):
             messages.error(request, "该用户没有注册权限！")
         else:
@@ -90,16 +89,21 @@ def register(request):
 
 
 def register_return(request):
-    return redirect('../../login')
+    return redirect('../../login/')
 
 
 @if_login
 def transfer(request):
     return render(request, 'transfer.html')
 
+
 # def addUser(request):
 #     models.Users.objects.create(studentID='example')
 #     return HttpResponse('success')
 
+def home(request):
+    return redirect('../login/')
+
+
 def page_not_found(request, exception):
-    return redirect('../../login')
+    return render(request, 'error.html')

@@ -29,6 +29,6 @@ urlpatterns = [
 
     path('transfer/', views.transfer),
 
-    path('', views.login),
+    path('', views.home),
 ]
 handler404 = views.page_not_found
