@@ -20,13 +20,15 @@ from login import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # path('adduser/', views.addUser),
 
     path('login/', views.login),
 
     path('register/', views.register),
     path('register/return/', views.register_return),
 
-    path('transfer/',views.transfer),
+    path('transfer/', views.transfer),
 
-    path('', views.home),
+    path('', views.login),
 ]
+handler404 = views.page_not_found

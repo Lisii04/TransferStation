@@ -30,7 +30,7 @@
 
         .login-wrapper {
             width: 360px;
-            height: 650px;
+            height: 700px;
             border-radius: 15px;
             padding: 0 50px;
             position: relative;
@@ -53,7 +53,7 @@
         }
 
         .input-item {
-            color: #ffffff;
+            color: #ffffffd2;
             width: 92%;
             margin-bottom: 30px;
             padding: 10px;
@@ -62,6 +62,21 @@
             border-bottom: 2px solid #ffffff;
             outline: none;
             background-color: transparent;
+        }
+
+        .select-item {
+            color: #ffffffd2;
+            width: 98%;
+            margin-bottom: 30px;
+            padding: 10px;
+            font-size: 15px;
+            border-width: 2px;
+            border-radius: 5px;
+            border-color: #ffffff;
+            outline: none;
+            margin-top: 5px;
+            margin-bottom: 20px;
+            background-color: #3e566e;
         }
 
         .input-item::placeholder {
@@ -171,13 +186,29 @@
             <div class="header">账号注册</div>
             <form action="" method="POST" class="form-wrapper">
                 {% csrf_token %}
-                <input type="text" name="studentID" id="studentID" class="input-item" placeholder="请输入学号">
+                <input type="text" name="studentID" id="studentID" class="input-item" placeholder="请输入学号"
+                    value="{{get_studentID}}">
 
-                <input type="text" name="username" id="username" class="input-item" placeholder="请输入你的姓名">
+                <input type="text" name="username" id="username" class="input-item" placeholder="请输入你的姓名"
+                    value="{{get_username}}">
 
-                <input type="text" name="group" id="group" class="input-item" placeholder="请输入你的组别">
+                <label class="input-item">请选择你的组别</label>
+                <select class="select-item" name="group" id="group">
+                    <option value="视觉">视觉</option>
+                    <option value="电控">电控</option>
+                    <option value="硬件">硬件</option>
+                    <option value="机械">机械</option>
+                </select>
 
-                <input type="text" name="grade" id="grade" class="input-item" placeholder="请输入你的年级（如：22级）">
+                <label class="input-item">请选择你的年级</label>
+                <select class="select-item" name="grade" id="grade">
+                    <option value="23级">23级</option>
+                    <option value="22级">22级</option>
+                    <option value="21级">21级</option>
+                    <option value="20级">20级</option>
+                    <option value="19级">19级</option>
+                </select>
+
 
                 <input type="password" name="password" id="pwd" class="input-item" placeholder="请输入密码">
 
@@ -196,5 +227,5 @@
         {% endfor %}
     </script>
     {% endif %}
-
+</body>
 </html>
