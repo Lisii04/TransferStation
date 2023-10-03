@@ -1,7 +1,7 @@
 [
 {
-  "directory": "/home/lisii/Documents/Github-Repos/UV-Project/Lisii/build",
-  "command": "/usr/bin/g++ -isystem /usr/local/include/opencv4 -g -std=gnu++11 -o CMakeFiles/UVProj.dir/main.cpp.o -c /home/lisii/Documents/Github-Repos/UV-Project/Lisii/main.cpp",
-  "file": "/home/lisii/Documents/Github-Repos/UV-Project/Lisii/main.cpp"
+  "directory": "/home/lisii/Documents/Github-Repos/TransferStation/Codes/Lisii/build",
+  "command": "/usr/bin/g++ -isystem /usr/local/include/opencv4 -g -std=gnu++11 -o CMakeFiles/UVProj.dir/main.cpp.o -c /home/lisii/Documents/Github-Repos/TransferStation/Codes/Lisii/main.cpp",
+  "file": "/home/lisii/Documents/Github-Repos/TransferStation/Codes/Lisii/main.cpp"
 }
 ]
