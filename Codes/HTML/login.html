@@ -216,22 +216,6 @@
                 window.location.href = 'transfer.html';
             }
         };
-
-        function remember(remember) {
-            var text = document.getElementById("rememberpwd");
-            var pwd = document.getElementById("pwd").value;
-
-            if (pwd == "") {
-                text.value = "密码为空";
-                text.style.backgroundColor = '#ff0000';
-                document.getElementById('rememberpwd').style.color = '#ffffff'
-                setTimeout("{document.getElementById('rememberpwd').value = '记住密码';document.getElementById('rememberpwd').style.backgroundColor = '#ffffff75';document.getElementById('rememberpwd').style.color = '#222222'}", 2000);
-            } else {
-                text.value = "✓已记住";
-                text.style.backgroundColor = '#427ef5';
-                text.style.color = '#ffffff'
-            }
-        }
     </script>
 </body>
 
