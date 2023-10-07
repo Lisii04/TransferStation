@@ -14,7 +14,7 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
 # Declare the executable target built from your sources
-add_executable(UVProj main.cpp)
+add_executable(UVProj main.cpp func.cpp)
 
 # Link your application with OpenCV libraries
 target_link_libraries(UVProj PRIVATE ${OpenCV_LIBS})
