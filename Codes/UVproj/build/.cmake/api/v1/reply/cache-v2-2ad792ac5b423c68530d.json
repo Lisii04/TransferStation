@@ -55,7 +55,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/lisii/Documents/Github-Repos/TransferStation/Codes/Lisii/build"
+			"value" : "/home/lisii/Documents/Github-Repos/TransferStation/Codes/UVproj/build"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -139,10 +139,10 @@
 				},
 				{
 					"name" : "HELPSTRING",
-					"value" : "CXX compiler"
+					"value" : "No help, variable specified on the command line."
 				}
 			],
-			"type" : "STRING",
+			"type" : "FILEPATH",
 			"value" : "/usr/bin/g++"
 		},
 		{
@@ -267,10 +267,10 @@
 				},
 				{
 					"name" : "HELPSTRING",
-					"value" : "C compiler"
+					"value" : "No help, variable specified on the command line."
 				}
 			],
-			"type" : "STRING",
+			"type" : "FILEPATH",
 			"value" : "/usr/bin/gcc"
 		},
 		{
@@ -587,7 +587,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/lisii/Documents/Github-Repos/TransferStation/Codes/Lisii"
+			"value" : "/home/lisii/Documents/Github-Repos/TransferStation/Codes/UVproj"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
@@ -1147,7 +1147,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/lisii/Documents/Github-Repos/TransferStation/Codes/Lisii/build"
+			"value" : "/home/lisii/Documents/Github-Repos/TransferStation/Codes/UVproj/build"
 		},
 		{
 			"name" : "UVProj_IS_TOP_LEVEL",
@@ -1171,7 +1171,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/lisii/Documents/Github-Repos/TransferStation/Codes/Lisii"
+			"value" : "/home/lisii/Documents/Github-Repos/TransferStation/Codes/UVproj"
 		}
 	],
 	"kind" : "cache",

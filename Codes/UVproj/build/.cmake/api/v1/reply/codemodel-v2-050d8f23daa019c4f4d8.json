@@ -49,8 +49,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "/home/lisii/Documents/Github-Repos/TransferStation/Codes/Lisii/build",
-		"source" : "/home/lisii/Documents/Github-Repos/TransferStation/Codes/Lisii"
+		"build" : "/home/lisii/Documents/Github-Repos/TransferStation/Codes/UVproj/build",
+		"source" : "/home/lisii/Documents/Github-Repos/TransferStation/Codes/UVproj"
 	},
 	"version" : 
 	{

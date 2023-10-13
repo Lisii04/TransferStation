@@ -1,0 +1,3 @@
+/home/lisii/Documents/Github-Repos/TransferStation/Codes/UVproj/build/CMakeFiles/UVProj.dir
+/home/lisii/Documents/Github-Repos/TransferStation/Codes/UVproj/build/CMakeFiles/edit_cache.dir
+/home/lisii/Documents/Github-Repos/TransferStation/Codes/UVproj/build/CMakeFiles/rebuild_cache.dir

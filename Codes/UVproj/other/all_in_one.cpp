@@ -1,4 +1,9 @@
-#include "func.hpp"
+#include <iostream>
+#include <math.h>
+#include <numeric>
+#include <opencv4/opencv2/opencv.hpp>
+#include <vector>
+#include <opencv4/opencv2/core.hpp>
 
 bool IF_READY = false;
 bool IF_STOP = false; // 是否停止
@@ -441,7 +446,9 @@ void VideoProcess(cv::VideoCapture video)
         if (frame.empty())
             break; // 如果图像为空，表示已经读取完所有帧，跳出循环
 
-        if (count > 100)
+        double time0 = static_cast<double>(cv::getTickCount());
+
+        if (count > 0)
         {
             frame = If_ZebraCrossing(frame, draw);
 
@@ -451,71 +458,86 @@ void VideoProcess(cv::VideoCapture video)
 
         cv::waitKey(1);
 
-        std::cout << "Processing frame " << count << std::endl;
+        double time1 = ((double)cv::getTickCount() - time0) / cv::getTickFrequency();
+
+        std::cout << "FPS: " << (int)(1 / time1) << " | "
+                  << "Processing frame: " << count << std::endl;
     }
 }
 
-/* 启动函数
-    @param frame: 要处理的帧
-*/
-cv::Mat UVstart(cv::Mat frame)
+// /* 启动函数
+//     @param frame: 要处理的帧
+// */
+// cv::Mat UVstart(cv::Mat frame)
+// {
+//     /* 识别前 图像处理 */
+//     cv::Mat gray, ROI, bulr, thres, canny, erode, element, dilate;
+//     // 转灰度
+//     cv::cvtColor(ROI, gray, cv::COLOR_BGR2GRAY);
+//     // 高斯滤波
+//     cv::GaussianBlur(gray, bulr, cv::Size(7, 7), 0, 0);
+//     // 阈值化处理
+//     cv::threshold(bulr, thres, 150, 255, cv::THRESH_BINARY);
+//     // Canny边缘检测
+//     cv::Canny(dilate, canny, 100, 200, 3);
+//     /* 识别前图像处理结束 */
+
+//     /**** 识别图像轮廓 ****/
+//     // 存储轮廓
+//     std::vector<std::vector<cv::Point>> contours;
+//     // 存储轮廓层级信息
+//     std::vector<cv::Vec4i> hierachy;
+//     // 查找轮廓
+//     cv::findContours(canny, contours, hierachy, cv::RETR_LIST,
+//                      cv::CHAIN_APPROX_NONE);
+
+//     bool If_hexagon = false;
+
+//     if (IF_READY == false)
+//     {
+//         for (int i = 0; i < contours.size(); i++)
+//         {
+//             // 多边形逼近
+//             std::vector<cv::Point2f> points;
+//             cv::approxPolyDP(contours[i], points, 10.0, true);
+
+//             // 筛选出六边形
+//             if (points.size() == 6)
+//             {
+//                 If_hexagon = true;
+//             }
+//         }
+//     }
+//     else
+//     {
+//         for (int i = 0; i < contours.size(); i++)
+//         {
+//             // 多边形逼近
+//             std::vector<cv::Point2f> points;
+//             cv::approxPolyDP(contours[i], points, 10.0, true);
+
+//             // 筛选出六边形
+//             if (points.size() != 6)
+//             {
+//                 ready_count++;
+//             }
+//         }
+//     }
+
+//     if (If_hexagon == true && contours.size() == 1)
+//     {
+//         IF_READY = true;
+//     }
+// }
+
+int main()
 {
-    /* 识别前 图像处理 */
-    cv::Mat gray, ROI, bulr, thres, canny, erode, element, dilate;
-    // 转灰度
-    cv::cvtColor(ROI, gray, cv::COLOR_BGR2GRAY);
-    // 高斯滤波
-    cv::GaussianBlur(gray, bulr, cv::Size(7, 7), 0, 0);
-    // 阈值化处理
-    cv::threshold(bulr, thres, 150, 255, cv::THRESH_BINARY);
-    // Canny边缘检测
-    cv::Canny(dilate, canny, 100, 200, 3);
-    /* 识别前图像处理结束 */
+    cv::VideoCapture video;
+    video.open("1.mp4"); // 打开视频文件/摄像头
 
-    /**** 识别图像轮廓 ****/
-    // 存储轮廓
-    std::vector<std::vector<cv::Point>> contours;
-    // 存储轮廓层级信息
-    std::vector<cv::Vec4i> hierachy;
-    // 查找轮廓
-    cv::findContours(canny, contours, hierachy, cv::RETR_LIST,
-                     cv::CHAIN_APPROX_NONE);
+    VideoProcess(video); // 处理视频帧
 
-    bool If_hexagon = false;
+    video.release(); // 关闭视频文件/摄像头
 
-    if (IF_READY == false)
-    {
-        for (int i = 0; i < contours.size(); i++)
-        {
-            // 多边形逼近
-            std::vector<cv::Point2f> points;
-            cv::approxPolyDP(contours[i], points, 10.0, true);
-
-            // 筛选出六边形
-            if (points.size() == 6)
-            {
-                If_hexagon = true;
-            }
-        }
-    }
-    else
-    {
-        for (int i = 0; i < contours.size(); i++)
-        {
-            // 多边形逼近
-            std::vector<cv::Point2f> points;
-            cv::approxPolyDP(contours[i], points, 10.0, true);
-
-            // 筛选出六边形
-            if (points.size() != 6)
-            {
-                ready_count++;
-            }
-        }
-    }
-
-    if (If_hexagon == true && contours.size() == 1)
-    {
-        IF_READY = true;
-    }
+    return 0;
 }
