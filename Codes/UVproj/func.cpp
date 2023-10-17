@@ -426,21 +426,35 @@ cv::Mat If_Rhombus(cv::Mat frame, cv::Mat draw)
 /* 启动函数
     @param frame: 要处理的帧
 */
-cv::Mat UVstart(cv::Mat frame)
+cv::Mat LaneLine(cv::Mat frame, cv::Mat draw)
 {
     /* 识别前 图像处理 */
-    cv::Mat gray, bulr, thres, canny, element, erode;
+    cv::Mat gray, ROI, bulr, thres, canny, erode, element, dilate;
+
+    // ROI提取
+    std::vector<cv::Point> points;
+    double max_X = frame.size().width;
+    double max_Y = frame.size().height;
+    points.push_back(cv::Point(max_X * (0.1 / 5.0), max_Y * (4.95 / 5.0))); // LD
+    points.push_back(cv::Point(max_X * (4.9 / 5.0), max_Y * (4.95 / 5.0))); // RD
+    points.push_back(cv::Point(max_X * (4.0 / 5.0), max_Y * (3.5 / 5.0)));  // RU
+    points.push_back(cv::Point(max_X * (1.0 / 5.0), max_Y * (3.5 / 5.0)));  // LU
+    ROI = ROI_extract(frame, points);
+    line(draw, points[1], points[2], cv::Scalar(0, 255, 0), 1, 8);
+    line(draw, points[2], points[3], cv::Scalar(0, 255, 0), 1, 8);
+    line(draw, points[3], points[0], cv::Scalar(0, 255, 0), 1, 8);
+    line(draw, points[0], points[1], cv::Scalar(0, 255, 0), 1, 8);
     // 转灰度
-    cv::cvtColor(frame, gray, cv::COLOR_BGR2GRAY);
+    cv::cvtColor(ROI, gray, cv::COLOR_BGR2GRAY);
     // 高斯滤波
     cv::GaussianBlur(gray, bulr, cv::Size(7, 7), 0, 0);
     // 阈值化处理
-    cv::adaptiveThreshold(bulr, thres, 255, cv::ADAPTIVE_THRESH_MEAN_C, cv::THRESH_BINARY, 3, 2);
+    cv::threshold(bulr, thres, 150, 255, cv::THRESH_BINARY);
     // 膨胀处理
-    element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(3, 3));
-    cv::erode(thres, erode, element);
+    element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(8, 8));
+    cv::dilate(thres, dilate, element);
     // Canny边缘检测
-    cv::Canny(erode, canny, 100, 200, 3);
+    cv::Canny(dilate, canny, 100, 200, 3);
     /* 识别前图像处理结束 */
 
     /**** 识别图像轮廓 ****/
@@ -452,7 +466,10 @@ cv::Mat UVstart(cv::Mat frame)
     cv::findContours(canny, contours, hierachy, cv::RETR_LIST,
                      cv::CHAIN_APPROX_NONE);
 
-    bool If_hexagon = false;
+    double middle_x = 0;
+    double min_x = 100000;
+    double max_x = 0;
+    int lane_count = 0;
 
     for (int i = 0; i < contours.size(); i++)
     {
@@ -460,32 +477,38 @@ cv::Mat UVstart(cv::Mat frame)
         std::vector<cv::Point2f> points;
         cv::approxPolyDP(contours[i], points, 10.0, true);
 
-        // 筛选出六边形
-        if (points.size() == 6)
-        {
-            If_hexagon = true;
-        }
-        for (int j = 0; j < contours[i].size(); j++)
-        {
-            cv::circle(frame, contours[i][j], 1, cv::Scalar(0, 255, 0), -1, 8,
-                       0);
-        }
-    }
+        // 筛选出四边形
 
-    if (If_hexagon == true && contours.size() == 1)
-    {
-        IF_READY = true;
-    }
+        if (points.size() == 4)
+        {
+            double len_to_wid_ratio = (getDistance(points[0], points[1]) >= getDistance(points[1], points[2])) ? (getDistance(points[0], points[1]) / getDistance(points[1], points[2])) : (getDistance(points[1], points[2]) / getDistance(points[0], points[1]));
 
-    if (contours.size() < 10)
-    {
-        std::cout << "-----------------|" << If_hexagon << "|" << contours.size() << std::endl;
+            if (len_to_wid_ratio > 5)
+            {
+                for (int j = 0; j < contours[i].size(); j++)
+                {
+                    cv::circle(frame, contours[i][j], 1, cv::Scalar(0, 0, 255), -1, 8, 0);
+                    if (min_x > contours[i][j].x)
+                    {
+                        min_x = contours[i][j].x;
+                    }
+                    if (max_x < contours[i][j].x)
+                    {
+                        max_x = contours[i][j].x;
+                    }
+                }
+                lane_count++;
+            }
+        }
     }
-    else
+    if (lane_count == 3)
     {
-        std::cout << If_hexagon << "|" << contours.size() << std::endl;
+        cv::line(draw, cv::Point((max_x + min_x) / 2, max_Y), cv::Point((max_x + min_x) / 2, max_Y / 2), cv::Scalar(0, 0, 255), 2, 8, 0);
+        cv::line(draw, cv::Point(max_X / 2, max_Y), cv::Point(max_X / 2, max_Y / 2), cv::Scalar(0, 255, 0), 4, 8, 0);
+        cv::line(draw, cv::Point((max_x + min_x) / 2, max_Y / 2 + 50), cv::Point(max_X / 2, max_Y / 2 + 50), cv::Scalar(0, 255, 255), 2, 8, 0);
+        cv::putText(draw, std::to_string((max_X / 2) - ((max_x + min_x) / 2)), cv::Point((max_x + min_x) / 2, max_Y / 2 + 50), 1, 4, cv::Scalar(0, 255, 255), 2, 8, 0);
     }
-    return frame;
+    return draw;
 }
 
 void VideoProcess(cv::VideoCapture video)
@@ -506,19 +529,14 @@ void VideoProcess(cv::VideoCapture video)
         if (frame.empty())
             break; // 如果图像为空，表示已经读取完所有帧，跳出循环
 
-        // if (count > 0)
-        // {
-        //     frame = If_ZebraCrossing(frame, draw);
+        if (count > 0)
+        {
+            frame = LaneLine(frame, draw);
 
-        //     cv::imshow("a", frame);
-        //     cv::waitKey(1);
-        // }
-
-        frame = UVstart(frame);
-
-        cv::imshow("a", frame);
-
-        cv::waitKey(16);
+            cv::imshow("a", frame);
+            cv::waitKey();
+        }
+        // cv::waitKey(16);
 
         std::cout << "Processing frame " << count << std::endl;
     }
