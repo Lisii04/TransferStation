@@ -89,10 +89,10 @@ cv::Mat If_ZebraCrossing(cv::Mat frame, cv::Mat draw)
     std::vector<cv::Point> points;
     double max_X = frame.size().width;
     double max_Y = frame.size().height;
-    points.push_back(cv::Point((max_X / 5) * 1, max_Y));           // LD
-    points.push_back(cv::Point((max_X / 5) * 4, max_Y));           // RD
-    points.push_back(cv::Point((max_X / 5) * 3, (max_Y / 5) * 3)); // RU
-    points.push_back(cv::Point((max_X / 5) * 2, (max_Y / 5) * 3)); // RD
+    points.push_back(cv::Point(max_X * (0.1 / 5.0), max_Y * (4.95 / 5.0))); // LD
+    points.push_back(cv::Point(max_X * (4.9 / 5.0), max_Y * (4.95 / 5.0))); // RD
+    points.push_back(cv::Point(max_X * (4.0 / 5.0), max_Y * (2.0 / 5.0)));  // RU
+    points.push_back(cv::Point(max_X * (1.0 / 5.0), max_Y * (2.0 / 5.0)));  // LU
     ROI = ROI_extract(frame, points);
     line(draw, points[1], points[2], cv::Scalar(0, 255, 0), 1, 8);
     line(draw, points[2], points[3], cv::Scalar(0, 255, 0), 1, 8);
@@ -179,7 +179,7 @@ cv::Mat If_ZebraCrossing(cv::Mat frame, cv::Mat draw)
 
     /**** 识别斑马线 ****/
     // 如果四边形数量大于3认为有可能识别到斑马线
-    if (all_points.size() >= 16)
+    if (all_points.size() >= 12)
     {
         // 定义-凸包点集
         std::vector<cv::Point> hull_points;
@@ -198,7 +198,16 @@ cv::Mat If_ZebraCrossing(cv::Mat frame, cv::Mat draw)
         // 求外接矩形长宽
         unsigned int width = (getDistance(rect[0], rect[1]) > getDistance(rect[1], rect[2])) ? (getDistance(rect[0], rect[1])) : (getDistance(rect[1], rect[2])),
                      length = (getDistance(rect[0], rect[1]) < getDistance(rect[1], rect[2])) ? (getDistance(rect[0], rect[1])) : (getDistance(rect[1], rect[2]));
-
+        // 求上边斜率
+        double up_slope = 0;
+        if (getDistance(rect[0], rect[1]) > getDistance(rect[1], rect[2]))
+        {
+            up_slope = getAbs(getSlope(rect[0], rect[1]));
+        }
+        else
+        {
+            up_slope = getAbs(getSlope(rect[1], rect[2]));
+        }
         // 求最靠近视频流底部的点
         double y_max = 0;
         for (int i = 0; i < 4; i++)
@@ -208,23 +217,23 @@ cv::Mat If_ZebraCrossing(cv::Mat frame, cv::Mat draw)
         }
 
         // 定义斑马线总长宽比
-        double zebra_ratio = 4.5;
-        // 求置信度(凸包面积 + 补偿面积 ?= 斑马线块总面积*2)
-        double confidence_level = ((hull_area + white_extern_area) <= (white_area * 2)) ? ((hull_area + white_extern_area) / (white_area * 2)) : ((white_area * 2) / (hull_area + white_extern_area));
+        double zebra_ratio = 3;
+        // 求置信度(凸包面积 + 补偿面积 ?= 斑马线块总面积*2.5)
+        double confidence_level = ((hull_area + white_extern_area) <= (white_area * 2.5)) ? ((hull_area + white_extern_area) / (white_area * 2.5)) : ((white_area * 2.5) / (hull_area + white_extern_area));
         // 文字信息
-        std::string text = "ZebraCrossing|Score:";
+        std::string text = "ZC|Score:";
         text.append(std::to_string(confidence_level));
-        text.append("|Dist:");
-        text.append(std::to_string(frame.size().height - y_max));
+        text.append("|Slope:");
+        text.append(std::to_string(up_slope));
 
         /* 最后的筛选：
             1.判断外接矩形长宽是否符合比例
             2.判断置信度是否大于0.8
-            3.判断斑马线距离视频流底部距离是否小于100px
+            3.判断斑马线距离视频流底部距离是否小于500px
            如果满足：
             识别到斑马线的帧数（zbera_count）+1
         */
-        if ((length * zebra_ratio < width) && (confidence_level >= 0.8) && (frame.size().height - y_max < 100))
+        if ((length * zebra_ratio < width) && (confidence_level >= 0.8) && (frame.size().height - y_max < 500) && (up_slope <= 0.05))
         {
             // 视觉显示
             cv::putText(draw, text, rect[0], 1, 3, cv::Scalar(0, 255, 0), 2, 8);
@@ -239,11 +248,11 @@ cv::Mat If_ZebraCrossing(cv::Mat frame, cv::Mat draw)
         }
         else
         {
-            cv::putText(draw, text, rect[0], 1, 3, cv::Scalar(0, 0, 255), 2, 8);
-            for (int j = 0; j < 4; j++)
-            {
-                line(draw, rect[j], rect[(j + 1) % 4], cv::Scalar(0, 0, 255), 3, 8); // 绘制最小外接矩形每条边
-            }
+            // cv::putText(draw, text, rect[0], 1, 3, cv::Scalar(0, 0, 255), 2, 8);
+            // for (int j = 0; j < 4; j++)
+            // {
+            //     line(draw, rect[j], rect[(j + 1) % 4], cv::Scalar(0, 0, 255), 3, 8); // 绘制最小外接矩形每条边
+            // }
         }
     }
     /**** 识别斑马线 结束 ****/
@@ -252,7 +261,7 @@ cv::Mat If_ZebraCrossing(cv::Mat frame, cv::Mat draw)
         当 zbera_count > 5 且 斑马线距离视频流底部距离满足条件 时 输出停止信号
     */
     cv::String text = "IF_STOP:";
-    if ((zbera_count > 5) && Is_approach == true)
+    if ((zbera_count > 10) && Is_approach == true)
     {
         IF_STOP = true;
     }
@@ -269,7 +278,6 @@ cv::Mat If_ZebraCrossing(cv::Mat frame, cv::Mat draw)
         cv::putText(draw, std::to_string(zbera_count), cv::Point(50, 100), 1, 4, cv::Scalar(0, 0, 255), 4, 8);
         cv::putText(draw, text, cv::Point(50, 50), 1, 4, cv::Scalar(0, 0, 255), 4, 8);
     }
-
     return draw;
 }
 
@@ -286,10 +294,10 @@ cv::Mat If_Rhombus(cv::Mat frame, cv::Mat draw)
     std::vector<cv::Point> points;
     double max_X = frame.size().width;
     double max_Y = frame.size().height;
-    points.push_back(cv::Point((max_X / 5) * 1.2, max_Y));             // LD
-    points.push_back(cv::Point((max_X / 5) * 3.6, max_Y));             // RD
-    points.push_back(cv::Point((max_X / 5) * 2.8, (max_Y / 5) * 3.5)); // RU
-    points.push_back(cv::Point((max_X / 5) * 2.2, (max_Y / 5) * 3.5)); // LU
+    points.push_back(cv::Point(max_X * (0.5 / 5.0), max_Y * (4.95 / 5.0))); // LD
+    points.push_back(cv::Point(max_X * (4.5 / 5.0), max_Y * (4.95 / 5.0))); // RD
+    points.push_back(cv::Point(max_X * (4.0 / 5.0), max_Y * (3.0 / 5.0)));  // RU
+    points.push_back(cv::Point(max_X * (1.0 / 5.0), max_Y * (3.0 / 5.0)));  // LU
     ROI = ROI_extract(frame, points);
     line(draw, points[1], points[2], cv::Scalar(0, 255, 0), 1, 8);
     line(draw, points[2], points[3], cv::Scalar(0, 255, 0), 1, 8);
@@ -402,7 +410,7 @@ cv::Mat If_Rhombus(cv::Mat frame, cv::Mat draw)
         当 rhombus_count > 5时 输出停止信号
     */
     cv::String text = "IF_SLOW:";
-    if (rhombus_count > 3)
+    if (rhombus_count > 10)
     {
         IF_SLOW = true;
     }
@@ -531,7 +539,7 @@ void VideoProcess(cv::VideoCapture video)
 
         if (count > 0)
         {
-            frame = LaneLine(frame, draw);
+            frame = If_Rhombus(frame, draw);
 
             cv::imshow("a", frame);
             cv::waitKey();
