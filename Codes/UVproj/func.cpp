@@ -524,9 +524,16 @@ void VideoProcess(cv::VideoCapture video)
     cv::namedWindow("a", 0);
     cv::resizeWindow("a", 1000, 500);
 
+    // FPS-------------------------------------------
+    double all_frame = 0;
+
+    std::vector<double> fpses;
+    // ----------------------------------------------
+
     int count = 0;
     while (1)
     {
+        double t0 = (double)cv::getTickCount();
 
         count++;
 
@@ -535,17 +542,38 @@ void VideoProcess(cv::VideoCapture video)
         draw = frame;
 
         if (frame.empty())
+        {
+            std::cout << "Aver FPS:" << all_frame / count << std::endl;
             break; // 如果图像为空，表示已经读取完所有帧，跳出循环
+        }
 
         if (count > 0)
         {
             frame = If_Rhombus(frame, draw);
+            frame = If_ZebraCrossing(frame, draw);
 
-            cv::imshow("a", frame);
-            cv::waitKey();
+            cv::waitKey(1);
         }
-        // cv::waitKey(16);
+        cv::waitKey(14);
 
-        std::cout << "Processing frame " << count << std::endl;
+        // FPS--------------------------------------------------------------------------
+        double t1 = ((double)cv::getTickCount() - t0) / (cv::getTickFrequency());
+        all_frame += 1 / t1;
+        std::cout << "Processing frame " << count << "|FPS:" << 1 / t1 << std::endl;
+        fpses.insert(fpses.begin(), 1 / t1);
+        if (fpses.size() >= 30)
+        {
+            fpses.pop_back();
+            for (int i = 0; i < 29; i++)
+            {
+                cv::line(frame, cv::Point((29 - i) * 20 + 100, 500 - 2 * fpses[i + 1]), cv::Point((30 - i) * 20 + 100, 500 - 2 * fpses[i]), cv::Scalar(0, 0, 255), 3, 8, 0);
+            }
+            cv::line(frame, cv::Point(120, 500), cv::Point(800, 500), cv::Scalar(0, 255, 255), 3, 8, 0);
+            cv::line(frame, cv::Point(120, 500), cv::Point(120, 100), cv::Scalar(0, 255, 255), 3, 8, 0);
+            cv::putText(frame, std::to_string((int)(1 / t1)), cv::Point(500, 200), 1, 3, cv::Scalar(0, 0, 255), 3, 8);
+        }
+        //-------------------------------------------------------------------------
+
+        cv::imshow("a", frame);
     }
 }
