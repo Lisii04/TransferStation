@@ -14,21 +14,25 @@ def uart_send(delta_x, IF_READY, IF_SLOW, IF_STOP):
 
     data1 = uart_data()
 
-    data1.delta_x = delta_x
+    data1.delta_x = round(delta_x,3)
     data1.IF_READY = IF_READY
     data1.IF_SLOW = IF_SLOW
     data1.IF_STOP = IF_STOP
 
+    
+
     ser.write(
         (
-            "R["
+            "R"
+            + "-"
             + str(data1.IF_READY)
-            + "]["
+            + "-"
             + str(data1.IF_SLOW)
-            + "]["
+            + "-"
             + str(data1.IF_STOP)
-            + "]["
+            + "-"
             + str(data1.delta_x)
-            + "]E\n"
+            + "-"
+            + "E\n"
         ).encode()
     )  # 发送到串口
