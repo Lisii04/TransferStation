@@ -122,12 +122,14 @@
 			"path" : "/usr/share/cmake-3.22/Modules/CMakeCommonLanguageInclude.cmake"
 		},
 		{
+			"isCMake" : true,
 			"isExternal" : true,
-			"path" : "/usr/local/lib/cmake/opencv4/OpenCVConfig-version.cmake"
+			"path" : "/usr/share/cmake-3.22/Modules/FindPython3.cmake"
 		},
 		{
+			"isCMake" : true,
 			"isExternal" : true,
-			"path" : "/usr/local/lib/cmake/opencv4/OpenCVConfig.cmake"
+			"path" : "/usr/share/cmake-3.22/Modules/FindPython/Support.cmake"
 		},
 		{
 			"isCMake" : true,
@@ -138,21 +140,13 @@
 			"isCMake" : true,
 			"isExternal" : true,
 			"path" : "/usr/share/cmake-3.22/Modules/FindPackageMessage.cmake"
-		},
-		{
-			"isExternal" : true,
-			"path" : "/usr/local/lib/cmake/opencv4/OpenCVModules.cmake"
-		},
-		{
-			"isExternal" : true,
-			"path" : "/usr/local/lib/cmake/opencv4/OpenCVModules-release.cmake"
 		}
 	],
 	"kind" : "cmakeFiles",
 	"paths" : 
 	{
-		"build" : "/home/lisii/Documents/Github-Repos/TransferStation/Codes/UVproj/build",
-		"source" : "/home/lisii/Documents/Github-Repos/TransferStation/Codes/UVproj"
+		"build" : "/home/lisii/Documents/Github-Repos/TransferStation/1_Projects/Current/UVproj/other/transmit/build",
+		"source" : "/home/lisii/Documents/Github-Repos/TransferStation/1_Projects/Current/UVproj/other/transmit"
 	},
 	"version" : 
 	{

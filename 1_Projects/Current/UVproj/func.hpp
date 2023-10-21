@@ -3,6 +3,7 @@
 #include <numeric>
 #include <opencv4/opencv2/opencv.hpp>
 #include <vector>
+#include <python3.10/Python.h>
 
 /* ROI区域提取
     @param inputFrame 输入图像
@@ -35,15 +36,26 @@ T getAbs(T input);
     @return slope 斜率
 */
 double getSlope(cv::Point pointA, cv::Point pointB);
+
 /* 斑马线识别函数
     @param frame 要处理的帧
     @param draw 要绘制轮廓的图像
 */
 cv::Mat If_ZebraCrossing(cv::Mat frame, cv::Mat draw);
+
 /* 菱形标识别函数
     @param frame: 要处理的帧
     @param draw: 要绘制轮廓的图像
 */
 cv::Mat If_Rhombus(cv::Mat frame, cv::Mat draw);
+
+/** 串口通信函数
+ *  @param IF_READY
+ *  @param IF_SLOW
+ *  @param IF_STOP
+ *  @param delta_x
+ *  @retval 1 或 0
+ */
+int uart_send(int IF_READY, int IF_SLOW, int IF_STOP, float delta_x);
 
 void VideoProcess(cv::VideoCapture video);

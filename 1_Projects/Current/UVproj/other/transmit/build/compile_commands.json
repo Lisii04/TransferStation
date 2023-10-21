@@ -1,7 +1,7 @@
 [
 {
   "directory": "/home/lisii/Documents/Github-Repos/TransferStation/1_Projects/Current/UVproj/other/transmit/build",
-  "command": "/usr/bin/g++ -g -std=gnu++11 -o CMakeFiles/uart.dir/uart_t.cpp.o -c /home/lisii/Documents/Github-Repos/TransferStation/1_Projects/Current/UVproj/other/transmit/uart_t.cpp",
+  "command": "/usr/bin/g++ -I/usr/include/python3.10 -g -std=gnu++11 -o CMakeFiles/uart.dir/uart_t.cpp.o -c /home/lisii/Documents/Github-Repos/TransferStation/1_Projects/Current/UVproj/other/transmit/uart_t.cpp",
   "file": "/home/lisii/Documents/Github-Repos/TransferStation/1_Projects/Current/UVproj/other/transmit/uart_t.cpp"
 }
 ]

@@ -1,12 +1,12 @@
 [
 {
-  "directory": "/home/lisii/Documents/Github-Repos/TransferStation/Codes/UVproj/build",
-  "command": "/usr/bin/g++ -isystem /usr/local/include/opencv4 -g -std=gnu++11 -o CMakeFiles/UVProj.dir/main.cpp.o -c /home/lisii/Documents/Github-Repos/TransferStation/Codes/UVproj/main.cpp",
-  "file": "/home/lisii/Documents/Github-Repos/TransferStation/Codes/UVproj/main.cpp"
+  "directory": "/home/lisii/Documents/Github-Repos/TransferStation/1_Projects/Current/UVproj/build",
+  "command": "/usr/bin/g++ -I/usr/include/python3.10 -isystem /usr/local/include/opencv4 -g -std=gnu++11 -o CMakeFiles/UVProj.dir/main.cpp.o -c /home/lisii/Documents/Github-Repos/TransferStation/1_Projects/Current/UVproj/main.cpp",
+  "file": "/home/lisii/Documents/Github-Repos/TransferStation/1_Projects/Current/UVproj/main.cpp"
 },
 {
-  "directory": "/home/lisii/Documents/Github-Repos/TransferStation/Codes/UVproj/build",
-  "command": "/usr/bin/g++ -isystem /usr/local/include/opencv4 -g -std=gnu++11 -o CMakeFiles/UVProj.dir/func.cpp.o -c /home/lisii/Documents/Github-Repos/TransferStation/Codes/UVproj/func.cpp",
-  "file": "/home/lisii/Documents/Github-Repos/TransferStation/Codes/UVproj/func.cpp"
+  "directory": "/home/lisii/Documents/Github-Repos/TransferStation/1_Projects/Current/UVproj/build",
+  "command": "/usr/bin/g++ -I/usr/include/python3.10 -isystem /usr/local/include/opencv4 -g -std=gnu++11 -o CMakeFiles/UVProj.dir/func.cpp.o -c /home/lisii/Documents/Github-Repos/TransferStation/1_Projects/Current/UVproj/func.cpp",
+  "file": "/home/lisii/Documents/Github-Repos/TransferStation/1_Projects/Current/UVproj/func.cpp"
 }
 ]

@@ -55,7 +55,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/lisii/Documents/Github-Repos/TransferStation/Codes/UVproj/build"
+			"value" : "/home/lisii/Documents/Github-Repos/TransferStation/1_Projects/Current/UVproj/other/transmit/build"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -587,7 +587,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/lisii/Documents/Github-Repos/TransferStation/Codes/UVproj"
+			"value" : "/home/lisii/Documents/Github-Repos/TransferStation/1_Projects/Current/UVproj/other/transmit"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
@@ -831,7 +831,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "UVProj"
+			"value" : "uart"
 		},
 		{
 			"name" : "CMAKE_RANLIB",
@@ -1114,31 +1114,103 @@
 			"value" : "FALSE"
 		},
 		{
-			"name" : "FIND_PACKAGE_MESSAGE_DETAILS_OpenCV",
+			"name" : "FIND_PACKAGE_MESSAGE_DETAILS_Python3",
 			"properties" : 
 			[
 				{
 					"name" : "HELPSTRING",
-					"value" : "Details about finding OpenCV"
+					"value" : "Details about finding Python3"
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "[/usr/local][v4.8.0()]"
+			"value" : "[/usr/bin/python3.10][/usr/include/python3.10][/usr/lib/x86_64-linux-gnu/libpython3.10.so][cfound components: Interpreter Development Development.Module Development.Embed ][v3.10.12()]"
 		},
 		{
-			"name" : "OpenCV_DIR",
+			"name" : "_Python3_DEVELOPMENT_EMBED_SIGNATURE",
 			"properties" : 
 			[
 				{
 					"name" : "HELPSTRING",
-					"value" : "The directory containing a CMake configuration file for OpenCV."
+					"value" : ""
 				}
 			],
-			"type" : "PATH",
-			"value" : "/usr/local/lib/cmake/opencv4"
+			"type" : "INTERNAL",
+			"value" : "625d9e0f7a1af1ddb80bfa11fbea90e0"
 		},
 		{
-			"name" : "UVProj_BINARY_DIR",
+			"name" : "_Python3_DEVELOPMENT_MODULE_SIGNATURE",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : ""
+				}
+			],
+			"type" : "INTERNAL",
+			"value" : "4bc14a0ea6a21ea267e38aa660e9b54b"
+		},
+		{
+			"name" : "_Python3_EXECUTABLE",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Path to a program."
+				}
+			],
+			"type" : "INTERNAL",
+			"value" : "/usr/bin/python3.10"
+		},
+		{
+			"name" : "_Python3_INCLUDE_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Path to a file."
+				}
+			],
+			"type" : "INTERNAL",
+			"value" : "/usr/include/python3.10"
+		},
+		{
+			"name" : "_Python3_INTERPRETER_PROPERTIES",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Python3 Properties"
+				}
+			],
+			"type" : "INTERNAL",
+			"value" : "Python;3;10;12;64;;cpython-310-x86_64-linux-gnu;/usr/lib/python3.10;/usr/lib/python3.10;/usr/lib/python3/dist-packages;/usr/lib/python3/dist-packages"
+		},
+		{
+			"name" : "_Python3_INTERPRETER_SIGNATURE",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : ""
+				}
+			],
+			"type" : "INTERNAL",
+			"value" : "b91b4035ecb3bb3f5760d35922531bcd"
+		},
+		{
+			"name" : "_Python3_LIBRARY_RELEASE",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Path to a library."
+				}
+			],
+			"type" : "INTERNAL",
+			"value" : "/usr/lib/x86_64-linux-gnu/libpython3.10.so"
+		},
+		{
+			"name" : "uart_BINARY_DIR",
 			"properties" : 
 			[
 				{
@@ -1147,10 +1219,10 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/lisii/Documents/Github-Repos/TransferStation/Codes/UVproj/build"
+			"value" : "/home/lisii/Documents/Github-Repos/TransferStation/1_Projects/Current/UVproj/other/transmit/build"
 		},
 		{
-			"name" : "UVProj_IS_TOP_LEVEL",
+			"name" : "uart_IS_TOP_LEVEL",
 			"properties" : 
 			[
 				{
@@ -1162,7 +1234,7 @@
 			"value" : "ON"
 		},
 		{
-			"name" : "UVProj_SOURCE_DIR",
+			"name" : "uart_SOURCE_DIR",
 			"properties" : 
 			[
 				{
@@ -1171,7 +1243,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/lisii/Documents/Github-Repos/TransferStation/Codes/UVproj"
+			"value" : "/home/lisii/Documents/Github-Repos/TransferStation/1_Projects/Current/UVproj/other/transmit"
 		}
 	],
 	"kind" : "cache",

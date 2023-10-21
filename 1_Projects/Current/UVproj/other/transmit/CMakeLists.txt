@@ -8,5 +8,9 @@ project(uart)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
-# Declare the executable target built from your sources
+find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
+
 add_executable(uart uart_t.cpp)
+target_include_directories(${PROJECT_NAME} PRIVATE ${Python3_INCLUDE_DIRS})
+target_link_libraries(${PROJECT_NAME} ${Python3_LIBRARIES})
+# Declare the executable target built from your sources
