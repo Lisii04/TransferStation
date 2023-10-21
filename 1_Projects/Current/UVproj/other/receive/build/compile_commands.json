@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/lisii/Documents/Github-Repos/TransferStation/1_Projects/Current/UVproj/other/receive/build",
+  "command": "/usr/bin/g++ -g -std=gnu++11 -o CMakeFiles/uart.dir/uart_r.cpp.o -c /home/lisii/Documents/Github-Repos/TransferStation/1_Projects/Current/UVproj/other/receive/uart_r.cpp",
+  "file": "/home/lisii/Documents/Github-Repos/TransferStation/1_Projects/Current/UVproj/other/receive/uart_r.cpp"
+}
+]
