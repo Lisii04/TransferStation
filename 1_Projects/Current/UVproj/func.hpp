@@ -49,6 +49,11 @@ cv::Mat If_ZebraCrossing(cv::Mat frame, cv::Mat draw);
 */
 cv::Mat If_Rhombus(cv::Mat frame, cv::Mat draw);
 
+/* 车道线函数
+    @param frame: 要处理的帧
+*/
+cv::Mat LaneLine(cv::Mat frame, cv::Mat draw);
+
 /** 串口通信函数
  *  @param IF_READY
  *  @param IF_SLOW
