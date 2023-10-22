@@ -1,8 +1,8 @@
 #include "func.hpp"
 
 bool IF_READY = false;
-bool IF_STOP = false; // 是否停止
-bool IF_SLOW = false; // 是否减速
+bool FLAG_STOP = false; // 是否停止
+bool FLAG_SLOW = false; // 是否减速
 
 int ready_count = 0;
 int zbera_count = 0;   // 识别到斑马线的帧数
@@ -260,13 +260,13 @@ cv::Mat If_ZebraCrossing(cv::Mat frame, cv::Mat draw)
     /* 判断是否停止：
         当 zbera_count > 5 且 斑马线距离视频流底部距离满足条件 时 输出停止信号
     */
-    cv::String text = "IF_STOP:";
+    cv::String text = "FLAG_STOP:";
     if ((zbera_count > 10) && Is_approach == true)
     {
-        IF_STOP = true;
+        FLAG_STOP = true;
     }
 
-    if (IF_STOP == true)
+    if (FLAG_STOP == true)
     {
         text.append("YES");
         cv::putText(draw, std::to_string(zbera_count), cv::Point(50, 100), 1, 4, cv::Scalar(0, 255, 0), 4, 8);
@@ -409,13 +409,13 @@ cv::Mat If_Rhombus(cv::Mat frame, cv::Mat draw)
     /* 判断是否减速：
         当 rhombus_count > 5时 输出停止信号
     */
-    cv::String text = "IF_SLOW:";
+    cv::String text = "FLAG_SLOW:";
     if (rhombus_count > 10)
     {
-        IF_SLOW = true;
+        FLAG_SLOW = true;
     }
 
-    if (IF_SLOW == true)
+    if (FLAG_SLOW == true)
     {
         text.append("YES");
         cv::putText(draw, std::to_string(rhombus_count), cv::Point(50, 100), 1, 4, cv::Scalar(0, 255, 0), 4, 8);
@@ -620,13 +620,13 @@ cv::Mat LaneLine(cv::Mat frame, cv::Mat draw)
 }
 
 /** 串口通信函数
- *  @param IF_READY
- *  @param IF_SLOW
- *  @param IF_STOP
- *  @param delta_x
+ *  @param TURN_DIRECTION(0不转弯  1左转  2右转)
+ *  @param FLAG_SLOW(0不减速 1减速)
+ *  @param FLAG_STOP(0不停止 1停止)
+ *  @param DEVIATION(偏移量)
  *  @retval 1 或 0
  */
-int uart_send(int IF_READY, int IF_SLOW, int IF_STOP, float delta_x)
+int uart_send(int TURN_DIRECTION, int FLAG_SLOW, int FLAG_STOP, int DEVIATION)
 {
     // 初始化python接口
     Py_Initialize();
@@ -654,10 +654,10 @@ int uart_send(int IF_READY, int IF_SLOW, int IF_STOP, float delta_x)
     PyObject *pArgs = PyTuple_New(4);
 
     // 0：第一个参数，传入 float 类型的值 2.242
-    PyTuple_SetItem(pArgs, 0, Py_BuildValue("f", delta_x));
-    PyTuple_SetItem(pArgs, 1, Py_BuildValue("i", IF_READY));
-    PyTuple_SetItem(pArgs, 2, Py_BuildValue("i", IF_SLOW));
-    PyTuple_SetItem(pArgs, 3, Py_BuildValue("i", IF_STOP));
+    PyTuple_SetItem(pArgs, 0, Py_BuildValue("f", TURN_DIRECTION));
+    PyTuple_SetItem(pArgs, 1, Py_BuildValue("i", FLAG_SLOW));
+    PyTuple_SetItem(pArgs, 2, Py_BuildValue("i", FLAG_STOP));
+    PyTuple_SetItem(pArgs, 3, Py_BuildValue("i", DEVIATION));
 
     // 使用C++的python接口调用该函数
     PyObject *pReturn = PyEval_CallObject(pFunc, pArgs);
