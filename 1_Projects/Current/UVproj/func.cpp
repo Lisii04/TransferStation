@@ -1,6 +1,5 @@
 #include "func.hpp"
 
-bool IF_READY = false;
 bool FLAG_STOP = false; // 是否停止
 bool FLAG_SLOW = false; // 是否减速
 
@@ -54,8 +53,7 @@ double getDistance(cv::Point pointO, cv::Point pointA)
 
     @return 输入值的绝对值
 */
-template <typename T>
-T getAbs(T input)
+double getAbs(double input)
 {
     return ((input > 0) ? (input) : (-input));
 }
@@ -598,32 +596,55 @@ cv::Mat LaneLine(cv::Mat frame, cv::Mat draw)
         }
     }
 
-    // debug----------------------------------------------------------
-    cv::putText(draw, std::to_string(if_dashed_line), cv::Point(800, 100), 1, 4, cv::Scalar(0, 255, 255), 2, 8, 0);
-
-    if (left_lanelines <= right_lanelines)
+    if (if_dashed_line == false)
     {
-        cv::putText(draw, "LEFT|If dashe line:", cv::Point(100, 100), 1, 4, cv::Scalar(0, 255, 255), 2, 8, 0);
+        // debug----------------------------------------------------------
+        cv::putText(draw, std::to_string(if_dashed_line), cv::Point(800, 100), 1, 4, cv::Scalar(0, 255, 255), 2, 8, 0);
+
+        if (left_lanelines <= right_lanelines)
+        {
+            cv::putText(draw, "LEFT|If dashe line:", cv::Point(100, 100), 1, 4, cv::Scalar(0, 255, 255), 2, 8, 0);
+        }
+        else
+        {
+            cv::putText(draw, "RIGHT|If dashe line:", cv::Point(100, 100), 1, 4, cv::Scalar(0, 255, 255), 2, 8, 0);
+        }
+
+        cv::line(draw, cv::Point((left_max_x + right_min_x) / 2, max_Y), cv::Point((left_max_x + right_min_x) / 2, max_Y / 2), cv::Scalar(0, 0, 255), 2, 8, 0);
+        cv::line(draw, cv::Point(max_X / 2, max_Y), cv::Point(max_X / 2, max_Y / 2), cv::Scalar(0, 255, 0), 4, 8, 0);
+        cv::line(draw, cv::Point((left_max_x + right_min_x) / 2, max_Y / 2 + 50), cv::Point(max_X / 2, max_Y / 2 + 50), cv::Scalar(0, 255, 255), 2, 8, 0);
+        cv::putText(draw, std::to_string((max_X / 2) - ((left_max_x + right_min_x) / 2)), cv::Point((left_max_x + right_min_x) / 2, max_Y / 2 + 50), 1, 4, cv::Scalar(0, 255, 255), 2, 8, 0);
+        // debug----------------------------------------------------------
     }
     else
     {
-        cv::putText(draw, "RIGHT|If dashe line:", cv::Point(100, 100), 1, 4, cv::Scalar(0, 255, 255), 2, 8, 0);
-    }
+        // debug----------------------------------------------------------
+        cv::putText(draw, std::to_string(if_dashed_line), cv::Point(800, 100), 1, 4, cv::Scalar(0, 255, 255), 2, 8, 0);
 
-    cv::line(draw, cv::Point((left_max_x + right_min_x) / 2, max_Y), cv::Point((left_max_x + right_min_x) / 2, max_Y / 2), cv::Scalar(0, 0, 255), 2, 8, 0);
-    cv::line(draw, cv::Point(max_X / 2, max_Y), cv::Point(max_X / 2, max_Y / 2), cv::Scalar(0, 255, 0), 4, 8, 0);
-    cv::line(draw, cv::Point((left_max_x + right_min_x) / 2, max_Y / 2 + 50), cv::Point(max_X / 2, max_Y / 2 + 50), cv::Scalar(0, 255, 255), 2, 8, 0);
-    cv::putText(draw, std::to_string((max_X / 2) - ((left_max_x + right_min_x) / 2)), cv::Point((left_max_x + right_min_x) / 2, max_Y / 2 + 50), 1, 4, cv::Scalar(0, 255, 255), 2, 8, 0);
-    // debug----------------------------------------------------------
+        if (left_lanelines <= right_lanelines)
+        {
+            cv::putText(draw, "LEFT|If dashe line:", cv::Point(100, 100), 1, 4, cv::Scalar(0, 255, 255), 2, 8, 0);
+        }
+        else
+        {
+            cv::putText(draw, "RIGHT|If dashe line:", cv::Point(100, 100), 1, 4, cv::Scalar(0, 255, 255), 2, 8, 0);
+        }
+
+        cv::line(draw, cv::Point(max_X / 2, max_Y), cv::Point(max_X / 2, max_Y / 2), cv::Scalar(0, 0, 255), 2, 8, 0);
+        cv::line(draw, cv::Point(max_X / 2, max_Y), cv::Point(max_X / 2, max_Y / 2), cv::Scalar(0, 255, 0), 4, 8, 0);
+        cv::line(draw, cv::Point((left_max_x + right_min_x) / 2, max_Y / 2 + 50), cv::Point(max_X / 2, max_Y / 2 + 50), cv::Scalar(0, 255, 255), 2, 8, 0);
+        cv::putText(draw, std::to_string(0), cv::Point(max_X / 2, max_Y / 2 + 50), 1, 4, cv::Scalar(0, 255, 255), 2, 8, 0);
+        // debug----------------------------------------------------------
+    }
 
     return draw;
 }
 
 /** 串口通信函数
- *  @param TURN_DIRECTION(0不转弯  1左转  2右转)
- *  @param FLAG_SLOW(0不减速 1减速)
- *  @param FLAG_STOP(0不停止 1停止)
- *  @param DEVIATION(偏移量)
+ *  @param TURN_DIRECTION (0不转弯  1左转  2右转)
+ *  @param FLAG_SLOW (0不减速 1减速)
+ *  @param FLAG_STOP (0不停止 1停止)
+ *  @param DEVIATION (偏移量)
  *  @retval 1 或 0
  */
 int uart_send(int TURN_DIRECTION, int FLAG_SLOW, int FLAG_STOP, int DEVIATION)
@@ -697,11 +718,11 @@ void VideoProcess(cv::VideoCapture video)
 
         if (count > 0)
         {
-            // frame = If_Rhombus(frame, draw);
-            // frame = If_ZebraCrossing(frame, draw);
+            frame = If_Rhombus(frame, draw);
+            frame = If_ZebraCrossing(frame, draw);
             frame = LaneLine(frame, draw);
 
-            cv::waitKey();
+            cv::waitKey(1);
         }
         cv::waitKey(1);
 
