@@ -57,6 +57,10 @@ double getAbs(double input)
 {
     return ((input > 0) ? (input) : (-input));
 }
+int getAbs(int input)
+{
+    return ((input > 0) ? (input) : (-input));
+}
 
 /* 直线斜率计算
     @param pointA 直线上第一点
@@ -87,10 +91,10 @@ cv::Mat If_ZebraCrossing(cv::Mat frame, cv::Mat draw)
     std::vector<cv::Point> points;
     double max_X = frame.size().width;
     double max_Y = frame.size().height;
-    points.push_back(cv::Point(max_X * (0.1 / 5.0), max_Y * (4.95 / 5.0))); // LD
-    points.push_back(cv::Point(max_X * (4.9 / 5.0), max_Y * (4.95 / 5.0))); // RD
-    points.push_back(cv::Point(max_X * (4.0 / 5.0), max_Y * (2.0 / 5.0)));  // RU
-    points.push_back(cv::Point(max_X * (1.0 / 5.0), max_Y * (2.0 / 5.0)));  // LU
+    points.push_back(cv::Point(max_X * (0.01 / 5.0), max_Y * (4.95 / 5.0))); // LD
+    points.push_back(cv::Point(max_X * (4.99 / 5.0), max_Y * (4.95 / 5.0))); // RD
+    points.push_back(cv::Point(max_X * (4.85 / 5.0), max_Y * (3.0 / 5.0)));  // RU
+    points.push_back(cv::Point(max_X * (0.15 / 5.0), max_Y * (3.0 / 5.0)));  // LU
     ROI = ROI_extract(frame, points);
     line(draw, points[1], points[2], cv::Scalar(0, 255, 0), 1, 8);
     line(draw, points[2], points[3], cv::Scalar(0, 255, 0), 1, 8);
@@ -216,8 +220,8 @@ cv::Mat If_ZebraCrossing(cv::Mat frame, cv::Mat draw)
 
         // 定义斑马线总长宽比
         double zebra_ratio = 3;
-        // 求置信度(凸包面积 + 补偿面积 ?= 斑马线块总面积*2.5)
-        double confidence_level = ((hull_area + white_extern_area) <= (white_area * 2.5)) ? ((hull_area + white_extern_area) / (white_area * 2.5)) : ((white_area * 2.5) / (hull_area + white_extern_area));
+        // 求置信度(凸包面积 + 补偿面积 ?= 斑马线块总面积*2.3)
+        double confidence_level = ((hull_area + white_extern_area) <= (white_area * 2.3)) ? ((hull_area + white_extern_area) / (white_area * 2.5)) : ((white_area * 2.5) / (hull_area + white_extern_area));
         // 文字信息
         std::string text = "ZC|Score:";
         text.append(std::to_string(confidence_level));
@@ -231,7 +235,7 @@ cv::Mat If_ZebraCrossing(cv::Mat frame, cv::Mat draw)
            如果满足：
             识别到斑马线的帧数（zbera_count）+1
         */
-        if ((length * zebra_ratio < width) && (confidence_level >= 0.8) && (frame.size().height - y_max < 500) && (up_slope <= 0.05))
+        if ((length * zebra_ratio < width) && (confidence_level >= 0.8) && (frame.size().height - y_max < 1000) && (up_slope <= 0.05))
         {
             // 视觉显示
             cv::putText(draw, text, rect[0], 1, 3, cv::Scalar(0, 255, 0), 2, 8);
@@ -452,10 +456,10 @@ cv::Mat LaneLine(cv::Mat frame, cv::Mat draw)
     std::vector<cv::Point> points;
     double max_X = frame.size().width;
     double max_Y = frame.size().height;
-    points.push_back(cv::Point(max_X * (0.0 / 5.0), max_Y * (4.95 / 5.0))); // LD
-    points.push_back(cv::Point(max_X * (5.0 / 5.0), max_Y * (4.95 / 5.0))); // RD
-    points.push_back(cv::Point(max_X * (4.9 / 5.0), max_Y * (3.5 / 5.0)));  // RU
-    points.push_back(cv::Point(max_X * (0.1 / 5.0), max_Y * (3.5 / 5.0)));  // LU
+    points.push_back(cv::Point(max_X * (0.0 / 5.0), max_Y * (5.0 / 5.0))); // LD
+    points.push_back(cv::Point(max_X * (5.0 / 5.0), max_Y * (5.0 / 5.0))); // RD
+    points.push_back(cv::Point(max_X * (5.0 / 5.0), max_Y * (2.5 / 5.0))); // RU
+    points.push_back(cv::Point(max_X * (0.0 / 5.0), max_Y * (2.5 / 5.0))); // LU
     ROI = ROI_extract(frame, points);
     line(draw, points[1], points[2], cv::Scalar(0, 255, 0), 1, 8);
     line(draw, points[2], points[3], cv::Scalar(0, 255, 0), 1, 8);
@@ -675,7 +679,7 @@ int uart_send(int TURN_DIRECTION, int FLAG_SLOW, int FLAG_STOP, int DEVIATION)
     PyObject *pArgs = PyTuple_New(4);
 
     // 0：第一个参数，传入 float 类型的值 2.242
-    PyTuple_SetItem(pArgs, 0, Py_BuildValue("f", TURN_DIRECTION));
+    PyTuple_SetItem(pArgs, 0, Py_BuildValue("i", TURN_DIRECTION));
     PyTuple_SetItem(pArgs, 1, Py_BuildValue("i", FLAG_SLOW));
     PyTuple_SetItem(pArgs, 2, Py_BuildValue("i", FLAG_STOP));
     PyTuple_SetItem(pArgs, 3, Py_BuildValue("i", DEVIATION));
@@ -694,15 +698,20 @@ void VideoProcess(cv::VideoCapture video)
     cv::resizeWindow("a", 1000, 500);
 
     // FPS-------------------------------------------
-    double all_frame = 0;
+    float time_use = 0;
+    float all_time_use = 0;
+    struct timeval all_start;
+    struct timeval all_end;
 
-    std::vector<double> fpses;
+    struct timeval start;
+    struct timeval end;
+    gettimeofday(&all_start, NULL);
     // ----------------------------------------------
 
     int count = 0;
     while (1)
     {
-        double t0 = (double)cv::getTickCount();
+        gettimeofday(&start, NULL);
 
         count++;
 
@@ -712,38 +721,31 @@ void VideoProcess(cv::VideoCapture video)
 
         if (frame.empty())
         {
-            std::cout << "Aver FPS:" << all_frame / count << std::endl;
+            gettimeofday(&all_end, NULL);
+            all_time_use = ((all_end.tv_sec - all_start.tv_sec) * 1000000 + (all_end.tv_usec - all_start.tv_usec));
+            std::cout << "Aver FPS:" << (((float)count) / (all_time_use / 1000000)) << std::endl;
             break; // 如果图像为空，表示已经读取完所有帧，跳出循环
         }
 
         if (count > 0)
         {
-            frame = If_Rhombus(frame, draw);
-            frame = If_ZebraCrossing(frame, draw);
-            frame = LaneLine(frame, draw);
+            if (FLAG_SLOW == 0)
+                frame = If_Rhombus(frame, draw);
+            else
+                frame = If_ZebraCrossing(frame, draw);
+            // frame = LaneLine(frame, draw);
 
-            cv::waitKey(1);
+            // uart_send(0, FLAG_SLOW, FLAG_STOP, 0);
+            // cv::imshow("a", frame);
+            // cv::waitKey(1);
         }
-        cv::waitKey(1);
+        // cv::waitKey(1);
 
         // FPS--------------------------------------------------------------------------
-        double t1 = ((double)cv::getTickCount() - t0) / (cv::getTickFrequency());
-        all_frame += 1 / t1;
-        std::cout << "Processing frame " << count << "|FPS:" << 1 / t1 << std::endl;
-        fpses.insert(fpses.begin(), 1 / t1);
-        if (fpses.size() >= 30)
-        {
-            fpses.pop_back();
-            for (int i = 0; i < 29; i++)
-            {
-                cv::line(frame, cv::Point((29 - i) * 20 + 100, 500 - 2 * fpses[i + 1]), cv::Point((30 - i) * 20 + 100, 500 - 2 * fpses[i]), cv::Scalar(0, 0, 255), 3, 8, 0);
-            }
-            cv::line(frame, cv::Point(120, 500), cv::Point(800, 500), cv::Scalar(0, 255, 255), 3, 8, 0);
-            cv::line(frame, cv::Point(120, 500), cv::Point(120, 100), cv::Scalar(0, 255, 255), 3, 8, 0);
-            cv::putText(frame, std::to_string((int)(1 / t1)), cv::Point(500, 200), 1, 3, cv::Scalar(0, 0, 255), 3, 8);
-        }
-        //-------------------------------------------------------------------------
+        gettimeofday(&end, NULL);
+        time_use = ((end.tv_sec - start.tv_sec) * 1000000 + (end.tv_usec - start.tv_usec));
+        std::cout << "Processing frame " << count << "|FPS:" << 1.0 / (time_use / 1000000) << std::endl;
 
-        cv::imshow("a", frame);
+        //-------------------------------------------------------------------------
     }
 }

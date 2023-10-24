@@ -4,6 +4,8 @@
 #include <opencv4/opencv2/opencv.hpp>
 #include <vector>
 #include <python3.10/Python.h>
+#include <sys/time.h>
+#include <stdlib.h>
 
 /* ROI区域提取
     @param inputFrame 输入图像
