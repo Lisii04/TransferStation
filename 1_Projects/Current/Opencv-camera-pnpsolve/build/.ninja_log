@@ -1,0 +1,5 @@
+# ninja log v5
+0	1596	1698226119189864337	CMakeFiles/Opencv-camera-pnpsolve.dir/main.cpp.o	bdcf7006e00dbe33
+1562	1685	1698226250608103610	Opencv-camera-pnpsolve	ab688d4d2fc44df5
+0	1453	1698226082481245693	CMakeFiles/Opencv-camera-pnpsolve.dir/chesscoard_capture.cpp.o	adea49e5953eec42
+1	1562	1698226250484101481	CMakeFiles/Opencv-camera-pnpsolve.dir/camera_calibration.cpp.o	21995fd0fd2f1f18
