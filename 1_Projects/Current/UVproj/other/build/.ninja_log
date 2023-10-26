@@ -1,0 +1,15 @@
+# ninja log v5
+0	199	1698330015114414210	CMakeFiles/uart_debug.dir/uart_debug.cpp.o	a0f6abe9a148dbd6
+199	248	1698330015166416716	uart_debug	dfd58651e489d81b
+0	197	1698330032359235627	CMakeFiles/uart_debug.dir/uart_debug.cpp.o	a0f6abe9a148dbd6
+197	249	1698330032411238074	uart_debug	dfd58651e489d81b
+0	195	1698330201310332085	CMakeFiles/uart_debug.dir/uart_debug.cpp.o	a0f6abe9a148dbd6
+195	244	1698330201358333883	uart_debug	dfd58651e489d81b
+0	201	1698330291981544951	CMakeFiles/uart_debug.dir/uart_debug.cpp.o	a0f6abe9a148dbd6
+201	251	1698330292029546559	uart_debug	dfd58651e489d81b
+0	194	1698330337623033716	CMakeFiles/uart_debug.dir/uart_debug.cpp.o	a0f6abe9a148dbd6
+194	243	1698330337671035241	uart_debug	dfd58651e489d81b
+1	194	1698330478839184536	CMakeFiles/uart_debug.dir/uart_debug.cpp.o	a0f6abe9a148dbd6
+194	241	1698330478887185843	uart_debug	dfd58651e489d81b
+0	254	1698330882180402841	CMakeFiles/uart_debug.dir/uart_debug.cpp.o	a0f6abe9a148dbd6
+1	264	1698330918857109060	CMakeFiles/uart_debug.dir/uart_debug.cpp.o	a0f6abe9a148dbd6

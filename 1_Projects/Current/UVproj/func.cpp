@@ -735,9 +735,9 @@ void VideoProcess(cv::VideoCapture video)
                 frame = If_ZebraCrossing(frame, draw);
             // frame = LaneLine(frame, draw);
 
-            // uart_send(0, FLAG_SLOW, FLAG_STOP, 0);
-            // cv::imshow("a", frame);
-            // cv::waitKey(1);
+//            uart_send(0, FLAG_SLOW, FLAG_STOP, 0);
+            cv::imshow("a", frame);
+            cv::waitKey(1);
         }
         // cv::waitKey(1);
 
