@@ -1,7 +1,0 @@
-[
-{
-  "directory": "/home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/UVproj/other/build",
-  "command": "/usr/bin/g++ -g -std=gnu++11 -o CMakeFiles/uart_debug.dir/uart_debug.cpp.o -c /home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/UVproj/other/uart_debug.cpp",
-  "file": "/home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/UVproj/other/uart_debug.cpp"
-}
-]

@@ -76,6 +76,14 @@ double getSlope(cv::Point pointA, cv::Point pointB)
     return slope;
 }
 
+/* 已知斜率和直线上一点求截距
+ *
+ */
+double getIntercept(double slope, cv::Point point)
+{
+    return (point.y - point.x * slope);
+}
+
 /* 斑马线识别函数
     @param frame 要处理的帧
     @param draw 要绘制轮廓的图像
@@ -329,7 +337,7 @@ cv::Mat If_Rhombus(cv::Mat frame, cv::Mat draw)
     // 定义-存储满足条件的四边形角点集合
     std::vector<std::vector<cv::Point2f>> all_point_sets;
 
-    int min_area = 5000;
+    int min_area = 6000;
     for (int i = 0; i < contours.size(); i++)
     {
         if (cv::contourArea(contours[i]) > min_area)
@@ -412,7 +420,7 @@ cv::Mat If_Rhombus(cv::Mat frame, cv::Mat draw)
         当 rhombus_count > 5时 输出停止信号
     */
     cv::String text = "FLAG_SLOW:";
-    if (rhombus_count > 10)
+    if (rhombus_count > 15)
     {
         FLAG_SLOW = true;
     }
@@ -450,7 +458,7 @@ typedef struct laneline
 cv::Mat LaneLine(cv::Mat frame, cv::Mat draw)
 {
     /* 识别前 图像处理 */
-    cv::Mat gray, ROI, bulr, thres, canny, erode, element, dilate;
+    cv::Mat gray, ROI, bulr, thres, canny, erode, element_erode, element_dilate, dilate;
 
     // ROI提取
     std::vector<cv::Point> points;
@@ -458,188 +466,77 @@ cv::Mat LaneLine(cv::Mat frame, cv::Mat draw)
     double max_Y = frame.size().height;
     points.push_back(cv::Point(max_X * (0.0 / 5.0), max_Y * (5.0 / 5.0))); // LD
     points.push_back(cv::Point(max_X * (5.0 / 5.0), max_Y * (5.0 / 5.0))); // RD
-    points.push_back(cv::Point(max_X * (5.0 / 5.0), max_Y * (2.5 / 5.0))); // RU
-    points.push_back(cv::Point(max_X * (0.0 / 5.0), max_Y * (2.5 / 5.0))); // LU
+    points.push_back(cv::Point(max_X * (5.0 / 5.0), max_Y * (3.0 / 5.0))); // RU
+    points.push_back(cv::Point(max_X * (0.0 / 5.0), max_Y * (3.0 / 5.0))); // LU
     ROI = ROI_extract(frame, points);
-    line(draw, points[1], points[2], cv::Scalar(0, 255, 0), 1, 8);
-    line(draw, points[2], points[3], cv::Scalar(0, 255, 0), 1, 8);
-    line(draw, points[3], points[0], cv::Scalar(0, 255, 0), 1, 8);
-    line(draw, points[0], points[1], cv::Scalar(0, 255, 0), 1, 8);
     // 转灰度
     cv::cvtColor(ROI, gray, cv::COLOR_BGR2GRAY);
     // 高斯滤波
     cv::GaussianBlur(gray, bulr, cv::Size(7, 7), 0, 0);
     // 阈值化处理
-    cv::threshold(bulr, thres, 150, 255, cv::THRESH_BINARY);
-    // 膨胀处理
-    element = cv::getStructuringElement(cv::MORPH_RECT, cv::Size(8, 8));
-    cv::dilate(thres, dilate, element);
-    // Canny边缘检测
-    cv::Canny(dilate, canny, 100, 200, 3);
+    cv::threshold(bulr, thres, 170, 255, cv::THRESH_BINARY);
+
+    cv::Canny(thres, canny, 100, 200, 3);
     /* 识别前图像处理结束 */
 
-    /**** 识别图像轮廓 ****/
-    // 存储轮廓
-    std::vector<std::vector<cv::Point>> contours;
-    // 存储轮廓层级信息
-    std::vector<cv::Vec4i> hierachy;
-    // 查找轮廓
-    cv::findContours(canny, contours, hierachy, cv::RETR_LIST,
-                     cv::CHAIN_APPROX_NONE);
-
-    // 定义-用于初步存储车道线的向量容器
-    std::vector<laneline> lanelines;
-
-    for (int i = 0; i < contours.size(); i++)
+    std::vector<cv::Vec4f> lines;
+    // 创建一个包含直线斜率和截距的特征向量的数据集
+    std::vector<std::vector<cv::Point2d>> features;
+    std::vector<cv::Point2d> left;
+    std::vector<cv::Point2d> right;
+    features.push_back(left);
+    features.push_back(right);
+    cv::HoughLinesP(canny, lines, 1., CV_PI / 180, 100, 70, 30);
+    for (int i = 0; i < lines.size(); ++i)
     {
-        // 多边形逼近
-        std::vector<cv::Point2f> points;
-        cv::approxPolyDP(contours[i], points, 10.0, true);
-
-        // 定义-用于计算车道线上下边界和中心点的变量
-        double aver_x = 0, aver_y = 0, top_y = max_Y, bottom_y = 0;
-
-        // 筛选出四边形
-
-        if (points.size() == 4)
+        cv::Vec4i line_ = lines[i];
+        cv::Point pointA = cv::Point(line_[0], line_[1]), pointB = cv::Point(line_[2], line_[3]);
+        double slope = getSlope(pointA, pointB);
+        double intercept = getIntercept(slope, pointA);
+        if (getAbs(slope) >= 0.5)
         {
-            double len_to_wid_ratio = (getDistance(points[0], points[1]) >= getDistance(points[1], points[2])) ? (getDistance(points[0], points[1]) / getDistance(points[1], points[2])) : (getDistance(points[1], points[2]) / getDistance(points[0], points[1]));
-
-            if (len_to_wid_ratio > 3)
+            if (slope > 0)
             {
-                for (int j = 0; j < contours[i].size(); j++)
-                {
-                    cv::circle(draw, contours[i][j], 1, cv::Scalar(0, 0, 255), -1, 8, 0);
-                    if (top_y > contours[i][j].y)
-                    {
-                        top_y = contours[i][j].y;
-                    }
-                    if (bottom_y < contours[i][j].y)
-                    {
-                        bottom_y = contours[i][j].y;
-                    }
-                }
-                for (int i = 0; i < 4; i++)
-                {
-                    aver_x += points[i].x;
-                    aver_y += points[i].y;
-                }
-
-                aver_x = aver_x / 4.0;
-                aver_y = aver_y / 4.0;
-
-                laneline lane;
-                lane.top_y = top_y;
-                lane.bottom_y = bottom_y;
-                lane.middle_point = cv::Point(aver_x, aver_y);
-
-                // 检测轮廓是否为虚线
-                if ((bottom_y - top_y) <= (max_Y * (4.95 / 5.0) - max_Y * (3.5 / 5.0)))
-                {
-                    lane.if_dashed_line = true;
-                }
-                else
-                {
-                    lane.if_dashed_line = false;
-                }
-
-                cv::circle(draw, cv::Point(aver_x, aver_y), 3, cv::Scalar(0, 255, 255), -1, 8, 0);
-                lanelines.push_back(lane);
+                features[0].push_back(cv::Point2d(slope, intercept));
+            }
+            else
+            {
+                features[1].push_back(cv::Point2d(slope, intercept));
             }
         }
     }
 
-    // 筛选掉重合的轮廓
-    std::vector<laneline> identfied_lanelines;
-
-    for (int i = 0; i < lanelines.size(); i++)
+    std::vector<cv::Point2d> lanelines;
+    for (int i = 0; i < features.size(); i++)
     {
-        bool if_coincidence = false;
-        for (int j = i + 1; j < lanelines.size(); j++)
+        double slope = 0, intercept = 0;
+
+        for (int j = 0; j < features[i].size(); j++)
         {
-            if (getAbs(lanelines[i].middle_point.x - lanelines[j].middle_point.x) < 30)
-            {
-                if_coincidence = true;
-            }
+            slope += features[i][j].x;
+            intercept += features[i][j].y;
         }
-        if (if_coincidence == false)
+
+        lanelines.push_back(cv::Point2d((slope / features[i].size()), (intercept / features[i].size())));
+    }
+    std::vector<int> center;
+    for (int x = 0; x < max_X; x++)
+    {
+        if (getAbs((x * lanelines[0].x + lanelines[0].y) - (x * lanelines[1].x + lanelines[1].y)) <= 10)
         {
-            identfied_lanelines.push_back(lanelines[i]);
+            center.push_back(x);
+            cv::putText(draw, std::to_string(x), cv::Point(x, ((x * lanelines[0].x + lanelines[0].y) + (x * lanelines[1].x + lanelines[1].y)) / 2), 1, 4, cv::Scalar(0, 0, 255), 3);
+            cv::circle(draw, cv::Point(x, ((x * lanelines[0].x + lanelines[0].y) + (x * lanelines[1].x + lanelines[1].y)) / 2), 10, cv::Scalar(0, 0, 255), -1);
         }
     }
-
-    // 定义-用于分类存储（相对于视角）左右的车道线中心点
-    cv::Point left_laneline, right_laneline;
-    int left_lanelines = 0, right_lanelines = 0;
-    double left_max_x = 0, right_min_x = max_X;
-    bool if_dashed_line = false;
-
-    for (int i = 0; i < identfied_lanelines.size(); i++)
+    double center_x = 0;
+    for (int i = 0; i < center.size(); i++)
     {
-        if (identfied_lanelines[i].middle_point.x < (max_X / 2.0))
-        {
-            if (left_max_x < identfied_lanelines[i].middle_point.x)
-            {
-                left_max_x = identfied_lanelines[i].middle_point.x;
-                left_laneline = identfied_lanelines[i].middle_point;
-            }
-            left_lanelines++;
-        }
-        else
-        {
-            if (right_min_x > identfied_lanelines[i].middle_point.x)
-            {
-                right_min_x = identfied_lanelines[i].middle_point.x;
-                right_laneline = identfied_lanelines[i].middle_point;
-            }
-            right_lanelines++;
-        }
-        if (identfied_lanelines[i].if_dashed_line == true)
-        {
-            if_dashed_line = true;
-        }
+        center_x += center[i];
     }
+    center_x = center_x / center.size();
 
-    if (if_dashed_line == false)
-    {
-        // debug----------------------------------------------------------
-        cv::putText(draw, std::to_string(if_dashed_line), cv::Point(800, 100), 1, 4, cv::Scalar(0, 255, 255), 2, 8, 0);
-
-        if (left_lanelines <= right_lanelines)
-        {
-            cv::putText(draw, "LEFT|If dashe line:", cv::Point(100, 100), 1, 4, cv::Scalar(0, 255, 255), 2, 8, 0);
-        }
-        else
-        {
-            cv::putText(draw, "RIGHT|If dashe line:", cv::Point(100, 100), 1, 4, cv::Scalar(0, 255, 255), 2, 8, 0);
-        }
-
-        cv::line(draw, cv::Point((left_max_x + right_min_x) / 2, max_Y), cv::Point((left_max_x + right_min_x) / 2, max_Y / 2), cv::Scalar(0, 0, 255), 2, 8, 0);
-        cv::line(draw, cv::Point(max_X / 2, max_Y), cv::Point(max_X / 2, max_Y / 2), cv::Scalar(0, 255, 0), 4, 8, 0);
-        cv::line(draw, cv::Point((left_max_x + right_min_x) / 2, max_Y / 2 + 50), cv::Point(max_X / 2, max_Y / 2 + 50), cv::Scalar(0, 255, 255), 2, 8, 0);
-        cv::putText(draw, std::to_string((max_X / 2) - ((left_max_x + right_min_x) / 2)), cv::Point((left_max_x + right_min_x) / 2, max_Y / 2 + 50), 1, 4, cv::Scalar(0, 255, 255), 2, 8, 0);
-        // debug----------------------------------------------------------
-    }
-    else
-    {
-        // debug----------------------------------------------------------
-        cv::putText(draw, std::to_string(if_dashed_line), cv::Point(800, 100), 1, 4, cv::Scalar(0, 255, 255), 2, 8, 0);
-
-        if (left_lanelines <= right_lanelines)
-        {
-            cv::putText(draw, "LEFT|If dashe line:", cv::Point(100, 100), 1, 4, cv::Scalar(0, 255, 255), 2, 8, 0);
-        }
-        else
-        {
-            cv::putText(draw, "RIGHT|If dashe line:", cv::Point(100, 100), 1, 4, cv::Scalar(0, 255, 255), 2, 8, 0);
-        }
-
-        cv::line(draw, cv::Point(max_X / 2, max_Y), cv::Point(max_X / 2, max_Y / 2), cv::Scalar(0, 0, 255), 2, 8, 0);
-        cv::line(draw, cv::Point(max_X / 2, max_Y), cv::Point(max_X / 2, max_Y / 2), cv::Scalar(0, 255, 0), 4, 8, 0);
-        cv::line(draw, cv::Point((left_max_x + right_min_x) / 2, max_Y / 2 + 50), cv::Point(max_X / 2, max_Y / 2 + 50), cv::Scalar(0, 255, 255), 2, 8, 0);
-        cv::putText(draw, std::to_string(0), cv::Point(max_X / 2, max_Y / 2 + 50), 1, 4, cv::Scalar(0, 255, 255), 2, 8, 0);
-        // debug----------------------------------------------------------
-    }
+    cv::line(draw, cv::Point((int)center_x, max_Y), cv::Point(center_x, 0), cv::Scalar(0, 0, 255), 2);
 
     return draw;
 }
@@ -648,10 +545,9 @@ cv::Mat LaneLine(cv::Mat frame, cv::Mat draw)
  *  @param TURN_DIRECTION (0不转弯  1左转  2右转)
  *  @param FLAG_SLOW (0不减速 1减速)
  *  @param FLAG_STOP (0不停止 1停止)
- *  @param DEVIATION (偏移量)
  *  @retval 1 或 0
  */
-int uart_send(int TURN_DIRECTION, int FLAG_SLOW, int FLAG_STOP, int DEVIATION)
+int uart_send(int TURN_DIRECTION, int FLAG_SLOW, int FLAG_STOP)
 {
     // 初始化python接口
     Py_Initialize();
@@ -676,13 +572,12 @@ int uart_send(int TURN_DIRECTION, int FLAG_SLOW, int FLAG_STOP, int DEVIATION)
     pFunc = PyObject_GetAttrString(pModule, "uart_send");
 
     // 给python传参数
-    PyObject *pArgs = PyTuple_New(4);
+    PyObject *pArgs = PyTuple_New(3);
 
     // 0：第一个参数，传入 float 类型的值 2.242
     PyTuple_SetItem(pArgs, 0, Py_BuildValue("i", TURN_DIRECTION));
     PyTuple_SetItem(pArgs, 1, Py_BuildValue("i", FLAG_SLOW));
     PyTuple_SetItem(pArgs, 2, Py_BuildValue("i", FLAG_STOP));
-    PyTuple_SetItem(pArgs, 3, Py_BuildValue("i", DEVIATION));
 
     // 使用C++的python接口调用该函数
     PyObject *pReturn = PyEval_CallObject(pFunc, pArgs);
@@ -723,21 +618,21 @@ void VideoProcess(cv::VideoCapture video)
         {
             gettimeofday(&all_end, NULL);
             all_time_use = ((all_end.tv_sec - all_start.tv_sec) * 1000000 + (all_end.tv_usec - all_start.tv_usec));
-            std::cout << "Aver FPS:" << (((float)count) / (all_time_use / 1000000)) << std::endl;
+            std::cout << "Average FPS:" << (((float)count) / (all_time_use / 1000000)) << std::endl;
             break; // 如果图像为空，表示已经读取完所有帧，跳出循环
         }
 
         if (count > 0)
         {
-            if (FLAG_SLOW == 0)
-                frame = If_Rhombus(frame, draw);
-            else
-                frame = If_ZebraCrossing(frame, draw);
-            // frame = LaneLine(frame, draw);
+            // if (FLAG_SLOW == 0)
+            //     frame = If_Rhombus(frame, draw);
+            // else
+            //     frame = If_ZebraCrossing(frame, draw);
+            frame = LaneLine(frame, draw);
 
-//            uart_send(0, FLAG_SLOW, FLAG_STOP, 0);
+            // uart_send(0, FLAG_SLOW, FLAG_STOP, 0);
             cv::imshow("a", frame);
-            cv::waitKey(1);
+            cv::waitKey();
         }
         // cv::waitKey(1);
 
@@ -749,3 +644,166 @@ void VideoProcess(cv::VideoCapture video)
         //-------------------------------------------------------------------------
     }
 }
+
+// /**** 识别图像轮廓 ****/
+// // 存储轮廓
+// std::vector<std::vector<cv::Point>> contours;
+// // 存储轮廓层级信息
+// std::vector<cv::Vec4i> hierachy;
+// // 查找轮廓
+// cv::findContours(canny, contours, hierachy, cv::RETR_LIST,
+//                  cv::CHAIN_APPROX_NONE);
+
+// // 定义-用于初步存储车道线的向量容器
+// std::vector<laneline> lanelines;
+
+// for (int i = 0; i < contours.size(); i++)
+// {
+//     // 多边形逼近
+//     std::vector<cv::Point2f> points;
+//     cv::approxPolyDP(contours[i], points, 10.0, true);
+
+//     // 定义-用于计算车道线上下边界和中心点的变量
+//     double aver_x = 0, aver_y = 0, top_y = max_Y, bottom_y = 0;
+
+//     // 筛选出四边形
+
+//     if (points.size() == 4)
+//     {
+//         double len_to_wid_ratio = (getDistance(points[0], points[1]) >= getDistance(points[1], points[2])) ? (getDistance(points[0], points[1]) / getDistance(points[1], points[2])) : (getDistance(points[1], points[2]) / getDistance(points[0], points[1]));
+
+//         if (len_to_wid_ratio > 3)
+//         {
+//             for (int j = 0; j < contours[i].size(); j++)
+//             {
+//                 cv::circle(draw, contours[i][j], 1, cv::Scalar(0, 0, 255), -1, 8, 0);
+//                 if (top_y > contours[i][j].y)
+//                 {
+//                     top_y = contours[i][j].y;
+//                 }
+//                 if (bottom_y < contours[i][j].y)
+//                 {
+//                     bottom_y = contours[i][j].y;
+//                 }
+//             }
+//             for (int i = 0; i < 4; i++)
+//             {
+//                 aver_x += points[i].x;
+//                 aver_y += points[i].y;
+//             }
+
+//             aver_x = aver_x / 4.0;
+//             aver_y = aver_y / 4.0;
+
+//             laneline lane;
+//             lane.top_y = top_y;
+//             lane.bottom_y = bottom_y;
+//             lane.middle_point = cv::Point(aver_x, aver_y);
+
+//             // 检测轮廓是否为虚线
+//             if ((bottom_y - top_y) <= (max_Y * (4.95 / 5.0) - max_Y * (3.5 / 5.0)))
+//             {
+//                 lane.if_dashed_line = true;
+//             }
+//             else
+//             {
+//                 lane.if_dashed_line = false;
+//             }
+
+//             cv::circle(draw, cv::Point(aver_x, aver_y), 3, cv::Scalar(0, 255, 255), -1, 8, 0);
+//             lanelines.push_back(lane);
+//         }
+//     }
+// }
+
+// // 筛选掉重合的轮廓
+// std::vector<laneline> identfied_lanelines;
+
+// for (int i = 0; i < lanelines.size(); i++)
+// {
+//     bool if_coincidence = false;
+//     for (int j = i + 1; j < lanelines.size(); j++)
+//     {
+//         if (getAbs(lanelines[i].middle_point.x - lanelines[j].middle_point.x) < 30)
+//         {
+//             if_coincidence = true;
+//         }
+//     }
+//     if (if_coincidence == false)
+//     {
+//         identfied_lanelines.push_back(lanelines[i]);
+//     }
+// }
+
+// // 定义-用于分类存储（相对于视角）左右的车道线中心点
+// cv::Point left_laneline, right_laneline;
+// int left_lanelines = 0, right_lanelines = 0;
+// double left_max_x = 0, right_min_x = max_X;
+// bool if_dashed_line = false;
+
+// for (int i = 0; i < identfied_lanelines.size(); i++)
+// {
+//     if (identfied_lanelines[i].middle_point.x < (max_X / 2.0))
+//     {
+//         if (left_max_x < identfied_lanelines[i].middle_point.x)
+//         {
+//             left_max_x = identfied_lanelines[i].middle_point.x;
+//             left_laneline = identfied_lanelines[i].middle_point;
+//         }
+//         left_lanelines++;
+//     }
+//     else
+//     {
+//         if (right_min_x > identfied_lanelines[i].middle_point.x)
+//         {
+//             right_min_x = identfied_lanelines[i].middle_point.x;
+//             right_laneline = identfied_lanelines[i].middle_point;
+//         }
+//         right_lanelines++;
+//     }
+//     if (identfied_lanelines[i].if_dashed_line == true)
+//     {
+//         if_dashed_line = true;
+//     }
+// }
+
+// if (if_dashed_line == false)
+// {
+//     // debug----------------------------------------------------------
+//     cv::putText(draw, std::to_string(if_dashed_line), cv::Point(800, 100), 1, 4, cv::Scalar(0, 255, 255), 2, 8, 0);
+
+//     if (left_lanelines <= right_lanelines)
+//     {
+//         cv::putText(draw, "LEFT|If dashe line:", cv::Point(100, 100), 1, 4, cv::Scalar(0, 255, 255), 2, 8, 0);
+//     }
+//     else
+//     {
+//         cv::putText(draw, "RIGHT|If dashe line:", cv::Point(100, 100), 1, 4, cv::Scalar(0, 255, 255), 2, 8, 0);
+//     }
+
+//     cv::line(draw, cv::Point((left_max_x + right_min_x) / 2, max_Y), cv::Point((left_max_x + right_min_x) / 2, max_Y / 2), cv::Scalar(0, 0, 255), 2, 8, 0);
+//     cv::line(draw, cv::Point(max_X / 2, max_Y), cv::Point(max_X / 2, max_Y / 2), cv::Scalar(0, 255, 0), 4, 8, 0);
+//     cv::line(draw, cv::Point((left_max_x + right_min_x) / 2, max_Y / 2 + 50), cv::Point(max_X / 2, max_Y / 2 + 50), cv::Scalar(0, 255, 255), 2, 8, 0);
+//     cv::putText(draw, std::to_string((max_X / 2) - ((left_max_x + right_min_x) / 2)), cv::Point((left_max_x + right_min_x) / 2, max_Y / 2 + 50), 1, 4, cv::Scalar(0, 255, 255), 2, 8, 0);
+//     // debug----------------------------------------------------------
+// }
+// else
+// {
+//     // debug----------------------------------------------------------
+//     cv::putText(draw, std::to_string(if_dashed_line), cv::Point(800, 100), 1, 4, cv::Scalar(0, 255, 255), 2, 8, 0);
+
+//     if (left_lanelines <= right_lanelines)
+//     {
+//         cv::putText(draw, "LEFT|If dashe line:", cv::Point(100, 100), 1, 4, cv::Scalar(0, 255, 255), 2, 8, 0);
+//     }
+//     else
+//     {
+//         cv::putText(draw, "RIGHT|If dashe line:", cv::Point(100, 100), 1, 4, cv::Scalar(0, 255, 255), 2, 8, 0);
+//     }
+
+//     cv::line(draw, cv::Point(max_X / 2, max_Y), cv::Point(max_X / 2, max_Y / 2), cv::Scalar(0, 0, 255), 2, 8, 0);
+//     cv::line(draw, cv::Point(max_X / 2, max_Y), cv::Point(max_X / 2, max_Y / 2), cv::Scalar(0, 255, 0), 4, 8, 0);
+//     cv::line(draw, cv::Point((left_max_x + right_min_x) / 2, max_Y / 2 + 50), cv::Point(max_X / 2, max_Y / 2 + 50), cv::Scalar(0, 255, 255), 2, 8, 0);
+//     cv::putText(draw, std::to_string(0), cv::Point(max_X / 2, max_Y / 2 + 50), 1, 4, cv::Scalar(0, 255, 255), 2, 8, 0);
+//     // debug----------------------------------------------------------
+// }

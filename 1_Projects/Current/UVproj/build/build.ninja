@@ -39,7 +39,7 @@ include CMakeFiles/rules.ninja
 #############################################
 # Logical path to working directory; prefix for absolute paths.
 
-cmake_ninja_workdir = /home/lisii/Documents/Github-Repos/TransferStation/1_Projects/Current/UVproj/build/
+cmake_ninja_workdir = /home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/UVproj/build/
 # =============================================================================
 # Object build statements for EXECUTABLE target UVProj
 
@@ -49,14 +49,14 @@ cmake_ninja_workdir = /home/lisii/Documents/Github-Repos/TransferStation/1_Proje
 
 build cmake_object_order_depends_target_UVProj: phony || CMakeFiles/UVProj.dir
 
-build CMakeFiles/UVProj.dir/main.cpp.o: CXX_COMPILER__UVProj_Debug /home/lisii/Documents/Github-Repos/TransferStation/1_Projects/Current/UVproj/main.cpp || cmake_object_order_depends_target_UVProj
+build CMakeFiles/UVProj.dir/main.cpp.o: CXX_COMPILER__UVProj_Debug /home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/UVproj/main.cpp || cmake_object_order_depends_target_UVProj
   DEP_FILE = CMakeFiles/UVProj.dir/main.cpp.o.d
   FLAGS = -g -std=gnu++11
   INCLUDES = -I/usr/include/python3.10 -isystem /usr/local/include/opencv4
   OBJECT_DIR = CMakeFiles/UVProj.dir
   OBJECT_FILE_DIR = CMakeFiles/UVProj.dir
 
-build CMakeFiles/UVProj.dir/func.cpp.o: CXX_COMPILER__UVProj_Debug /home/lisii/Documents/Github-Repos/TransferStation/1_Projects/Current/UVproj/func.cpp || cmake_object_order_depends_target_UVProj
+build CMakeFiles/UVProj.dir/func.cpp.o: CXX_COMPILER__UVProj_Debug /home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/UVproj/func.cpp || cmake_object_order_depends_target_UVProj
   DEP_FILE = CMakeFiles/UVProj.dir/func.cpp.o.d
   FLAGS = -g -std=gnu++11
   INCLUDES = -I/usr/include/python3.10 -isystem /usr/local/include/opencv4
@@ -86,7 +86,7 @@ build UVProj: CXX_EXECUTABLE_LINKER__UVProj_Debug CMakeFiles/UVProj.dir/main.cpp
 # Utility command for edit_cache
 
 build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/lisii/Documents/Github-Repos/TransferStation/1_Projects/Current/UVproj/build && /usr/bin/cmake-gui -S/home/lisii/Documents/Github-Repos/TransferStation/1_Projects/Current/UVproj -B/home/lisii/Documents/Github-Repos/TransferStation/1_Projects/Current/UVproj/build
+  COMMAND = cd /home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/UVproj/build && /usr/bin/cmake-gui -S/home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/UVproj -B/home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/UVproj/build
   DESC = Running CMake cache editor...
   pool = console
   restat = 1
@@ -98,7 +98,7 @@ build edit_cache: phony CMakeFiles/edit_cache.util
 # Utility command for rebuild_cache
 
 build CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /home/lisii/Documents/Github-Repos/TransferStation/1_Projects/Current/UVproj/build && /usr/bin/cmake --regenerate-during-build -S/home/lisii/Documents/Github-Repos/TransferStation/1_Projects/Current/UVproj -B/home/lisii/Documents/Github-Repos/TransferStation/1_Projects/Current/UVproj/build
+  COMMAND = cd /home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/UVproj/build && /usr/bin/cmake --regenerate-during-build -S/home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/UVproj -B/home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/UVproj/build
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -114,7 +114,7 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 # =============================================================================
 
 #############################################
-# Folder: /home/lisii/Documents/Github-Repos/TransferStation/1_Projects/Current/UVproj/build
+# Folder: /home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/UVproj/build
 
 build all: phony UVProj
 
