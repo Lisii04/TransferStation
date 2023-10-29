@@ -6,7 +6,7 @@
 },
 {
   "directory": "/home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/UVproj/build",
-  "command": "/usr/bin/g++ -I/usr/include/python3.10 -isystem /usr/local/include/opencv4 -g -std=gnu++11 -o CMakeFiles/UVProj.dir/func.cpp.o -c /home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/UVproj/func.cpp",
-  "file": "/home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/UVproj/func.cpp"
+  "command": "/usr/bin/g++ -I/usr/include/python3.10 -isystem /usr/local/include/opencv4 -g -std=gnu++11 -o CMakeFiles/UVProj.dir/func_rel.cpp.o -c /home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/UVproj/func_rel.cpp",
+  "file": "/home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/UVproj/func_rel.cpp"
 }
 ]

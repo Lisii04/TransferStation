@@ -67,6 +67,7 @@
         "optional": "cpp",
         "fstream": "cpp",
         "typeindex": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "*.ipp": "cpp"
     }
 }

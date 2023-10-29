@@ -1,4 +1,4 @@
-#include "func.hpp"
+#include "func_rel.hpp"
 
 bool FLAG_STOP = false; // 是否停止
 bool FLAG_SLOW = false; // 是否减速
@@ -92,7 +92,7 @@ double getIntercept(double slope, cv::Point point)
     @param frame 要处理的帧
     @param draw 要绘制轮廓的图像
 */
-cv::Mat If_ZebraCrossing(cv::Mat frame, cv::Mat draw)
+int If_ZebraCrossing(cv::Mat frame)
 {
 
     /**** 识别前 图像处理 ****/
@@ -108,9 +108,6 @@ cv::Mat If_ZebraCrossing(cv::Mat frame, cv::Mat draw)
     points.push_back(cv::Point(max_X * (4.85 / 5.0), max_Y * (3.0 / 5.0)));  // RU
     points.push_back(cv::Point(max_X * (0.15 / 5.0), max_Y * (3.0 / 5.0)));  // LU
     ROI = ROI_extract(frame, points);
-    line(draw, points[1], points[2], cv::Scalar(0, 255, 0), 1, 8);
-    line(draw, points[2], points[3], cv::Scalar(0, 255, 0), 1, 8);
-    line(draw, points[3], points[0], cv::Scalar(0, 255, 0), 1, 8);
     // 转灰度
     cv::cvtColor(ROI, gray, cv::COLOR_BGR2GRAY);
     // 高斯滤波
@@ -153,21 +150,6 @@ cv::Mat If_ZebraCrossing(cv::Mat frame, cv::Mat draw)
             if (points.size() == 4)
             {
 
-                // 绘制角点
-                for (int j = 0; j < points.size(); j++)
-                {
-                    std::string text = std::to_string(j + 1);
-                    cv::putText(draw, text, points[j], 1, 3, cv::Scalar(255, 0, 0), 2, 8);
-                    cv::circle(draw, points[j], 4, cv::Scalar(255, 0, 0), -1, 8,
-                               0);
-                }
-                // 绘制轮廓
-                for (int j = 0; j < contours[i].size(); j++)
-                {
-                    cv::circle(draw, contours[i][j], 1, cv::Scalar(0, 255, 0), -1, 8,
-                               0);
-                }
-
                 // 按长宽比例筛选四边形
 
                 // 定义-长宽比(利用问号表达式使其大于一)
@@ -184,7 +166,6 @@ cv::Mat If_ZebraCrossing(cv::Mat frame, cv::Mat draw)
                         white_extern_area = cv::contourArea(contours[i]);
                     }
                     white_area += cv::contourArea(contours[i]);
-                    cv::putText(draw, "ZebraBlock", points[0], 1, 1, cv::Scalar(255, 255, 0), 2, 8);
                 }
             }
         }
@@ -234,12 +215,6 @@ cv::Mat If_ZebraCrossing(cv::Mat frame, cv::Mat draw)
         double zebra_ratio = 3;
         // 求置信度(凸包面积 + 补偿面积 ?= 斑马线块总面积*2.3)
         double confidence_level = ((hull_area + white_extern_area) <= (white_area * 2.3)) ? ((hull_area + white_extern_area) / (white_area * 2.5)) : ((white_area * 2.5) / (hull_area + white_extern_area));
-        // 文字信息
-        std::string text = "ZC|Score:";
-        text.append(std::to_string(confidence_level));
-        text.append("|Slope:");
-        text.append(std::to_string(up_slope));
-
         /* 最后的筛选：
             1.判断外接矩形长宽是否符合比例
             2.判断置信度是否大于0.8
@@ -249,24 +224,8 @@ cv::Mat If_ZebraCrossing(cv::Mat frame, cv::Mat draw)
         */
         if ((length * zebra_ratio < width) && (confidence_level >= 0.8) && (frame.size().height - y_max < 1000) && (up_slope <= 0.05))
         {
-            // 视觉显示
-            cv::putText(draw, text, rect[0], 1, 3, cv::Scalar(0, 255, 0), 2, 8);
-            for (int j = 0; j < 4; j++)
-            {
-                line(draw, rect[j], rect[(j + 1) % 4], cv::Scalar(0, 255, 0), 3, 8); // 绘制最小外接矩形每条边
-            }
-            //
-
             zbera_count++;
             Is_approach = true;
-        }
-        else
-        {
-            // cv::putText(draw, text, rect[0], 1, 3, cv::Scalar(0, 0, 255), 2, 8);
-            // for (int j = 0; j < 4; j++)
-            // {
-            //     line(draw, rect[j], rect[(j + 1) % 4], cv::Scalar(0, 0, 255), 3, 8); // 绘制最小外接矩形每条边
-            // }
         }
     }
     /**** 识别斑马线 结束 ****/
@@ -274,32 +233,19 @@ cv::Mat If_ZebraCrossing(cv::Mat frame, cv::Mat draw)
     /* 判断是否停止：
         当 zbera_count > 5 且 斑马线距离视频流底部距离满足条件 时 输出停止信号
     */
-    cv::String text = "FLAG_STOP:";
     if ((zbera_count > 10) && Is_approach == true)
     {
         FLAG_STOP = true;
     }
 
-    if (FLAG_STOP == true)
-    {
-        text.append("YES");
-        cv::putText(draw, std::to_string(zbera_count), cv::Point(50, 100), 1, 4, cv::Scalar(0, 255, 0), 4, 8);
-        cv::putText(draw, text, cv::Point(50, 50), 1, 4, cv::Scalar(0, 255, 0), 4, 8);
-    }
-    else
-    {
-        text.append("NO");
-        cv::putText(draw, std::to_string(zbera_count), cv::Point(50, 100), 1, 4, cv::Scalar(0, 0, 255), 4, 8);
-        cv::putText(draw, text, cv::Point(50, 50), 1, 4, cv::Scalar(0, 0, 255), 4, 8);
-    }
-    return draw;
+    return 1;
 }
 
 /* 菱形标识别函数
     @param frame: 要处理的帧
     @param draw: 要绘制轮廓的图像
 */
-cv::Mat If_Rhombus(cv::Mat frame, cv::Mat draw)
+int If_Rhombus(cv::Mat frame)
 {
     /* 识别前 图像处理 */
     cv::Mat gray, ROI, bulr, thres, canny, erode, element, dilate;
@@ -313,9 +259,6 @@ cv::Mat If_Rhombus(cv::Mat frame, cv::Mat draw)
     points.push_back(cv::Point(max_X * (3.0 / 5.0), max_Y * (3.0 / 5.0)));  // RU
     points.push_back(cv::Point(max_X * (2.0 / 5.0), max_Y * (3.0 / 5.0)));  // LU
     ROI = ROI_extract(frame, points);
-    line(draw, points[1], points[2], cv::Scalar(0, 255, 0), 1, 8);
-    line(draw, points[2], points[3], cv::Scalar(0, 255, 0), 1, 8);
-    line(draw, points[3], points[0], cv::Scalar(0, 255, 0), 1, 8);
     // 转灰度
     cv::cvtColor(ROI, gray, cv::COLOR_BGR2GRAY);
     // 高斯滤波
@@ -364,21 +307,6 @@ cv::Mat If_Rhombus(cv::Mat frame, cv::Mat draw)
             // 筛选出四边形
             if (points.size() == 4)
             {
-                // 绘制角点
-                for (int i = 0; i < points.size(); i++)
-                {
-                    std::string text = std::to_string(i + 1);
-                    cv::putText(draw, text, points[i], 1, 3, cv::Scalar(255, 0, 0), 2, 8);
-                    cv::circle(draw, points[i], 4, cv::Scalar(255, 0, 0), -1, 8,
-                               0);
-                }
-                // 绘制轮廓
-                for (int j = 0; j < contours[i].size(); j++)
-                {
-                    cv::circle(draw, contours[i][j], 1, cv::Scalar(0, 255, 0), -1, 8,
-                               0);
-                }
-
                 // 定义-长宽比(利用问号表达式使其大于一)
                 double len_to_wid_ratio = (getDistance(points[0], points[1]) >= getDistance(points[1], points[2])) ? (getDistance(points[0], points[1]) / getDistance(points[1], points[2])) : (getDistance(points[1], points[2]) / getDistance(points[0], points[1]));
 
@@ -405,45 +333,8 @@ cv::Mat If_Rhombus(cv::Mat frame, cv::Mat draw)
                     if ((diag_slope_1 < 0.5) && (diag_slope_2 > 2.5))
                     {
                         rhombus_count++;
-                        std::string result;
-                        result.append(std::to_string(diag_slope_1));
-                        result.append("|");
-                        result.append(std::to_string(diag_slope_2));
-                        result.append("|");
-                        result.append(std::to_string(product));
-                        all_point_sets.push_back(points);
-                        cv::putText(draw, result, points[0], 1, 3, cv::Scalar(255, 255, 0), 2, 8);
-                        cv::putText(draw, std::to_string(cv::contourArea(contours[i])), cv::Point(points[0].x, points[0].y - 50), 1, 3, cv::Scalar(255, 0, 255), 2, 8);
                     }
                 }
-            }
-        }
-    }
-
-    std::vector<cv::Vec4f> lines;
-    // 创建一个包含直线斜率和截距的特征向量的数据集
-    std::vector<std::vector<cv::Point2d>> features;
-    std::vector<cv::Point2d> left;
-    std::vector<cv::Point2d> right;
-    features.push_back(left);
-    features.push_back(right);
-    cv::HoughLinesP(canny, lines, 1., CV_PI / 180, 70, 20, 10);
-    for (int i = 0; i < lines.size(); ++i)
-    {
-        cv::Vec4i line_ = lines[i];
-        cv::Point pointA = cv::Point(line_[0], line_[1]), pointB = cv::Point(line_[2], line_[3]);
-        double slope = getSlope(pointA, pointB);
-        double intercept = getIntercept(slope, pointA);
-        if (getAbs(slope) >= 0.5)
-        {
-            cv::line(draw, pointA, pointB, cv::Scalar(255, 255, 0), 4);
-            if (slope > 0)
-            {
-                features[0].push_back(cv::Point2d(slope, intercept));
-            }
-            else
-            {
-                features[1].push_back(cv::Point2d(slope, intercept));
             }
         }
     }
@@ -451,32 +342,18 @@ cv::Mat If_Rhombus(cv::Mat frame, cv::Mat draw)
     /* 判断是否减速：
         当 rhombus_count > 5时 输出停止信号
     */
-    cv::String text = "FLAG_SLOW:";
     if (rhombus_count > 15)
     {
         FLAG_SLOW = true;
     }
 
-    if (FLAG_SLOW == true)
-    {
-        text.append("YES");
-        cv::putText(draw, std::to_string(rhombus_count), cv::Point(50, 100), 1, 4, cv::Scalar(0, 255, 0), 4, 8);
-        cv::putText(draw, text, cv::Point(50, 50), 1, 4, cv::Scalar(0, 255, 0), 4, 8);
-    }
-    else
-    {
-        text.append("NO");
-        cv::putText(draw, std::to_string(rhombus_count), cv::Point(50, 100), 1, 4, cv::Scalar(0, 0, 255), 4, 8);
-        cv::putText(draw, text, cv::Point(50, 50), 1, 4, cv::Scalar(0, 0, 255), 4, 8);
-    }
-
-    return canny;
+    return 1;
 }
 
 /* 车道线函数
     @param frame: 要处理的帧
 */
-int LaneLine(cv::Mat frame, cv::Mat draw)
+int LaneLine(cv::Mat frame)
 {
     /* 识别前 图像处理 */
     cv::Mat gray, ROI, bulr, thres, canny, erode, element_erode, element_dilate, dilate;
@@ -542,23 +419,12 @@ int LaneLine(cv::Mat frame, cv::Mat draw)
 
             lanelines.push_back(cv::Point2d((slope / features[i].size()), (intercept / features[i].size())));
         }
-
-        // for (int x = 0; x < max_X; x++)
-        // {
-        //     int y_1 = x * lanelines[0].x + lanelines[0].y;
-        //     int y_2 = x * lanelines[1].x + lanelines[1].y;
-        //     cv::circle(draw, cv::Point(x, y_1), 3, cv::Scalar(255, 0, 255), -1);
-        //     cv::circle(draw, cv::Point(x, y_2), 3, cv::Scalar(255, 0, 255), -1);
-        // }
-
         std::vector<int> center;
         for (int x = 0; x < max_X; x++)
         {
             if (getAbs((x * lanelines[0].x + lanelines[0].y) - (x * lanelines[1].x + lanelines[1].y)) <= 10)
             {
                 center.push_back(x);
-                // cv::putText(draw, std::to_string(x), cv::Point(x, ((x * lanelines[0].x + lanelines[0].y) + (x * lanelines[1].x + lanelines[1].y)) / 2), 1, 4, cv::Scalar(0, 0, 255), 3);
-                // cv::circle(draw, cv::Point(x, ((x * lanelines[0].x + lanelines[0].y) + (x * lanelines[1].x + lanelines[1].y)) / 2), 10, cv::Scalar(0, 0, 255), -1);
             }
         }
         double center_x = 0;
@@ -567,10 +433,6 @@ int LaneLine(cv::Mat frame, cv::Mat draw)
             center_x += center[i];
         }
         center_x = center_x / center.size();
-
-        // cv::line(draw, cv::Point((int)center_x, max_Y), cv::Point(center_x, 0), cv::Scalar(0, 0, 255), 4);
-        // cv::line(draw, cv::Point(max_X / 2, max_Y), cv::Point(max_X / 2, 0), cv::Scalar(0, 255, 0), 4);
-        // cv::putText(draw, std::to_string((double)center_x - (double)max_X / 2.0), cv::Point(max_X / 2, max_Y / 2), 1, 4, cv::Scalar(255, 255, 0), 2);
 
         int Deviation = (int)((double)center_x - (double)max_X / 2.0);
 
@@ -630,61 +492,56 @@ int uart_send(int DEVIATION, int TURN_DIRECTION, int FLAG_SLOW, int FLAG_STOP)
     return 1;
 }
 
-void VideoProcess(cv::VideoCapture video)
-{
-    cv::namedWindow("a", 0);
-    cv::resizeWindow("a", 1000, 500);
+// void VideoProcess(cv::VideoCapture video)
+// {
+//     cv::namedWindow("a", 0);
+//     cv::resizeWindow("a", 1000, 500);
 
-    // FPS-------------------------------------------
-    float time_use = 0;
-    float all_time_use = 0;
-    struct timeval all_start;
-    struct timeval all_end;
+//     // FPS-------------------------------------------
+//     float time_use = 0;
+//     float all_time_use = 0;
+//     struct timeval all_start;
+//     struct timeval all_end;
 
-    struct timeval start;
-    struct timeval end;
-    gettimeofday(&all_start, NULL);
-    // ----------------------------------------------
+//     struct timeval start;
+//     struct timeval end;
+//     gettimeofday(&all_start, NULL);
+//     // ----------------------------------------------
 
-    int count = 0;
-    while (1)
-    {
-        gettimeofday(&start, NULL);
+//     int count = 0;
+//     while (1)
+//     {
+//         gettimeofday(&start, NULL);
 
-        count++;
+//         count++;
 
-        cv::Mat frame, draw;
-        video >> frame; // 从视频中读取一帧图像
-        draw = frame;
+//         cv::Mat frame;
+//         video >> frame; // 从视频中读取一帧图像
+//         if (frame.empty())
+//         {
+//             gettimeofday(&all_end, NULL);
+//             all_time_use = ((all_end.tv_sec - all_start.tv_sec) * 1000000 + (all_end.tv_usec - all_start.tv_usec));
+//             std::cout << "Average FPS:" << (((float)count) / (all_time_use / 1000000)) << std::endl;
+//             break; // 如果图像为空，表示已经读取完所有帧，跳出循环
+//         }
 
-        if (frame.empty())
-        {
-            gettimeofday(&all_end, NULL);
-            all_time_use = ((all_end.tv_sec - all_start.tv_sec) * 1000000 + (all_end.tv_usec - all_start.tv_usec));
-            std::cout << "Average FPS:" << (((float)count) / (all_time_use / 1000000)) << std::endl;
-            break; // 如果图像为空，表示已经读取完所有帧，跳出循环
-        }
+//         int DEVIATION = 0;
 
-        int DEVIATION = 0;
+//         if (count > 0)
+//         {
+//             if (FLAG_SLOW == 0)
+//                 If_Rhombus(frame);
+//             else
+//                 If_ZebraCrossing(frame);
+//             DEVIATION = LaneLine(frame);
 
-        if (count > 0)
-        {
-            // if (FLAG_SLOW == 0)
-            draw = If_Rhombus(frame, draw);
-            // else
-            //     draw = If_ZebraCrossing(frame, draw);
-            // DEVIATION = LaneLine(frame, draw);
+//             uart_send(0, FLAG_SLOW, FLAG_STOP, DEVIATION);
+//         }
 
-            // uart_send(0, FLAG_SLOW, FLAG_STOP, DEVIATION);
-            // cv::imshow("a", frame);
-            // cv::waitKey(0);
-        }
-        // cv::waitKey(14);
-
-        // FPS--------------------------------------------------------------------------
-        gettimeofday(&end, NULL);
-        time_use = ((end.tv_sec - start.tv_sec) * 1000000 + (end.tv_usec - start.tv_usec));
-        std::cout << "Processing frame " << count << "|FPS:" << 1.0 / (time_use / 1000000) << "|DEV:" << DEVIATION << std::endl;
-        //-------------------------------------------------------------------------
-    }
-}
+//         // FPS--------------------------------------------------------------------------
+//         gettimeofday(&end, NULL);
+//         time_use = ((end.tv_sec - start.tv_sec) * 1000000 + (end.tv_usec - start.tv_usec));
+//         std::cout << "Processing frame " << count << "|FPS:" << 1.0 / (time_use / 1000000) << "|DEV:" << DEVIATION << std::endl;
+//         //-------------------------------------------------------------------------
+//     }
+// }

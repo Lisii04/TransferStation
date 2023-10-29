@@ -43,22 +43,22 @@ double getSlope(cv::Point pointA, cv::Point pointB);
     @param frame 要处理的帧
     @param draw 要绘制轮廓的图像
 */
-cv::Mat If_ZebraCrossing(cv::Mat frame, cv::Mat draw);
+int If_ZebraCrossing(cv::Mat frame);
 
 /* 菱形标识别函数
     @param frame: 要处理的帧
     @param draw: 要绘制轮廓的图像
 */
-cv::Mat If_Rhombus(cv::Mat frame, cv::Mat draw);
+int If_Rhombus(cv::Mat frame);
 
 /* 车道线函数
     @param frame: 要处理的帧
 */
-int LaneLine(cv::Mat frame, cv::Mat draw);
+int LaneLine(cv::Mat frame);
 
 /** 串口通信函数
  *
  */
 int uart_send(int FLAG_TURN, int FLAG_SLOW, int FLAG_STOP, int DEVIATION);
 
-void VideoProcess(cv::VideoCapture video);
+// void VideoProcess(cv::VideoCapture video);

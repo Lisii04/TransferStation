@@ -56,8 +56,8 @@ build CMakeFiles/UVProj.dir/main.cpp.o: CXX_COMPILER__UVProj_Debug /home/lisii/D
   OBJECT_DIR = CMakeFiles/UVProj.dir
   OBJECT_FILE_DIR = CMakeFiles/UVProj.dir
 
-build CMakeFiles/UVProj.dir/func.cpp.o: CXX_COMPILER__UVProj_Debug /home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/UVproj/func.cpp || cmake_object_order_depends_target_UVProj
-  DEP_FILE = CMakeFiles/UVProj.dir/func.cpp.o.d
+build CMakeFiles/UVProj.dir/func_rel.cpp.o: CXX_COMPILER__UVProj_Debug /home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/UVproj/func_rel.cpp || cmake_object_order_depends_target_UVProj
+  DEP_FILE = CMakeFiles/UVProj.dir/func_rel.cpp.o.d
   FLAGS = -g -std=gnu++11
   INCLUDES = -I/usr/include/python3.10 -isystem /usr/local/include/opencv4
   OBJECT_DIR = CMakeFiles/UVProj.dir
@@ -71,7 +71,7 @@ build CMakeFiles/UVProj.dir/func.cpp.o: CXX_COMPILER__UVProj_Debug /home/lisii/D
 #############################################
 # Link the executable UVProj
 
-build UVProj: CXX_EXECUTABLE_LINKER__UVProj_Debug CMakeFiles/UVProj.dir/main.cpp.o CMakeFiles/UVProj.dir/func.cpp.o | /usr/lib/x86_64-linux-gnu/libpython3.10.so /usr/local/lib/libopencv_gapi.so.4.8.0 /usr/local/lib/libopencv_highgui.so.4.8.0 /usr/local/lib/libopencv_ml.so.4.8.0 /usr/local/lib/libopencv_objdetect.so.4.8.0 /usr/local/lib/libopencv_photo.so.4.8.0 /usr/local/lib/libopencv_stitching.so.4.8.0 /usr/local/lib/libopencv_video.so.4.8.0 /usr/local/lib/libopencv_videoio.so.4.8.0 /usr/local/lib/libopencv_imgcodecs.so.4.8.0 /usr/local/lib/libopencv_dnn.so.4.8.0 /usr/local/lib/libopencv_calib3d.so.4.8.0 /usr/local/lib/libopencv_features2d.so.4.8.0 /usr/local/lib/libopencv_flann.so.4.8.0 /usr/local/lib/libopencv_imgproc.so.4.8.0 /usr/local/lib/libopencv_core.so.4.8.0
+build UVProj: CXX_EXECUTABLE_LINKER__UVProj_Debug CMakeFiles/UVProj.dir/main.cpp.o CMakeFiles/UVProj.dir/func_rel.cpp.o | /usr/lib/x86_64-linux-gnu/libpython3.10.so /usr/local/lib/libopencv_gapi.so.4.8.0 /usr/local/lib/libopencv_highgui.so.4.8.0 /usr/local/lib/libopencv_ml.so.4.8.0 /usr/local/lib/libopencv_objdetect.so.4.8.0 /usr/local/lib/libopencv_photo.so.4.8.0 /usr/local/lib/libopencv_stitching.so.4.8.0 /usr/local/lib/libopencv_video.so.4.8.0 /usr/local/lib/libopencv_videoio.so.4.8.0 /usr/local/lib/libopencv_imgcodecs.so.4.8.0 /usr/local/lib/libopencv_dnn.so.4.8.0 /usr/local/lib/libopencv_calib3d.so.4.8.0 /usr/local/lib/libopencv_features2d.so.4.8.0 /usr/local/lib/libopencv_flann.so.4.8.0 /usr/local/lib/libopencv_imgproc.so.4.8.0 /usr/local/lib/libopencv_core.so.4.8.0
   FLAGS = -g
   LINK_FLAGS = -rdynamic
   LINK_LIBRARIES = -Wl,-rpath,/usr/local/lib  -lpython3.10  /usr/local/lib/libopencv_gapi.so.4.8.0  /usr/local/lib/libopencv_highgui.so.4.8.0  /usr/local/lib/libopencv_ml.so.4.8.0  /usr/local/lib/libopencv_objdetect.so.4.8.0  /usr/local/lib/libopencv_photo.so.4.8.0  /usr/local/lib/libopencv_stitching.so.4.8.0  /usr/local/lib/libopencv_video.so.4.8.0  /usr/local/lib/libopencv_videoio.so.4.8.0  /usr/local/lib/libopencv_imgcodecs.so.4.8.0  /usr/local/lib/libopencv_dnn.so.4.8.0  /usr/local/lib/libopencv_calib3d.so.4.8.0  /usr/local/lib/libopencv_features2d.so.4.8.0  /usr/local/lib/libopencv_flann.so.4.8.0  /usr/local/lib/libopencv_imgproc.so.4.8.0  /usr/local/lib/libopencv_core.so.4.8.0
