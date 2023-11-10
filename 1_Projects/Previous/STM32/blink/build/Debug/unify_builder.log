@@ -1,0 +1,221 @@
+[2023-11-10 20:19:25]	[done]
+	build successfully !
+
+[2023-11-10 20:22:45]	[done]
+	build successfully !
+
+[2023-11-10 20:23:18]	[done]
+	build successfully !
+
+[2023-11-10 20:24:00]	[done]
+	build successfully !
+
+[2023-11-10 20:26:41]	[done]
+	build successfully !
+
+[2023-11-10 20:27:54]	[done]
+	build successfully !
+
+[2023-11-10 20:31:58]	[done]
+	build successfully !
+
+[2023-11-10 20:32:07]	[done]
+	build successfully !
+
+[2023-11-10 20:32:15]	[done]
+	build successfully !
+
+[2023-11-10 20:32:25]	[done]
+	build successfully !
+
+[2023-11-10 20:32:32]	[done]
+	build successfully !
+
+[2023-11-10 20:32:43]	[done]
+	build successfully !
+
+[2023-11-10 20:33:15]	[done]
+	build successfully !
+
+[2023-11-10 20:33:34]	[done]
+	build successfully !
+
+[2023-11-10 20:51:00]	[done]
+	build successfully !
+
+[2023-11-10 20:51:13]	[done]
+	build successfully !
+
+[2023-11-10 21:27:44]	[done]
+	build successfully !
+
+[2023-11-10 21:35:25]	[done]
+	build successfully !
+
+[2023-11-10 21:45:21]	link failed !, exit code: 1
+   at unify_builder.Program.Main(String[] args_)
+---
+/opt/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/bin/ld: warning: ./build/Debug/blink.elf has a LOAD segment with RWX permissions
+/opt/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/bin/ld: ./build/Debug/Src/main.o: in function `main':
+/home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Previous/STM32/blink/./Src/main.c:108: undefined reference to `HAL_UART_Transmit_IT'
+/opt/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/bin/ld: ./build/Debug/Src/stm32f1xx_it.o: in function `USART1_IRQHandler':
+/home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Previous/STM32/blink/./Src/stm32f1xx_it.c:257: undefined reference to `HAL_UART_IRQHandler'
+/opt/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/bin/ld: ./build/Debug/Src/usart.o: in function `MX_USART1_UART_Init':
+/home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Previous/STM32/blink/./Src/usart.c:51: undefined reference to `HAL_UART_Init'
+Memory region         Used Size  Region Size  %age Used
+             RAM:        2208 B        20 KB     10.78%
+           FLASH:        4548 B        64 KB      6.94%
+collect2: error: ld returned 1 exit status
+
+
+[2023-11-10 21:45:37]	[done]
+	build successfully !
+
+[2023-11-10 21:47:08]	[done]
+	build successfully !
+
+[2023-11-10 21:47:42]	[done]
+	build successfully !
+
+[2023-11-10 21:51:47]	[done]
+	build successfully !
+
+[2023-11-10 21:52:13]	[done]
+	build successfully !
+
+[2023-11-10 21:56:18]	[done]
+	build successfully !
+
+[2023-11-10 21:57:14]	[done]
+	build successfully !
+
+[2023-11-10 21:58:25]	[done]
+	build successfully !
+
+[2023-11-10 22:00:23]	[done]
+	build successfully !
+
+[2023-11-10 22:01:14]	[done]
+	build successfully !
+
+[2023-11-10 22:05:35]	compilation failed at : "/home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Previous/STM32/blink/Src/stm32f1xx_it.c", exit code: 1
+command: 
+  "/opt/gcc-arm-none-eabi/bin/arm-none-eabi-gcc" -c -xc -mthumb -std=c11 -IInc -IDrivers/STM32F1xx_HAL_Driver/Inc -IDrivers/STM32F1xx_HAL_Driver/Inc/Legacy -IDrivers/CMSIS/Device/ST/STM32F1xx/Include -IDrivers/CMSIS/Include -DDEBUG -DUSE_HAL_DRIVER -DSTM32F103xB -mcpu=cortex-m3 -Og -Wall -g -ffunction-sections -fdata-sections -o ./build/Debug/Src/stm32f1xx_it.o -MMD ./Src/stm32f1xx_it.c
+   at unify_builder.Program.compileByMulThread(Int32 thrNum, CmdInfo[] cmds_, List`1 errLogs)
+   at unify_builder.Program.Main(String[] args_)
+---
+./Src/stm32f1xx_it.c: In function 'EXTI9_5_IRQHandler':
+./Src/stm32f1xx_it.c:239:16: warning: implicit declaration of function 'sprintf' [-Wimplicit-function-declaration]
+  239 |     int size = sprintf(send, "%d\n", count);
+      |                ^~~~~~~
+./Src/stm32f1xx_it.c:23:1: note: include '<stdio.h>' or provide a declaration of 'sprintf'
+   22 | #include "main.h"
+  +++ |+#include <stdio.h>
+   23 | 
+./Src/stm32f1xx_it.c:239:16: warning: incompatible implicit declaration of built-in function 'sprintf' [-Wbuiltin-declaration-mismatch]
+  239 |     int size = sprintf(send, "%d\n", count);
+      |                ^~~~~~~
+./Src/stm32f1xx_it.c:239:16: note: include '<stdio.h>' or provide a declaration of 'sprintf'
+./Src/stm32f1xx_it.c:239:38: error: 'count' undeclared (first use in this function)
+  239 |     int size = sprintf(send, "%d\n", count);
+      |                                      ^~~~~
+./Src/stm32f1xx_it.c:239:38: note: each undeclared identifier is reported only once for each function it appears in
+./Src/stm32f1xx_it.c: In function 'EXTI15_10_IRQHandler':
+./Src/stm32f1xx_it.c:274:16: warning: incompatible implicit declaration of built-in function 'sprintf' [-Wbuiltin-declaration-mismatch]
+  274 |     int size = sprintf(send, "%d\n", count);
+      |                ^~~~~~~
+./Src/stm32f1xx_it.c:274:16: note: include '<stdio.h>' or provide a declaration of 'sprintf'
+./Src/stm32f1xx_it.c:274:38: error: 'count' undeclared (first use in this function)
+  274 |     int size = sprintf(send, "%d\n", count);
+      |                                      ^~~~~
+
+[2023-11-10 22:06:02]	[done]
+	build successfully !
+
+[2023-11-10 22:06:51]	[done]
+	build successfully !
+
+[2023-11-10 22:09:41]	[done]
+	build successfully !
+
+[2023-11-10 22:10:09]	[done]
+	build successfully !
+
+[2023-11-10 22:11:13]	[done]
+	build successfully !
+
+[2023-11-10 22:12:38]	[done]
+	build successfully !
+
+[2023-11-10 22:24:00]	[done]
+	build successfully !
+
+[2023-11-10 22:39:26]	[done]
+	build successfully !
+
+[2023-11-10 22:40:04]	[done]
+	build successfully !
+
+[2023-11-10 22:41:12]	compilation failed at : "/home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Previous/STM32/blink/Src/main.c", exit code: 1
+command: 
+  "/opt/gcc-arm-none-eabi/bin/arm-none-eabi-gcc" -c -xc -mthumb -std=c11 -IInc -IDrivers/STM32F1xx_HAL_Driver/Inc -IDrivers/STM32F1xx_HAL_Driver/Inc/Legacy -IDrivers/CMSIS/Device/ST/STM32F1xx/Include -IDrivers/CMSIS/Include -DDEBUG -DUSE_HAL_DRIVER -DSTM32F103xB -mcpu=cortex-m3 -Og -Wall -g -ffunction-sections -fdata-sections -o ./build/Debug/Src/main.o -MMD ./Src/main.c
+   at unify_builder.Program.Main(String[] args_)
+---
+./Src/main.c: In function 'main':
+./Src/main.c:109:41: error: expected expression before 'uint8_t'
+  109 |         HAL_UART_Transmit_IT(&huart1, (*uint8_t)DATA, size);
+      |                                         ^~~~~~~
+./Src/main.c:109:49: error: expected ')' before 'DATA'
+  109 |         HAL_UART_Transmit_IT(&huart1, (*uint8_t)DATA, size);
+      |                             ~                   ^~~~
+      |                                                 )
+./Src/main.c:109:9: error: too few arguments to function 'HAL_UART_Transmit_IT'
+  109 |         HAL_UART_Transmit_IT(&huart1, (*uint8_t)DATA, size);
+      |         ^~~~~~~~~~~~~~~~~~~~
+In file included from Inc/stm32f1xx_hal_conf.h:338,
+                 from Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:29,
+                 from Inc/main.h:30,
+                 from ./Src/main.c:20:
+Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_uart.h:751:19: note: declared here
+  751 | HAL_StatusTypeDef HAL_UART_Transmit_IT(UART_HandleTypeDef *huart, const uint8_t *pData, uint16_t Size);
+      |                   ^~~~~~~~~~~~~~~~~~~~
+./Src/main.c:108:13: warning: unused variable 'size' [-Wunused-variable]
+  108 |         int size = sprintf(DATA, "%d,%d\n", GetData, Direction);
+      |             ^~~~
+
+[2023-11-10 22:41:43]	[done]
+	build successfully !
+
+[2023-11-10 22:44:07]	[done]
+	build successfully !
+
+[2023-11-10 22:44:55]	[done]
+	build successfully !
+
+[2023-11-10 22:53:02]	[done]
+	build successfully !
+
+[2023-11-10 22:55:16]	[done]
+	build successfully !
+
+[2023-11-10 22:56:05]	[done]
+	build successfully !
+
+[2023-11-10 22:56:24]	[done]
+	build successfully !
+
+[2023-11-10 22:56:50]	[done]
+	build successfully !
+
+[2023-11-10 22:56:56]	[done]
+	build successfully !
+
+[2023-11-10 23:00:57]	[done]
+	build successfully !
+
+[2023-11-10 23:01:52]	[done]
+	build successfully !
+
+[2023-11-10 23:02:18]	[done]
+	build successfully !
+

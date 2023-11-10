@@ -1,0 +1,3 @@
+tool: GCC
+fileName: blink.map
+elfName: blink.elf

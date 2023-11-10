@@ -1,0 +1,10 @@
+>>> cc
+
+
+
+>>> ld
+
+/opt/gcc-arm-none-eabi/bin/../lib/gcc/arm-none-eabi/12.3.1/../../../../arm-none-eabi/bin/ld: warning: ./build/Debug/blink.elf has a LOAD segment with RWX permissions
+Memory region         Used Size  Region Size  %age Used
+             RAM:        4384 B        20 KB     21.41%
+           FLASH:       37992 B        64 KB     57.97%

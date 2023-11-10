@@ -1,0 +1,27 @@
+-mthumb -mcpu=cortex-m3 -Wl,--print-memory-usage -TSTM32F103C8TX_FLASH.ld -Wl,--gc-sections
+-Wl,-Map=./build/Debug/blink.map
+-o ./build/Debug/blink.elf ./build/Debug/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.o
+./build/Debug/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.o
+./build/Debug/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.o
+./build/Debug/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.o
+./build/Debug/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.o
+./build/Debug/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.o
+./build/Debug/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.o
+./build/Debug/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.o
+./build/Debug/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.o
+./build/Debug/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.o
+./build/Debug/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.o
+./build/Debug/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.o
+./build/Debug/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.o
+./build/Debug/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.o
+./build/Debug/Src/dma.o
+./build/Debug/Src/gpio.o
+./build/Debug/Src/main.o
+./build/Debug/Src/stm32f1xx_hal_msp.o
+./build/Debug/Src/stm32f1xx_it.o
+./build/Debug/Src/syscalls.o
+./build/Debug/Src/sysmem.o
+./build/Debug/Src/system_stm32f1xx.o
+./build/Debug/Src/tim.o
+./build/Debug/Src/usart.o
+./build/Debug/Startup/startup_stm32f103c8tx.o

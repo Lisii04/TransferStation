@@ -1,0 +1,117 @@
+{
+    "name": "blink",
+    "target": "Debug",
+    "toolchain": "GCC",
+    "toolchainLocation": "/opt/gcc-arm-none-eabi",
+    "toolchainCfgFile": "/home/lisii/.vscode/extensions/cl.eide-3.13.2023060401/res/data/models/unix/arm.gcc.model.json",
+    "buildMode": "fast|multhread",
+    "showRepathOnLog": true,
+    "threadNum": 12,
+    "rootDir": "/home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Previous/STM32/blink",
+    "dumpPath": "build/Debug",
+    "outDir": "build/Debug",
+    "incDirs": [
+        "Inc",
+        "Drivers/STM32F1xx_HAL_Driver/Inc",
+        "Drivers/STM32F1xx_HAL_Driver/Inc/Legacy",
+        "Drivers/CMSIS/Device/ST/STM32F1xx/Include",
+        "Drivers/CMSIS/Include"
+    ],
+    "libDirs": [],
+    "defines": [
+        "DEBUG",
+        "USE_HAL_DRIVER",
+        "STM32F103xB"
+    ],
+    "sourceList": [
+        "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c",
+        "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c",
+        "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.c",
+        "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_exti.c",
+        "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.c",
+        "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c",
+        "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.c",
+        "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c",
+        "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.c",
+        "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.c",
+        "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c",
+        "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.c",
+        "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.c",
+        "Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.c",
+        "Src/dma.c",
+        "Src/gpio.c",
+        "Src/main.c",
+        "Src/stm32f1xx_hal_msp.c",
+        "Src/stm32f1xx_it.c",
+        "Src/syscalls.c",
+        "Src/sysmem.c",
+        "Src/system_stm32f1xx.c",
+        "Src/tim.c",
+        "Src/usart.c",
+        "Startup/startup_stm32f103c8tx.s"
+    ],
+    "sourceParams": {},
+    "sourceParamsMtime": 1699614373539.2295,
+    "options": {
+        "version": 5,
+        "beforeBuildTasks": [],
+        "afterBuildTasks": [],
+        "global": {
+            "$float-abi-type": "softfp",
+            "output-debug-info": "enable",
+            "misc-control": [],
+            "toolPrefix": "arm-none-eabi-",
+            "microcontroller-cpu": "cortex-m3",
+            "microcontroller-fpu": "cortex-m3",
+            "microcontroller-float": "cortex-m3",
+            "target": "cortex-m3"
+        },
+        "c/cpp-compiler": {
+            "language-c": "c11",
+            "language-cpp": "c++11",
+            "optimization": "level-debug",
+            "warnings": "all-warnings",
+            "one-elf-section-per-function": true,
+            "one-elf-section-per-data": true,
+            "C_FLAGS": "",
+            "CXX_FLAGS": ""
+        },
+        "asm-compiler": {
+            "ASM_FLAGS": "-DDEBUG"
+        },
+        "linker": {
+            "output-format": "elf",
+            "remove-unused-input-sections": true,
+            "LD_FLAGS": "-TSTM32F103C8TX_FLASH.ld",
+            "LIB_FLAGS": "",
+            "link-scatter": []
+        }
+    },
+    "env": {
+        "workspaceFolder": "/home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Previous/STM32/blink",
+        "workspaceFolderBasename": "blink",
+        "OutDir": "/home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Previous/STM32/blink/build/Debug",
+        "OutDirRoot": "build",
+        "OutDirBase": "build/Debug",
+        "ProjectName": "blink",
+        "ConfigName": "Debug",
+        "ProjectRoot": "/home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Previous/STM32/blink",
+        "ExecutableName": "/home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Previous/STM32/blink/build/Debug/blink",
+        "SYS_Platform": "linux",
+        "SYS_DirSep": "/",
+        "SYS_DirSeparator": "/",
+        "SYS_PathSep": ":",
+        "SYS_PathSeparator": ":",
+        "SYS_EOL": "\n",
+        "ToolchainRoot": "/opt/gcc-arm-none-eabi"
+    },
+    "sha": {
+        "c/cpp-defines": "b7dc12eacf518614d173849a1c7830d6",
+        "beforeBuildTasks": "d751713988987e9331980363e24189ce",
+        "afterBuildTasks": "d751713988987e9331980363e24189ce",
+        "global": "fe27bd4c36097c5f333890bab1f0573a",
+        "c/cpp-compiler": "292b10e2fef533def4cb15297b4e0391",
+        "asm-compiler": "d5d897d00b43b170847af159db4fbc71",
+        "linker": "2ac43d6f7a5f3dfe59748df5494c251e"
+    }
+}

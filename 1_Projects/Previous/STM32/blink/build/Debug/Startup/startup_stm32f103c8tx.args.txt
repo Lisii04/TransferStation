@@ -1,0 +1,1 @@
+-c -x assembler-with-cpp -mthumb -IInc -IDrivers/STM32F1xx_HAL_Driver/Inc -IDrivers/STM32F1xx_HAL_Driver/Inc/Legacy -IDrivers/CMSIS/Device/ST/STM32F1xx/Include -IDrivers/CMSIS/Include -mcpu=cortex-m3 -g -DDEBUG -o ./build/Debug/Startup/startup_stm32f103c8tx.o -MMD ./Startup/startup_stm32f103c8tx.s
