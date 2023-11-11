@@ -8,6 +8,8 @@ int CHECKERBOARD[2]{7, 7};
 
 int main()
 {
+    cv::namedWindow("Image", 0);
+    cv::resizeWindow("Image", cv::Size(800, 600));
     // Creating vector to store vectors of 3D points for each checkerboard image
     // 创建矢量以存储每个棋盘图像的三维点矢量
     std::vector<std::vector<cv::Point3f>> objpoints;
@@ -33,7 +35,7 @@ int main()
 
     // Path of the folder containing checkerboard images
     // 包含棋盘图像的文件夹的路径
-    std::string path = "./images/*.jpg";
+    std::string path = "../images/*.jpg";
 
     // 使用glob函数读取所有图像的路径
     cv::glob(path, images);

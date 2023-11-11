@@ -7,13 +7,13 @@ using namespace std;
 
 int main()
 {
-    VideoCapture inputVideo(1);
+    VideoCapture inputVideo("../1.mp4");
     if (!inputVideo.isOpened())
     {
         cout << "Could not open the input video " << endl;
         return -1;
     }
-    inputVideo.set(cv::CAP_PROP_FPS, 90);
+    inputVideo.set(cv::CAP_PROP_FPS, 60);
     namedWindow("Camera", 0);
     resizeWindow("Camera", cv::Size(800, 600));
 
@@ -26,7 +26,7 @@ int main()
         if (frame.empty())
             break;
         imshow("Camera", frame);
-        char key = waitKey(1);
+        char key = waitKey(0);
         if (key == 'q' || key == 'Q') // 退出运行
             break;
         if (key == 'k' || key == 'K') // 截取图片
