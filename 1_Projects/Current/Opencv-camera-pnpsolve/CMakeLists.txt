@@ -15,10 +15,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
 # Declare the executable target built from your sources
 
-add_executable(Opencv-camera-pnpsolve camera_calibration.cpp)
+# add_executable(Opencv-camera-pnpsolve camera_calibration.cpp)
 # add_executable(Opencv-camera-pnpsolve chesscoard_capture.cpp)
-# add_executable(Opencv-camera-pnpsolve pnp_solve.cpp)
-# add_executable(Opencv-camera-pnpsolve pnp_solve_example.cpp)
+add_executable(Opencv-camera-pnpsolve pnp_solve.cpp)
+# add_executable(Opencv-camera-pnpsolve remap.cpp)
 
 # Link your application with OpenCV libraries
 target_link_libraries(Opencv-camera-pnpsolve PRIVATE ${OpenCV_LIBS})
