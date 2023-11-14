@@ -1,7 +1,0 @@
-[
-{
-  "directory": "/home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/Opencv-camera-pnpsolve/build",
-  "command": "/usr/bin/g++ -isystem /usr/include/opencv4 -g -std=gnu++11 -o CMakeFiles/Opencv-camera-pnpsolve.dir/pnp_solve.cpp.o -c /home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/Opencv-camera-pnpsolve/pnp_solve.cpp",
-  "file": "/home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/Opencv-camera-pnpsolve/pnp_solve.cpp"
-}
-]

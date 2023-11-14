@@ -1,0 +1,4 @@
+# ninja log v5
+0	1786	1699968993565989305	CMakeFiles/Opencv-camera-pnpsolve.dir/perspective_ransform_cls.cpp.o	2c607c64577a49f9
+1853	2026	1699972207007887295	Opencv-camera-pnpsolve	a129957d573c5ab3
+1	1853	1699972206835911785	CMakeFiles/Opencv-camera-pnpsolve.dir/test.cpp.o	280231d56499bd39
