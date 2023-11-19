@@ -1,4 +1,4 @@
-# Install script for directory: /home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/RM_Radar/Opencv-camera-pnpsolve
+# Install script for directory: /home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/RM_Radar/Opencv-camera-pnpsolve/Src
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

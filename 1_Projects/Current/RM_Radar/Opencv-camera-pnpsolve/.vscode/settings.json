@@ -63,5 +63,6 @@
         "cinttypes": "cpp",
         "typeinfo": "cpp",
         "fstream": "cpp"
-    }
+    },
+    "cmake.sourceDirectory": "/home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/RM_Radar/Opencv-camera-pnpsolve/Src"
 }

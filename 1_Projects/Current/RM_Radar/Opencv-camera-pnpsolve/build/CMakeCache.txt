@@ -141,7 +141,7 @@ CMAKE_PROJECT_DESCRIPTION:STATIC=
 CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=Opencv-camera-pnpsolve
+CMAKE_PROJECT_NAME:STATIC=radar
 
 //Path to a program.
 CMAKE_RANLIB:FILEPATH=/usr/bin/ranlib
@@ -209,13 +209,13 @@ CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 OpenCV_DIR:PATH=/usr/local/lib/cmake/opencv4
 
 //Value Computed by CMake
-Opencv-camera-pnpsolve_BINARY_DIR:STATIC=/home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/RM_Radar/Opencv-camera-pnpsolve/build
+radar_BINARY_DIR:STATIC=/home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/RM_Radar/Opencv-camera-pnpsolve/build
 
 //Value Computed by CMake
-Opencv-camera-pnpsolve_IS_TOP_LEVEL:STATIC=ON
+radar_IS_TOP_LEVEL:STATIC=ON
 
 //Value Computed by CMake
-Opencv-camera-pnpsolve_SOURCE_DIR:STATIC=/home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/RM_Radar/Opencv-camera-pnpsolve
+radar_SOURCE_DIR:STATIC=/home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/RM_Radar/Opencv-camera-pnpsolve/Src
 
 
 ########################
@@ -300,7 +300,7 @@ CMAKE_GENERATOR_PLATFORM:INTERNAL=
 CMAKE_GENERATOR_TOOLSET:INTERNAL=
 //Source directory with the top level CMakeLists.txt file for this
 // project
-CMAKE_HOME_DIRECTORY:INTERNAL=/home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/RM_Radar/Opencv-camera-pnpsolve
+CMAKE_HOME_DIRECTORY:INTERNAL=/home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/RM_Radar/Opencv-camera-pnpsolve/Src
 //Install .so files without execute permission.
 CMAKE_INSTALL_SO_NO_EXE:INTERNAL=1
 //ADVANCED property for variable: CMAKE_LINKER
