@@ -8,7 +8,7 @@ using namespace cv;
 
 string image_path_1 = "../Images/camera2.png";
 Mat camera_image = imread(image_path_1);
-string image_path_2 = "../Images/minimap.png";
+string image_path_2 = "../Images/minimap.jpg";
 Mat minimap_image = imread(image_path_2);
 
 static vector<Point2f> high_image_points;

@@ -55,7 +55,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/RM_Radar/Opencv-camera-pnpsolve/build"
+			"value" : "/home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/RM_Radar/Opencv-camera-pnpsolve/build"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -92,6 +92,22 @@
 			],
 			"type" : "INTERNAL",
 			"value" : "1"
+		},
+		{
+			"name" : "CMAKE_COLOR_MAKEFILE",
+			"properties" : 
+			[
+				{
+					"name" : "ADVANCED",
+					"value" : "1"
+				},
+				{
+					"name" : "HELPSTRING",
+					"value" : "Enable/Disable color output during build."
+				}
+			],
+			"type" : "BOOL",
+			"value" : "ON"
 		},
 		{
 			"name" : "CMAKE_COMMAND",
@@ -402,18 +418,6 @@
 			"value" : "CMAKE_DLLTOOL-NOTFOUND"
 		},
 		{
-			"name" : "CMAKE_EDIT_COMMAND",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Path to cache edit program executable."
-				}
-			],
-			"type" : "INTERNAL",
-			"value" : "/usr/bin/cmake-gui"
-		},
-		{
 			"name" : "CMAKE_EXECUTABLE_FORMAT",
 			"properties" : 
 			[
@@ -539,7 +543,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "Ninja"
+			"value" : "Unix Makefiles"
 		},
 		{
 			"name" : "CMAKE_GENERATOR_INSTANCE",
@@ -587,7 +591,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/RM_Radar/Opencv-camera-pnpsolve/Src"
+			"value" : "/home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/RM_Radar/Opencv-camera-pnpsolve/Src"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
@@ -639,11 +643,11 @@
 				},
 				{
 					"name" : "HELPSTRING",
-					"value" : "Program used to build from build.ninja files."
+					"value" : "Path to a program."
 				}
 			],
 			"type" : "FILEPATH",
-			"value" : "/usr/bin/ninja"
+			"value" : "/usr/bin/gmake"
 		},
 		{
 			"name" : "CMAKE_MODULE_LINKER_FLAGS",
@@ -1123,7 +1127,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "[/usr/local][v4.8.0()]"
+			"value" : "[/usr][v4.5.4()]"
 		},
 		{
 			"name" : "OpenCV_DIR",
@@ -1135,7 +1139,7 @@
 				}
 			],
 			"type" : "PATH",
-			"value" : "/usr/local/lib/cmake/opencv4"
+			"value" : "/usr/lib/x86_64-linux-gnu/cmake/opencv4"
 		},
 		{
 			"name" : "radar_BINARY_DIR",
@@ -1147,7 +1151,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/RM_Radar/Opencv-camera-pnpsolve/build"
+			"value" : "/home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/RM_Radar/Opencv-camera-pnpsolve/build"
 		},
 		{
 			"name" : "radar_IS_TOP_LEVEL",
@@ -1171,7 +1175,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/RM_Radar/Opencv-camera-pnpsolve/Src"
+			"value" : "/home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/RM_Radar/Opencv-camera-pnpsolve/Src"
 		}
 	],
 	"kind" : "cache",

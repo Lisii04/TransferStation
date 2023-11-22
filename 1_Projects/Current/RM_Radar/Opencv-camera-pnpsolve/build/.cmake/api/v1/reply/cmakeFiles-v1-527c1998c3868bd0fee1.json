@@ -6,7 +6,7 @@
 		},
 		{
 			"isGenerated" : true,
-			"path" : "/home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/RM_Radar/Opencv-camera-pnpsolve/build/CMakeFiles/3.22.1/CMakeSystem.cmake"
+			"path" : "/home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/RM_Radar/Opencv-camera-pnpsolve/build/CMakeFiles/3.22.1/CMakeSystem.cmake"
 		},
 		{
 			"isCMake" : true,
@@ -15,11 +15,11 @@
 		},
 		{
 			"isGenerated" : true,
-			"path" : "/home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/RM_Radar/Opencv-camera-pnpsolve/build/CMakeFiles/3.22.1/CMakeCCompiler.cmake"
+			"path" : "/home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/RM_Radar/Opencv-camera-pnpsolve/build/CMakeFiles/3.22.1/CMakeCCompiler.cmake"
 		},
 		{
 			"isGenerated" : true,
-			"path" : "/home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/RM_Radar/Opencv-camera-pnpsolve/build/CMakeFiles/3.22.1/CMakeCXXCompiler.cmake"
+			"path" : "/home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/RM_Radar/Opencv-camera-pnpsolve/build/CMakeFiles/3.22.1/CMakeCXXCompiler.cmake"
 		},
 		{
 			"isCMake" : true,
@@ -123,11 +123,11 @@
 		},
 		{
 			"isExternal" : true,
-			"path" : "/usr/local/lib/cmake/opencv4/OpenCVConfig-version.cmake"
+			"path" : "/usr/lib/x86_64-linux-gnu/cmake/opencv4/OpenCVConfig-version.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/usr/local/lib/cmake/opencv4/OpenCVConfig.cmake"
+			"path" : "/usr/lib/x86_64-linux-gnu/cmake/opencv4/OpenCVConfig.cmake"
 		},
 		{
 			"isCMake" : true,
@@ -141,18 +141,18 @@
 		},
 		{
 			"isExternal" : true,
-			"path" : "/usr/local/lib/cmake/opencv4/OpenCVModules.cmake"
+			"path" : "/usr/lib/x86_64-linux-gnu/cmake/opencv4/OpenCVModules.cmake"
 		},
 		{
 			"isExternal" : true,
-			"path" : "/usr/local/lib/cmake/opencv4/OpenCVModules-release.cmake"
+			"path" : "/usr/lib/x86_64-linux-gnu/cmake/opencv4/OpenCVModules-release.cmake"
 		}
 	],
 	"kind" : "cmakeFiles",
 	"paths" : 
 	{
-		"build" : "/home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/RM_Radar/Opencv-camera-pnpsolve/build",
-		"source" : "/home/lisii/Documents/Github-Repos/Current/TransferStation/1_Projects/Current/RM_Radar/Opencv-camera-pnpsolve/Src"
+		"build" : "/home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/RM_Radar/Opencv-camera-pnpsolve/build",
+		"source" : "/home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/RM_Radar/Opencv-camera-pnpsolve/Src"
 	},
 	"version" : 
 	{

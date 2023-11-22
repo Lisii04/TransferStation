@@ -8,8 +8,10 @@ using namespace cv;
 
 string image_path_1 = "../Images/camera2.png";
 Mat camera_image = imread(image_path_1);
-string image_path_2 = "../Images/minimap.png";
+string image_path_2 = "../Images/minimap.jpg";
 Mat minimap_image = imread(image_path_2);
+string image_path_3 = "../Images/roi.jpg";
+Mat roi_image = imread(image_path_3);
 
 Mat_<float> high_transform_martix;
 Mat_<float> low_transform_martix;
@@ -27,8 +29,6 @@ private:
     {
         if (event == EVENT_MOUSEMOVE)
         {
-            // Mat temp_1 = imread(image_path_2);
-            // Mat temp_2 = imread(image_path_1);
 
             image_point = (Mat_<float>(3, 1) << x, y, 1);
 
@@ -38,18 +38,39 @@ private:
             Point _world_point_high = Point(world_point_high.at<float>(0, 0) / world_point_high.at<float>(0, 2), world_point_high.at<float>(1, 0) / world_point_high.at<float>(0, 2));
             Point _world_point_low = Point(world_point_low.at<float>(0, 0) / world_point_low.at<float>(0, 2), world_point_low.at<float>(1, 0) / world_point_low.at<float>(0, 2));
 
-            // putText(minimap_image, "HIGH", Point(_world_point_high.x, _world_point_high.y - 60), 1, 5, Scalar(0, 0, 255), 3);
-            circle(minimap_image, Point(_world_point_high.x, _world_point_high.y), 10, Scalar(0, 0, 255), -1);
-            // circle(minimap_image, Point(_world_point_high.x, _world_point_high.y), 15, Scalar(0, 0, 255), 2);
-            // putText(minimap_image, "LOW", Point(_world_point_low.x, _world_point_low.y - 60), 1, 5, Scalar(0, 255, 0), 3);
-            circle(minimap_image, Point(_world_point_low.x, _world_point_low.y), 10, Scalar(0, 255, 0), -1);
-            // circle(minimap_image, Point(_world_point_low.x, _world_point_low.y), 15, Scalar(0, 255, 0), 2);
-
+            if(_world_point_high.x < 0 || _world_point_high.y < 0)
+            {
+                _world_point_high.x = (_world_point_high.x > 0) ? (_world_point_high.x) : (0);
+                _world_point_high.y = (_world_point_high.y > 0) ? (_world_point_high.y) : (0);
+            }
+            if (_world_point_low.x < 0 || _world_point_low.y < 0)
+            {
+                _world_point_low.x = (_world_point_low.x > 0) ? (_world_point_low.x) : (0);
+                _world_point_low.y = (_world_point_low.y > 0) ? (_world_point_low.y) : (0);
+            }
+            
+            if((int)(roi_image.at<Vec3b>(_world_point_high.y, _world_point_high.x)[0]) > 150)
+            {
+                circle(minimap_image, Point(_world_point_high.x, _world_point_high.y), 10, Scalar(0, 0, 255), -1);
+            }else{
+                circle(minimap_image, Point(_world_point_low.x, _world_point_low.y), 10, Scalar(0, 255, 0), -1);
+            }
+            cout << to_string(roi_image.at<Vec3b>(_world_point_high.x, _world_point_high.y)[0]) << endl;
             circle(camera_image, Point(x, y), 10, Scalar(0, 0, 255), -1);
-            // circle(camera_image, Point(x, y), 15, Scalar(0, 0, 255), 2);
+            
+            // for (int i = 0; i < minimap_image.size().width; i++)
+            // {
+            //     for (int j = 0; j < minimap_image.size().height; j++)
+            //     {
+            //         minimap_image.at<Vec3b>(j,i)[0] = (int)(roi_image.at<Vec3b>(j,i)[0]);
+            //         // circle(minimap_image, Point(i, j), 10, Scalar(0,, 0), -1);
+            //         cout << i << "|" << j << endl;  
+            //     }
+            // }
 
             imshow("3", camera_image);
             imshow("4", minimap_image);
+            
         }
     }
 
@@ -89,6 +110,13 @@ int main(int argc, char **argv)
 
     // 关闭文件
     fread.release();
+
+
+
+    resize(roi_image,roi_image,minimap_image.size());
+
+    VideoCapture video;
+    video.open("../Videos/video.mp4");
 
     RobotLocationSolve robotLocationSolve;
 
