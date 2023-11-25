@@ -1,0 +1,55 @@
+[0.068s] Invoking command in '/home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/build/example_topic_rclcpp': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/install/example_py:/opt/ros/humble /usr/bin/cmake /home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/example_topic_rclcpp -DCMAKE_INSTALL_PREFIX=/home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/install/example_topic_rclcpp
+[0.103s] -- The C compiler identification is GNU 11.4.0
+[0.142s] -- The CXX compiler identification is GNU 11.4.0
+[0.147s] -- Detecting C compiler ABI info
+[0.193s] -- Detecting C compiler ABI info - done
+[0.199s] -- Check for working C compiler: /usr/bin/cc - skipped
+[0.199s] -- Detecting C compile features
+[0.199s] -- Detecting C compile features - done
+[0.202s] -- Detecting CXX compiler ABI info
+[0.256s] -- Detecting CXX compiler ABI info - done
+[0.262s] -- Check for working CXX compiler: /usr/bin/c++ - skipped
+[0.262s] -- Detecting CXX compile features
+[0.262s] -- Detecting CXX compile features - done
+[0.264s] -- Found ament_cmake: 1.3.6 (/opt/ros/humble/share/ament_cmake/cmake)
+[0.534s] -- Found Python3: /usr/bin/python3.10 (found version "3.10.12") found components: Interpreter 
+[0.594s] -- Found rclcpp: 16.0.7 (/opt/ros/humble/share/rclcpp/cmake)
+[0.622s] -- Found rosidl_generator_c: 3.1.5 (/opt/ros/humble/share/rosidl_generator_c/cmake)
+[0.626s] -- Found rosidl_adapter: 3.1.5 (/opt/ros/humble/share/rosidl_adapter/cmake)
+[0.631s] -- Found rosidl_generator_cpp: 3.1.5 (/opt/ros/humble/share/rosidl_generator_cpp/cmake)
+[0.642s] -- Using all available rosidl_typesupport_c: rosidl_typesupport_fastrtps_c;rosidl_typesupport_introspection_c
+[0.656s] -- Using all available rosidl_typesupport_cpp: rosidl_typesupport_fastrtps_cpp;rosidl_typesupport_introspection_cpp
+[0.710s] -- Found rmw_implementation_cmake: 6.1.1 (/opt/ros/humble/share/rmw_implementation_cmake/cmake)
+[0.712s] -- Found rmw_fastrtps_cpp: 6.2.5 (/opt/ros/humble/share/rmw_fastrtps_cpp/cmake)
+[0.777s] -- Found OpenSSL: /usr/lib/x86_64-linux-gnu/libcrypto.so (found version "3.0.2")  
+[0.795s] -- Found FastRTPS: /opt/ros/humble/include  
+[0.829s] -- Using RMW implementation 'rmw_fastrtps_cpp' as default
+[0.835s] -- Looking for pthread.h
+[0.883s] -- Looking for pthread.h - found
+[0.883s] -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+[0.932s] -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+[0.932s] -- Found Threads: TRUE  
+[1.072s] -- Found ament_lint_auto: 0.12.9 (/opt/ros/humble/share/ament_lint_auto/cmake)
+[1.132s] -- Added test 'cppcheck' to perform static code analysis on C / C++ code
+[1.132s] -- Configured cppcheck include dirs: 
+[1.132s] -- Configured cppcheck exclude dirs and/or files: 
+[1.133s] -- Added test 'flake8' to check Python code syntax and style conventions
+[1.134s] -- Added test 'lint_cmake' to check CMake code style
+[1.135s] -- Added test 'pep257' to check Python code against some of the docstring style conventions in PEP 257
+[1.139s] -- Added test 'uncrustify' to check C / C++ code style
+[1.139s] -- Configured uncrustify additional arguments: 
+[1.140s] -- Added test 'xmllint' to check XML markup files
+[1.142s] -- Configuring done
+[1.148s] -- Generating done
+[1.149s] -- Build files have been written to: /home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/build/example_topic_rclcpp
+[1.155s] Invoked command in '/home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/build/example_topic_rclcpp' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/install/example_py:/opt/ros/humble /usr/bin/cmake /home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/example_topic_rclcpp -DCMAKE_INSTALL_PREFIX=/home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/install/example_topic_rclcpp
+[1.157s] Invoking command in '/home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/build/example_topic_rclcpp': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/install/example_py:/opt/ros/humble /usr/bin/cmake --build /home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/build/example_topic_rclcpp -- -j12 -l12
+[1.188s] [ 50%] [32mBuilding CXX object CMakeFiles/topic_publisher_01.dir/src/topic_publisher_01.cpp.o[0m
+[3.484s] [100%] [32m[1mLinking CXX executable topic_publisher_01[0m
+[3.542s] /usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/11/../../../x86_64-linux-gnu/Scrt1.o: in function `_start':
+[3.543s] (.text+0x1b): undefined reference to `main'
+[3.545s] collect2: error: ld returned 1 exit status
+[3.547s] gmake[2]: *** [CMakeFiles/topic_publisher_01.dir/build.make:159：topic_publisher_01] 错误 1
+[3.547s] gmake[1]: *** [CMakeFiles/Makefile2:137：CMakeFiles/topic_publisher_01.dir/all] 错误 2
+[3.547s] gmake: *** [Makefile:146：all] 错误 2
+[3.549s] Invoked command in '/home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/build/example_topic_rclcpp' returned '2': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/install/example_py:/opt/ros/humble /usr/bin/cmake --build /home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/build/example_topic_rclcpp -- -j12 -l12
