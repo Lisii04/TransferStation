@@ -124,6 +124,10 @@ public:
 int main()
 {
 
+    VideoCapture video;
+    video.open("../Videos/video.mp4");
+    video >> camera_image;
+
     Calibrator calibrator;
     calibrator.MapCalibration(camera_image, minimap_image);
 
