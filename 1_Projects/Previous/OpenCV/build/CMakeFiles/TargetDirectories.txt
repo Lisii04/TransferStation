@@ -1,3 +1,0 @@
-/home/lisii/Documents/Github-Repos/TransferStation/Codes/OpenCV/build/CMakeFiles/test1.dir
-/home/lisii/Documents/Github-Repos/TransferStation/Codes/OpenCV/build/CMakeFiles/edit_cache.dir
-/home/lisii/Documents/Github-Repos/TransferStation/Codes/OpenCV/build/CMakeFiles/rebuild_cache.dir
