@@ -1,0 +1,28 @@
+[0.069s] Invoking command in '/home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/build/example_topic_rclcpp': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/build/example_topic_rclcpp -- -j12 -l12
+[0.096s] [35m[1mConsolidate compiler generated dependencies of target topic_subscribe_01[0m
+[0.104s] [ 25%] [32mBuilding CXX object CMakeFiles/topic_publisher_01.dir/src/topic_publisher_01.cpp.o[0m
+[0.107s] [ 75%] Built target topic_subscribe_01
+[3.011s] [100%] [32m[1mLinking CXX executable topic_publisher_01[0m
+[3.122s] [100%] Built target topic_publisher_01
+[3.130s] Invoked command in '/home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/build/example_topic_rclcpp' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --build /home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/build/example_topic_rclcpp -- -j12 -l12
+[3.153s] Invoking command in '/home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/build/example_topic_rclcpp': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --install /home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/build/example_topic_rclcpp
+[3.158s] -- Install configuration: ""
+[3.158s] -- Up-to-date: /home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/install/example_topic_rclcpp/share/ament_index/resource_index/package_run_dependencies/example_topic_rclcpp
+[3.158s] -- Up-to-date: /home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/install/example_topic_rclcpp/share/ament_index/resource_index/parent_prefix_path/example_topic_rclcpp
+[3.158s] -- Up-to-date: /home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/install/example_topic_rclcpp/share/example_topic_rclcpp/environment/ament_prefix_path.sh
+[3.158s] -- Up-to-date: /home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/install/example_topic_rclcpp/share/example_topic_rclcpp/environment/ament_prefix_path.dsv
+[3.158s] -- Up-to-date: /home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/install/example_topic_rclcpp/share/example_topic_rclcpp/environment/path.sh
+[3.158s] -- Up-to-date: /home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/install/example_topic_rclcpp/share/example_topic_rclcpp/environment/path.dsv
+[3.158s] -- Up-to-date: /home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/install/example_topic_rclcpp/share/example_topic_rclcpp/local_setup.bash
+[3.158s] -- Up-to-date: /home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/install/example_topic_rclcpp/share/example_topic_rclcpp/local_setup.sh
+[3.158s] -- Up-to-date: /home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/install/example_topic_rclcpp/share/example_topic_rclcpp/local_setup.zsh
+[3.159s] -- Up-to-date: /home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/install/example_topic_rclcpp/share/example_topic_rclcpp/local_setup.dsv
+[3.159s] -- Installing: /home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/install/example_topic_rclcpp/share/example_topic_rclcpp/package.dsv
+[3.159s] -- Up-to-date: /home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/install/example_topic_rclcpp/share/ament_index/resource_index/packages/example_topic_rclcpp
+[3.159s] -- Up-to-date: /home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/install/example_topic_rclcpp/share/example_topic_rclcpp/cmake/example_topic_rclcppConfig.cmake
+[3.159s] -- Up-to-date: /home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/install/example_topic_rclcpp/share/example_topic_rclcpp/cmake/example_topic_rclcppConfig-version.cmake
+[3.159s] -- Up-to-date: /home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/install/example_topic_rclcpp/share/example_topic_rclcpp/package.xml
+[3.159s] -- Installing: /home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/install/example_topic_rclcpp/lib/example_topic_rclcpp/topic_publisher_01
+[3.159s] -- Set runtime path of "/home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/install/example_topic_rclcpp/lib/example_topic_rclcpp/topic_publisher_01" to ""
+[3.159s] -- Up-to-date: /home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/install/example_topic_rclcpp/lib/example_topic_rclcpp/topic_subscribe_01
+[3.161s] Invoked command in '/home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/build/example_topic_rclcpp' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/opt/ros/humble /usr/bin/cmake --install /home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/build/example_topic_rclcpp

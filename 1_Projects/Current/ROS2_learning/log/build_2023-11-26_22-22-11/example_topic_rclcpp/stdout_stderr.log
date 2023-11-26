@@ -1,0 +1,8 @@
+[35m[1mConsolidate compiler generated dependencies of target topic_publisher_01[0m
+[ 50%] Built target topic_subscribe_01
+[ 75%] [32mBuilding CXX object CMakeFiles/topic_publisher_01.dir/src/topic_publisher_01.cpp.o[0m
+[01m[Kcc1plus:[m[K [01;31m[Kfatal error: [m[K/home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/ROS2_learning/example_topic_rclcpp/src/topic_publisher_01.cpp: 没有那个文件或目录
+compilation terminated.
+gmake[2]: *** [CMakeFiles/topic_publisher_01.dir/build.make:76：CMakeFiles/topic_publisher_01.dir/src/topic_publisher_01.cpp.o] 错误 1
+gmake[1]: *** [CMakeFiles/Makefile2:139：CMakeFiles/topic_publisher_01.dir/all] 错误 2
+gmake: *** [Makefile:146：all] 错误 2

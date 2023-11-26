@@ -32,7 +32,8 @@ install(TARGETS
 )
 
 add_executable(topic_subscribe_01 src/topic_subscribe_01.cpp)
-ament_target_dependencies(topic_subscribe_01 rclcpp)
+ament_target_dependencies(topic_subscribe_01 rclcpp std_msgs)
+
 
 install(TARGETS
 topic_subscribe_01
