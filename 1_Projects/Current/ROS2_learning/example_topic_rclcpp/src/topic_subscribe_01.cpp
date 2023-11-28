@@ -8,7 +8,7 @@ public:
     {
         RCLCPP_INFO(this->get_logger(), "大家好，我是%s.", name.c_str());
           // 创建一个订阅者订阅话题
-        command_subscribe_ = this->create_subscription<std_msgs::msg::Float32MultiArray>("command", 10, std::bind(&TopicSubscribe01::command_callback, this, std::placeholders::_1));
+        command_subscribe_ = this->create_subscription<std_msgs::msg::Float32MultiArray>("points_data", 10, std::bind(&TopicSubscribe01::command_callback, this, std::placeholders::_1));
     }
 
 private:
@@ -17,8 +17,13 @@ private:
      // 收到话题数据的回调函数
     void command_callback(const std_msgs::msg::Float32MultiArray::SharedPtr msg)
     {
+        printf("------\n");
         // RCLCPP_INFO(this->get_logger(), "收到[%s]", msg->data.);
-        printf("%0.6f\n",msg->data.data()[0]);
+        for (auto i = 0; i < msg->data.size(); i++)
+        {
+            printf("%0.6f\n",msg->data.data()[i]);
+        }
+        printf("------\n");
     }
 };
 
