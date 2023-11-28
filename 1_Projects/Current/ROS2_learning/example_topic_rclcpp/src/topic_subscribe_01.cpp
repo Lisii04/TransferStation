@@ -1,5 +1,9 @@
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/float32_multi_array.hpp"
+#include <opencv2/opencv.hpp>
+
+std::vector<cv::Point2f> points;
+
 
 class TopicSubscribe01 : public rclcpp::Node
 {
@@ -19,11 +23,14 @@ private:
     {
         printf("------\n");
         // RCLCPP_INFO(this->get_logger(), "收到[%s]", msg->data.);
-        for (auto i = 0; i < msg->data.size(); i++)
+        for (auto i = 0; i < msg->data.size() - 1; i++)
         {
-            printf("%0.6f\n",msg->data.data()[i]);
+            printf("(%0.6f,%0.6f)\n",msg->data.data()[i],msg->data.data()[i+1]);
+            points.push_back(cv::Point2f(msg->data.data()[i],msg->data.data()[i+1]));
         }
         printf("------\n");
+
+
     }
 };
 
