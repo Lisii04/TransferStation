@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/radar.dir/LocationSolve.cpp.o"
-  "CMakeFiles/radar.dir/LocationSolve.cpp.o.d"
+  "CMakeFiles/radar.dir/Calibrate.cpp.o"
+  "CMakeFiles/radar.dir/Calibrate.cpp.o.d"
   "radar"
   "radar.pdb"
 )

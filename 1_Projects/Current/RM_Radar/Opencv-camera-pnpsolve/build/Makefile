@@ -129,29 +129,29 @@ radar/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/radar.dir/build.make CMakeFiles/radar.dir/build
 .PHONY : radar/fast
 
-LocationSolve.o: LocationSolve.cpp.o
-.PHONY : LocationSolve.o
+Calibrate.o: Calibrate.cpp.o
+.PHONY : Calibrate.o
 
 # target to build an object file
-LocationSolve.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/radar.dir/build.make CMakeFiles/radar.dir/LocationSolve.cpp.o
-.PHONY : LocationSolve.cpp.o
+Calibrate.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/radar.dir/build.make CMakeFiles/radar.dir/Calibrate.cpp.o
+.PHONY : Calibrate.cpp.o
 
-LocationSolve.i: LocationSolve.cpp.i
-.PHONY : LocationSolve.i
+Calibrate.i: Calibrate.cpp.i
+.PHONY : Calibrate.i
 
 # target to preprocess a source file
-LocationSolve.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/radar.dir/build.make CMakeFiles/radar.dir/LocationSolve.cpp.i
-.PHONY : LocationSolve.cpp.i
+Calibrate.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/radar.dir/build.make CMakeFiles/radar.dir/Calibrate.cpp.i
+.PHONY : Calibrate.cpp.i
 
-LocationSolve.s: LocationSolve.cpp.s
-.PHONY : LocationSolve.s
+Calibrate.s: Calibrate.cpp.s
+.PHONY : Calibrate.s
 
 # target to generate assembly for a file
-LocationSolve.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/radar.dir/build.make CMakeFiles/radar.dir/LocationSolve.cpp.s
-.PHONY : LocationSolve.cpp.s
+Calibrate.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/radar.dir/build.make CMakeFiles/radar.dir/Calibrate.cpp.s
+.PHONY : Calibrate.cpp.s
 
 # Help Target
 help:
@@ -162,9 +162,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... radar"
-	@echo "... LocationSolve.o"
-	@echo "... LocationSolve.i"
-	@echo "... LocationSolve.s"
+	@echo "... Calibrate.o"
+	@echo "... Calibrate.i"
+	@echo "... Calibrate.s"
 .PHONY : help
 
 

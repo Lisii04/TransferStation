@@ -1,7 +1,7 @@
 [
 {
   "directory": "/home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/RM_Radar/Opencv-camera-pnpsolve/build",
-  "command": "/usr/bin/g++  -isystem /usr/include/opencv4 -g -std=gnu++11 -o CMakeFiles/radar.dir/LocationSolve.cpp.o -c /home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/RM_Radar/Opencv-camera-pnpsolve/Src/LocationSolve.cpp",
-  "file": "/home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/RM_Radar/Opencv-camera-pnpsolve/Src/LocationSolve.cpp"
+  "command": "/usr/bin/g++  -isystem /usr/include/opencv4 -g -std=gnu++11 -o CMakeFiles/radar.dir/Calibrate.cpp.o -c /home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/RM_Radar/Opencv-camera-pnpsolve/Src/Calibrate.cpp",
+  "file": "/home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/RM_Radar/Opencv-camera-pnpsolve/Src/Calibrate.cpp"
 }
 ]
