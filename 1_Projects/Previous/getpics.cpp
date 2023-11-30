@@ -25,8 +25,7 @@ int main()
             break;
         cout << "frame:" << count << endl;
         count++;
-        if(count%200 == 0 && count >= 2000)
-        {
+        if (count % 200 == 0 && count >= 0) {
             cout << "saved:" << count << endl;
             imgname = to_string(savename++) + ".jpg";
             imwrite(imgname, frame);

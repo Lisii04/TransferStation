@@ -28,9 +28,8 @@ long frame_count = 0;
 void remap(vector<Point2f> points)
 {
 
-    // minimap_image.copyTo(temp_image);
-    try
-    {
+    minimap_image.copyTo(temp_image);
+    try {
         for (size_t i = 0; i < points.size(); i++) {
             // ******* 由像素坐标计算到世界坐标 *********
             image_point = (Mat_<float>(3, 1) << points[i].x, points[i].y, 1);
@@ -48,7 +47,7 @@ void remap(vector<Point2f> points)
                 if ((int)(roi_image.at<Vec3b>(_world_point_high.y, _world_point_high.x)[0]) > 150) {
                     circle(temp_image, Point(_world_point_high.x, _world_point_high.y), 20, Scalar(0, 0, 255), -1);
                 } else {
-                    circle(temp_image, Point(_world_point_low.x, _world_point_low.y), 20, Scalar(0, 255, 0), -1);
+                    circle(temp_image, Point(_world_point_low.x, _world_point_low.y), 20, Scalar(0, 0, 255), -1);
                 }
             }
             // ******* 结束 ********
@@ -56,14 +55,10 @@ void remap(vector<Point2f> points)
         imshow("1", temp_image);
         waitKey(1);
         frame_count++;
-    }
-    catch(const std::exception& e)
-    {
+    } catch (const std::exception& e) {
         cout << "\033[31m[ERROR]\033[0m";
         std::cerr << e.what() << '\n';
     }
-    
-    
 }
 
 class Points_subscriber : public rclcpp::Node {
@@ -88,8 +83,8 @@ private:
             cout << "\033[31m[ERROR]\033[0m[未识别到坐标]" << endl;
         }
 
-        for (auto i = 0; i < msg->data.size() - 1; i++) {
-            printf("(%0.1f,%0.1f) ", msg->data.data()[i], msg->data.data()[i + 1]);
+        for (auto i = 0; i < msg->data.size() - 1; i += 2) {
+            printf("(%0.1f,%0.1f)", msg->data.data()[i], msg->data.data()[i + 1]);
             points.push_back(cv::Point2f(msg->data.data()[i], msg->data.data()[i + 1]));
         }
         cout << "\n"
