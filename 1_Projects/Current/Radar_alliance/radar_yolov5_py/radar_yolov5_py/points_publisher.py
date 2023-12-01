@@ -183,10 +183,15 @@ def run(
 
                     # ========================================
                     # 计算中心坐标
-                    center_x = (xyxy[0] + xyxy[2]) / 2
-                    center_y = (xyxy[1] + xyxy[3]) / 2
-                    pointslist.append(center_x)
-                    pointslist.append(center_y)
+                    if label == "car":
+                        center_x = (xyxy[0] + xyxy[2]) / 2
+                        center_y = (xyxy[1] + xyxy[3]) / 2
+                        if xyxy[1] > xyxy[3]:
+                            bottom_y = xyxy[1]
+                        else:
+                            bottom_y = xyxy[3]
+                        pointslist.append(center_x)
+                        pointslist.append((bottom_y + center_y)/2)
                     # ========================================
 
                     if save_csv:
@@ -264,7 +269,7 @@ def main(args=None):
     print(">\033[32m[DONE]\033[0m[节点启动]")
     print(">\033[33m[WORKING]\033[0m[正在启动YOLOv5]")
     time.sleep(2)
-    run(node,weights=os.getcwd()+'/user_models/best.pt',source=os.getcwd()+'/videos/1.mp4',nosave=True,view_img=True,iou_thres=0.25)
+    run(node,weights=os.getcwd()+'/user_models/best.pt',source=os.getcwd()+'/videos/1.mp4',nosave=True,view_img=True)
 
     rclpy.spin(node) # 保持节点运行，检测是否收到退出指令（Ctrl+C）
     rclpy.shutdown() # 关闭rclpy

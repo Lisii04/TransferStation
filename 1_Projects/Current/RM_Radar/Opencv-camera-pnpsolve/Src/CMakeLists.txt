@@ -15,7 +15,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
 # Declare the executable target built from your sources
 
-# add_executable(radar LocationSolve.cpp)
 add_executable(radar Calibrate.cpp)
 
 # Link your application with OpenCV libraries
