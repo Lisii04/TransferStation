@@ -21,13 +21,24 @@ Mat_<float> image_point(3, 1);
 Mat_<float> world_point_high(3, 1);
 Mat_<float> world_point_low(3, 1);
 
-std::vector<cv::Point2f> points;
+// std::vector<string> armor_names = { "armor_1_red", "armor_2_red", "armor_3_red", "armor_4_red", "armor_5_red",
+//     "watcher_red", "armor_1_blue", "armor_2_blue", "armor_3_blue", "armor_4_blue", "armor_5_blue", "watcher_blue" };
+std::vector<string> armor_names = { "1", "2", "3", "4", "5",
+    "W", "1", "2", "3", "4", "5", "W" };
+
+struct Car_datas {
+    std::vector<int> car_labels;
+    std::vector<cv::Point2f> car_points;
+};
+
+Car_datas car_datas;
 
 long frame_count = 0;
 
-void remap(vector<Point2f> points)
+void remap(Car_datas car_datas)
 {
-
+    std::vector<int> labels = car_datas.car_labels;
+    std::vector<cv::Point2f> points = car_datas.car_points;
     minimap_image.copyTo(temp_image);
     try {
         for (size_t i = 0; i < points.size(); i++) {
@@ -45,9 +56,24 @@ void remap(vector<Point2f> points)
             if (_world_point_high.x > 0 && _world_point_high.y > 0 && _world_point_low.x > 0 && _world_point_low.y > 0) {
                 // ******* 判断是否在高地 并绘制坐标 ********
                 if ((int)(roi_image.at<Vec3b>(_world_point_high.y, _world_point_high.x)[0]) > 150) {
-                    circle(temp_image, Point(_world_point_high.x, _world_point_high.y), 20, Scalar(0, 0, 255), -1);
+                    if (labels[i] > 5) {
+                        circle(temp_image, Point(_world_point_high.x, _world_point_high.y), 20, Scalar(255, 0, 0), -1);
+                        putText(temp_image, armor_names[labels[i]], Point(_world_point_high.x - 15, _world_point_high.y + 14), 1, 3, Scalar(255, 255, 255), 4);
+
+                    } else {
+                        circle(temp_image, Point(_world_point_high.x, _world_point_high.y), 20, Scalar(0, 0, 255), -1);
+                        putText(temp_image, armor_names[labels[i]], Point(_world_point_high.x - 15, _world_point_high.y + 14), 1, 3, Scalar(255, 255, 255), 4);
+                    }
+
                 } else {
-                    circle(temp_image, Point(_world_point_low.x, _world_point_low.y), 20, Scalar(0, 0, 255), -1);
+                    if (labels[i] > 5) {
+                        circle(temp_image, Point(_world_point_low.x, _world_point_low.y), 20, Scalar(255, 0, 0), -1);
+                        putText(temp_image, armor_names[labels[i]], Point(_world_point_low.x - 15, _world_point_low.y + 14), 1, 3, Scalar(255, 255, 255), 4);
+
+                    } else {
+                        circle(temp_image, Point(_world_point_low.x, _world_point_low.y), 20, Scalar(0, 0, 255), -1);
+                        putText(temp_image, armor_names[labels[i]], Point(_world_point_low.x - 15, _world_point_low.y + 14), 1, 3, Scalar(255, 255, 255), 4);
+                    }
                 }
             }
             // ******* 结束 ********
@@ -77,19 +103,22 @@ private:
     // 收到话题数据的回调函数
     void command_callback(const std_msgs::msg::Float32MultiArray::SharedPtr msg)
     {
-        points.clear();
+        car_datas.car_labels.clear();
+        car_datas.car_points.clear();
         cout << "\033c>\033[33m[WORKING]\033[0m[正在接收点坐标]\033[?25l" << endl;
         if (msg->data.size() == 0) {
             cout << "\033[31m[ERROR]\033[0m[未识别到坐标]" << endl;
         }
 
-        for (auto i = 0; i < msg->data.size() - 1; i += 2) {
-            printf("(%0.1f,%0.1f)", msg->data.data()[i], msg->data.data()[i + 1]);
-            points.push_back(cv::Point2f(msg->data.data()[i], msg->data.data()[i + 1]));
+        for (int i = 0; i < msg->data.size() - 2; i += 3) {
+            // cout << armor_names[int(msg->data.data()[i])];
+            printf("(%0.1f,%0.1f)\n", msg->data.data()[i + 1], msg->data.data()[i + 2]);
+            car_datas.car_labels.push_back(int(msg->data.data()[i]));
+            car_datas.car_points.push_back(cv::Point2f(msg->data.data()[i + 1], msg->data.data()[i + 2]));
         }
         cout << "\n"
              << endl;
-        remap(points);
+        remap(car_datas);
     }
 };
 

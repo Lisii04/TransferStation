@@ -9,6 +9,7 @@ build/radar_yolov5_py/radar_yolov5_py.egg-info/requires.txt
 build/radar_yolov5_py/radar_yolov5_py.egg-info/top_level.txt
 build/radar_yolov5_py/radar_yolov5_py.egg-info/zip-safe
 radar_yolov5_py/__init__.py
+radar_yolov5_py/export.py
 radar_yolov5_py/hubconf.py
 radar_yolov5_py/points_publisher.py
 radar_yolov5_py/models/__init__.py

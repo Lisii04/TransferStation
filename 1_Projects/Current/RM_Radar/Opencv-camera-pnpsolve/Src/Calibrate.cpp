@@ -1,7 +1,7 @@
-#include <opencv2/opencv.hpp>
 #include <iostream>
-#include <vector>
+#include <opencv2/opencv.hpp>
 #include <string>
+#include <vector>
 
 using namespace std;
 using namespace cv;
@@ -20,8 +20,7 @@ static vector<Point2f> low_model_points;
 int image_count = 0;
 int model_count = 0;
 
-class Calibrator
-{
+class Calibrator {
 public:
     Mat_<float> high_transform_martix;
     Mat_<float> low_transform_martix;
@@ -33,14 +32,12 @@ private:
         return getPerspectiveTransform(image_points, model_points);
     };
 
-    static void SetCameraPoint(int event, int x, int y, int flags, void *param)
+    static void SetCameraPoint(int event, int x, int y, int flags, void* param)
     {
         if (image_count == 8)
             return;
-        if (event == EVENT_LBUTTONDOWN)
-        {
-            switch (image_count / 4)
-            {
+        if (event == EVENT_LBUTTONDOWN) {
+            switch (image_count / 4) {
             case 0:
                 cout << "Camera Point High" << image_count + 1 << ": " << Point(x, y) << endl;
                 high_image_points.push_back(Point2f(x, y));
@@ -62,14 +59,12 @@ private:
         }
     };
 
-    static void SetMinimapPoint(int event, int x, int y, int flags, void *param)
+    static void SetMinimapPoint(int event, int x, int y, int flags, void* param)
     {
         if (model_count == 8)
             return;
-        if (event == EVENT_LBUTTONDOWN)
-        {
-            switch (model_count / 4)
-            {
+        if (event == EVENT_LBUTTONDOWN) {
+            switch (model_count / 4) {
             case 0:
                 cout << "Map Point High" << model_count + 1 << ": " << Point(x, y) << endl;
                 high_model_points.push_back(Point2f(x, y));
@@ -92,7 +87,7 @@ private:
     };
 
 public:
-    Calibrator(){}; // 构造函数
+    Calibrator() {}; // 构造函数
 
     // 透视变换标定
     void MapCalibration(Mat camera_image, Mat minimap_image)
@@ -105,12 +100,10 @@ public:
         setMouseCallback("camera", SetCameraPoint);
         setMouseCallback("minimap", SetMinimapPoint);
 
-        while (true)
-        {
+        while (true) {
             imshow("camera", camera_image);
             imshow("minimap", minimap_image);
-            if (waitKey())
-            {
+            if (waitKey()) {
                 // image_count = 0;
                 // model_count = 0;
                 break;
@@ -125,7 +118,7 @@ int main()
 {
 
     VideoCapture video;
-    video.open("../Videos/video.mp4");
+    video.open("../Videos/1.mp4");
     video >> camera_image;
 
     Calibrator calibrator;
@@ -136,7 +129,7 @@ int main()
 
     // 存入矩阵Mat类型的数据
     fwriter.write("high_transform_martix", calibrator.high_transform_martix); // 使用write()函数写入数据
-    fwriter.write("low_transform_martix", calibrator.low_transform_martix);   // 使用write()函数写入数据
+    fwriter.write("low_transform_martix", calibrator.low_transform_martix); // 使用write()函数写入数据
 
     fwriter.release();
 
