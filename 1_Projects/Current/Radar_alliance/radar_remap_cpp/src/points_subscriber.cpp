@@ -21,29 +21,34 @@ Mat_<float> image_point(3, 1);
 Mat_<float> world_point_high(3, 1);
 Mat_<float> world_point_low(3, 1);
 
-// std::vector<string> armor_names = { "armor_1_red", "armor_2_red", "armor_3_red", "armor_4_red", "armor_5_red",
-//     "watcher_red", "armor_1_blue", "armor_2_blue", "armor_3_blue", "armor_4_blue", "armor_5_blue", "watcher_blue" };
 std::vector<string> armor_names = { "1", "2", "3", "4", "5",
     "W", "1", "2", "3", "4", "5", "W" };
-
-struct Car_datas {
-    std::vector<int> car_labels;
-    std::vector<cv::Point2f> car_points;
-};
-
-Car_datas car_datas;
+std::map<int, cv::Point2f> cars_position;
 
 long frame_count = 0;
 
-void remap(Car_datas car_datas)
+void remap(std::map<int, cv::Point2f> cars_position)
 {
-    std::vector<int> labels = car_datas.car_labels;
-    std::vector<cv::Point2f> points = car_datas.car_points;
+
     minimap_image.copyTo(temp_image);
     try {
-        for (size_t i = 0; i < points.size(); i++) {
+        for (size_t i = 0; i < cars_position.size(); i++) {
             // ******* 由像素坐标计算到世界坐标 *********
-            image_point = (Mat_<float>(3, 1) << points[i].x, points[i].y, 1);
+            image_point = (Mat_<float>(3, 1) << cars_position[i].x, cars_position[i].y, 1);
+
+            if (cars_position[i].x == 0 && cars_position[i].y == 0) {
+                if (i > 5) {
+                    circle(temp_image, Point(50, 50 + 40 * i), 20, Scalar(255, 0, 0), -1);
+                    string text = armor_names[i];
+                    text.append(" [No Position Data]");
+                    putText(temp_image, text, Point(34, 50 + 40 * i + 14), 1, 3, Scalar(255, 255, 255), 4);
+                } else {
+                    circle(temp_image, Point(50, 50 + 40 * i), 20, Scalar(0, 0, 255), -1);
+                    string text = armor_names[i];
+                    text.append(" [No Position Data]");
+                    putText(temp_image, text, Point(34, 50 + 40 * i + 14), 1, 3, Scalar(255, 255, 255), 4);
+                }
+            }
 
             world_point_high = high_transform_martix * image_point;
             world_point_low = low_transform_martix * image_point;
@@ -56,23 +61,23 @@ void remap(Car_datas car_datas)
             if (_world_point_high.x > 0 && _world_point_high.y > 0 && _world_point_low.x > 0 && _world_point_low.y > 0) {
                 // ******* 判断是否在高地 并绘制坐标 ********
                 if ((int)(roi_image.at<Vec3b>(_world_point_high.y, _world_point_high.x)[0]) > 150) {
-                    if (labels[i] > 5) {
+                    if (i > 5) {
                         circle(temp_image, Point(_world_point_high.x, _world_point_high.y), 20, Scalar(255, 0, 0), -1);
-                        putText(temp_image, armor_names[labels[i]], Point(_world_point_high.x - 15, _world_point_high.y + 14), 1, 3, Scalar(255, 255, 255), 4);
+                        putText(temp_image, armor_names[i], Point(_world_point_high.x - 16, _world_point_high.y + 14), 1, 3, Scalar(255, 255, 255), 4);
 
                     } else {
                         circle(temp_image, Point(_world_point_high.x, _world_point_high.y), 20, Scalar(0, 0, 255), -1);
-                        putText(temp_image, armor_names[labels[i]], Point(_world_point_high.x - 15, _world_point_high.y + 14), 1, 3, Scalar(255, 255, 255), 4);
+                        putText(temp_image, armor_names[i], Point(_world_point_high.x - 16, _world_point_high.y + 14), 1, 3, Scalar(255, 255, 255), 4);
                     }
 
                 } else {
-                    if (labels[i] > 5) {
+                    if (i > 5) {
                         circle(temp_image, Point(_world_point_low.x, _world_point_low.y), 20, Scalar(255, 0, 0), -1);
-                        putText(temp_image, armor_names[labels[i]], Point(_world_point_low.x - 15, _world_point_low.y + 14), 1, 3, Scalar(255, 255, 255), 4);
+                        putText(temp_image, armor_names[i], Point(_world_point_low.x - 16, _world_point_low.y + 14), 1, 3, Scalar(255, 255, 255), 4);
 
                     } else {
                         circle(temp_image, Point(_world_point_low.x, _world_point_low.y), 20, Scalar(0, 0, 255), -1);
-                        putText(temp_image, armor_names[labels[i]], Point(_world_point_low.x - 15, _world_point_low.y + 14), 1, 3, Scalar(255, 255, 255), 4);
+                        putText(temp_image, armor_names[i], Point(_world_point_low.x - 16, _world_point_low.y + 14), 1, 3, Scalar(255, 255, 255), 4);
                     }
                 }
             }
@@ -103,22 +108,40 @@ private:
     // 收到话题数据的回调函数
     void command_callback(const std_msgs::msg::Float32MultiArray::SharedPtr msg)
     {
-        car_datas.car_labels.clear();
-        car_datas.car_points.clear();
-        cout << "\033c>\033[33m[WORKING]\033[0m[正在接收点坐标]\033[?25l" << endl;
-        if (msg->data.size() == 0) {
-            cout << "\033[31m[ERROR]\033[0m[未识别到坐标]" << endl;
+        // car_datas.car_labels.clear();
+        // car_datas.car_points.clear();
+        try {
+            cout << "\033c>\033[33m[WORKING]\033[0m[正在接收点坐标]\033[?25l" << endl;
+            if (msg->data.size() == 0) {
+                cout << "\033[31m[ERROR]\033[0m[未识别到坐标]" << endl;
+            } else {
+                for (int i = 0; i < msg->data.size() - 2; i += 3) {
+                    if (cars_position[int(msg->data.data()[i])].x == 0.0 && cars_position[int(msg->data.data()[i])].y == 0.0) {
+                        cars_position[int(msg->data.data()[i])] = cv::Point2f(msg->data.data()[i + 1], msg->data.data()[i + 2]);
+                    } else {
+                        cars_position[int(msg->data.data()[i])] = cv::Point2f((cars_position[int(msg->data.data()[i])].x + msg->data.data()[i + 1]) / 2.0, (cars_position[int(msg->data.data()[i])].y + msg->data.data()[i + 2]) / 2.0);
+                    }
+                }
+                for (int i = 0; i < cars_position.size(); i++) {
+                    if (i == 0) {
+                        cout << "\033[31m[RED]\n";
+                    } else if (i == 6) {
+                        cout << "\033[0m\033[34m[BLUE]\n";
+                    }
+                    cout << armor_names[i];
+                    if (cars_position[i].x == 0.0 && cars_position[i].y == 0.0) {
+                        printf(":[未识别到]\n");
+                    } else {
+                        printf(":(%0.1f,%0.1f)\n", cars_position[i].x, cars_position[i].y);
+                    }
+                }
+                cout << "\033[0m\n"
+                     << endl;
+                remap(cars_position);
+            }
+        } catch (const std::exception& e) {
+            std::cerr << e.what() << '\n';
         }
-
-        for (int i = 0; i < msg->data.size() - 2; i += 3) {
-            // cout << armor_names[int(msg->data.data()[i])];
-            printf("(%0.1f,%0.1f)\n", msg->data.data()[i + 1], msg->data.data()[i + 2]);
-            car_datas.car_labels.push_back(int(msg->data.data()[i]));
-            car_datas.car_points.push_back(cv::Point2f(msg->data.data()[i + 1], msg->data.data()[i + 2]));
-        }
-        cout << "\n"
-             << endl;
-        remap(car_datas);
     }
 };
 

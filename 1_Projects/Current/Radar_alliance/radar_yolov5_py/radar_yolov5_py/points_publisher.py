@@ -116,7 +116,6 @@ def run(
     ascii = is_ascii(names)  # names are ascii (use PIL for UTF-8)
     # ============== armor_load ================
 
-
     # Dataloader
     bs = 1  # batch_size
     if webcam:
@@ -214,10 +213,10 @@ def run(
                         # annotator.box_label(xyxy, label, color=colors(c, True))
                     if identfy_car and label == "car":
                         # ===========================================
-                        croped_image = imc[int(xyxy[1]):int(xyxy[3]),int(xyxy[0]):int(xyxy[2])]
+                        croped_image = imc[int(xyxy[1])+int((int(xyxy[3])-int(xyxy[1]))/3):int(xyxy[3]),int(xyxy[0]):int(xyxy[2])]
 
                         if croped_image.shape[0] > 0 and croped_image.shape[1] > 0:
-                            croped_image = cv.resize(croped_image,( (round(croped_image.shape[0]/32) )* 32 , ( round(croped_image.shape[1]/32) )* 32 ))
+                            croped_image = cv.resize(croped_image,( ( round(croped_image.shape[1]/32) )* 32, ( round(croped_image.shape[1]/32) )* 32 ))
                             car_image = torch.from_numpy(croped_image).to(device)
                             car_image = car_image.to(torch.float32) # uint8 to fp32
                             car_image = car_image / 255.0  # 0 - 255 to 0.0 - 1.0
@@ -268,7 +267,7 @@ def run(
                                     armor_label = armor_max
                                     annotator.box_label(xyxy, armor_label, color=colors(c, True))
                                     # armor_annotator.box_label(armor_xyxy, armor_label, color=colors(c, True))
-                                    cv.putText(annotator.result(),armor_label,(int(center_x),(int(xyxy[3])+10)),1,3,(0,255,0),5)
+                                    # cv.putText(annotator.result(),armor_label,(int(center_x),(int(xyxy[3])+10)),1,3,(0,255,0),5)
                                     pointslist.append(armor_names.index(armor_label))
                                     # ===========================================                       
                                    
@@ -291,8 +290,8 @@ def run(
             if view_img:
                 if platform.system() == 'Linux' and p not in windows:
                     windows.append(p)
-                    cv2.namedWindow(str(p), cv2.WINDOW_NORMAL | cv2.WINDOW_KEEPRATIO)  # allow window resize (Linux)
-                    cv2.resizeWindow(str(p), im0.shape[1], im0.shape[0])
+                    cv2.namedWindow(str(p),0)  # allow window resize (Linux)
+                    cv2.resizeWindow(str(p), 800, 500)
                 cv2.imshow(str(p), im0)
                 cv2.waitKey(1)  # 1 millisecond
 
@@ -317,7 +316,7 @@ def run(
 
         # Print time (inference-only)
         # LOGGER.info(f"{s}{'' if len(det) else '(no detections), '}{dt[1].dt * 1E3:.1f}ms")
-        print("\033[32m>[识别结果数量]\033[0m" + str(len(det)) + "\n\033[32m>[每一帧用时]\033[0m" + f"{dt[1].dt * 1E3:.1f}ms")
+        print("\033[32m>[识别结果数量]\033[0m" + str(len(pointslist)/3) + "\n\033[32m>[每一帧用时]\033[0m" + f"{dt[1].dt * 1E3:.1f}ms")
 
     # Print results
     t = tuple(x.t / seen * 1E3 for x in dt)  # speeds per image
@@ -338,8 +337,10 @@ def main(args=None):
     print(">\033[32m[DONE]\033[0m[初始化完成]")
     print(">\033[32m[DONE]\033[0m[节点启动]")
     print(">\033[33m[WORKING]\033[0m[正在启动YOLOv5]")
-    time.sleep(1)
-    run(node,car_weights=os.getcwd()+'/user_models/car_identfy.pt',armor_weights=os.getcwd()+'/user_models/armor_identfy.pt',source=os.getcwd()+'/videos/1.mp4',nosave=True,view_img=True,identfy_car=True)
+    try:
+        run(node,car_weights=os.getcwd()+'/user_models/car_identfy.pt',armor_weights=os.getcwd()+'/user_models/armor_identfy.pt',source=os.getcwd()+'/videos/2.mp4',nosave=True,view_img=True,identfy_car=True)
+    except:
+        print(">\033[31m[ERROR]\033[0m[启动失败，请检查文件路径是否正确或是否存在]")
 
     rclpy.spin(node) # 保持节点运行，检测是否收到退出指令（Ctrl+C）
     rclpy.shutdown() # 关闭rclpy
