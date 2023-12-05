@@ -107,7 +107,7 @@ def device_count():
 
 def select_device(device='', batch_size=0, newline=True):
     # device = None or 'cpu' or 0 or '0' or '0,1,2,3'
-    s = f'YOLOv5 🚀 {git_describe() or file_date()} Python-{platform.python_version()} torch-{torch.__version__} '
+    s = f'*[YOLOv5] [时间]{git_describe() or file_date()} [Python]{platform.python_version()} [torch]{torch.__version__} [DEVICE]'
     device = str(device).strip().lower().replace('cuda:', '').replace('none', '')  # to string, 'cuda:0' to '0'
     cpu = device == 'cpu'
     mps = device == 'mps'  # Apple Metal Performance Shaders (MPS)
@@ -286,12 +286,12 @@ def model_info(model, verbose=False, imgsz=640):
         im = torch.empty((1, p.shape[1], stride, stride), device=p.device)  # input image in BCHW format
         flops = thop.profile(deepcopy(model), inputs=(im, ), verbose=False)[0] / 1E9 * 2  # stride GFLOPs
         imgsz = imgsz if isinstance(imgsz, list) else [imgsz, imgsz]  # expand if int/float
-        fs = f', {flops * imgsz[0] / stride * imgsz[1] / stride:.1f} GFLOPs'  # 640x640 GFLOPs
+        fs = f'| {flops * imgsz[0] / stride * imgsz[1] / stride:.1f} GFLOPs'  # 640x640 GFLOPs
     except Exception:
         fs = ''
 
     name = Path(model.yaml_file).stem.replace('yolov5', 'YOLOv5') if hasattr(model, 'yaml_file') else 'Model'
-    LOGGER.info(f'{name} summary: {len(list(model.modules()))} layers, {n_p} parameters, {n_g} gradients{fs}')
+    LOGGER.info(f'[{name} summary] {len(list(model.modules()))} layers | {n_p} parameters | {n_g} gradients{fs}')
 
 
 def scale_img(img, ratio=1.0, same_shape=False, gs=32):  # img(16,3,256,416)
