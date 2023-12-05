@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 gnome-terminal -t "radar_remap_cpp" -x bash -c "cd ./radar_remap_cpp;
 source install/setup.bash;
 ros2 run radar_remap_cpp points_subscriber;" &

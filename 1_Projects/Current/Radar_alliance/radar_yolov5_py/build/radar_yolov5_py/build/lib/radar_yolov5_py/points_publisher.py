@@ -38,11 +38,11 @@ from utils.general import (LOGGER, Profile, check_file, check_img_size, check_im
 from utils.torch_utils import select_device, smart_inference_mode
 
 from models.experimental import attempt_load
-from utils.general import is_ascii, non_max_suppression
+from utils.general import non_max_suppression
 from utils.plots import Annotator, colors
 
 
-
+# [坐标数据发送类]>
 class PointsPublisher(Node):
     def __init__(self,name):
         super().__init__(name)
@@ -54,8 +54,9 @@ class PointsPublisher(Node):
         msg.data = points
         self.command_publisher_.publish(msg) 
         print("\033c>\033[33m[WORKING]\033[0m[正在发送点坐标]\033[?25l\n"+str(msg.data))
+# [坐标数据发送类]<
 
-
+# [YOLOv5识别网络主程序]>
 @smart_inference_mode()
 def run(
         PointsPublisher_obj,
@@ -68,12 +69,9 @@ def run(
         iou_thres=0.45,  # NMS IOU threshold
         max_det=1000,  # maximum detections per image
         device='',  # cuda device, i.e. 0 or 0,1,2,3 or cpu
-        view_img=False,  # show results
-        save_txt=False,  # save results to *.txt
-        save_csv=False,  # save results in CSV format
-        save_conf=False,  # save confidences in --save-txt labels
+        view_img=True,  # show results
         identfy_car=True,  # identfy which kind of robot 
-        nosave=False,  # do not save images/videos
+        nosave=True,  # do not save images/videos
         classes=None,  # filter by class: --class 0, or --class 0 2 3
         agnostic_nms=False,  # class-agnostic NMS
         augment=False,  # augmented inference
@@ -89,247 +87,252 @@ def run(
         dnn=False,  # use OpenCV DNN for ONNX inference
         vid_stride=1,  # video frame-rate stride
 ):
-    source = str(source)
-    save_img = not nosave and not source.endswith('.txt')  # save inference images
-    is_file = Path(source).suffix[1:] in (IMG_FORMATS + VID_FORMATS)
-    is_url = source.lower().startswith(('rtsp://', 'rtmp://', 'http://', 'https://'))
-    webcam = source.isnumeric() or source.endswith('.streams') or (is_url and not is_file)
-    screenshot = source.lower().startswith('screen')
-    if is_url and is_file:
-        source = check_file(source)  # download
+    # [载入输入图像/视频流]>
+    try:
+        source = str(source)
+        is_file = Path(source).suffix[1:] in (IMG_FORMATS + VID_FORMATS)
+        is_url = source.lower().startswith(('rtsp://', 'rtmp://', 'http://', 'https://'))
+        webcam = source.isnumeric() or source.endswith('.streams') or (is_url and not is_file)
+        screenshot = source.lower().startswith('screen')
+        if is_url and is_file:
+            source = check_file(source)  # download
+    except Exception as e:
+        print(">\033[31m[ERROR]\033[0m[摄像头/视频加载失败，请检查文件路径是否正确]")
+        print(">\033[31m[ERROR]\033[0m[错误信息]" + str(e) + "\n")
+    # [载入输入图像/视频流]<
 
-    # Directories
-    save_dir = increment_path(Path(project) / name, exist_ok=exist_ok)  # increment run
-    (save_dir / 'labels' if save_txt else save_dir).mkdir(parents=True, exist_ok=True)  # make dir
+    # [载入模型]>
+    try:
+        # [Car model load]>
+        device = select_device(device)
+        model = DetectMultiBackend(car_weights, device=device, dnn=dnn, data=data, fp16=half)
+        stride, names, pt = model.stride, model.names, model.pt
+        imgsz = check_img_size(imgsz, s=stride)  # check image size
+        # [Car model load]<
 
-    # Load model
-    device = select_device(device)
-    model = DetectMultiBackend(car_weights, device=device, dnn=dnn, data=data, fp16=half)
-    stride, names, pt = model.stride, model.names, model.pt
-    imgsz = check_img_size(imgsz, s=stride)  # check image size
+        # [Armor model load]>
+        armor_model = attempt_load(armor_weights,0)  # load FP32 armor_model
+        armor_names = ["armor_1_red","armor_2_red","armor_3_red","armor_4_red","armor_5_red","watcher_red","armor_1_blue","armor_2_blue","armor_3_blue","armor_4_blue","armor_5_blue","watcher_blue"]
+        # [Armor model load]<
+    except Exception as e:
+        print(">\033[31m[ERROR]\033[0m[模型加载失败，请检查文件路径是否正确]")
+        print(">\033[31m[ERROR]\033[0m[错误信息]" + str(e) + "\n")
+    # [载入模型]<
+
+    # [载入数据]>
+    try:
+        bs = 1  # batch_size
+        if webcam:
+            view_img = check_imshow(warn=True)
+            dataset = LoadStreams(source, img_size=imgsz, stride=stride, auto=pt, vid_stride=vid_stride)
+            bs = len(dataset)
+        elif screenshot:
+            dataset = LoadScreenshots(source, img_size=imgsz, stride=stride, auto=pt)
+        else:
+            dataset = LoadImages(source, img_size=imgsz, stride=stride, auto=pt, vid_stride=vid_stride)
+        vid_path, vid_writer = [None] * bs, [None] * bs
+    except Exception as e:
+        print(">\033[31m[ERROR]\033[0m[数据加载失败]")
+        print(">\033[31m[ERROR]\033[0m[错误信息]" + str(e) + "\n")
+    # [载入数据]<
 
 
-    # ============== armor_load ================
-    armor_model = attempt_load(armor_weights,0)  # load FP32 armor_model
-    # armor_names = armor_model.module.names if hasattr(armor_model, 'module') else armor_model.names  # get class names
-    armor_names = ["armor_1_red","armor_2_red","armor_3_red","armor_4_red","armor_5_red","watcher_red","armor_1_blue","armor_2_blue","armor_3_blue","armor_4_blue","armor_5_blue","watcher_blue"]
-    ascii = is_ascii(names)  # names are ascii (use PIL for UTF-8)
-    # ============== armor_load ================
-
-    # Dataloader
-    bs = 1  # batch_size
-    if webcam:
-        view_img = check_imshow(warn=True)
-        dataset = LoadStreams(source, img_size=imgsz, stride=stride, auto=pt, vid_stride=vid_stride)
-        bs = len(dataset)
-    elif screenshot:
-        dataset = LoadScreenshots(source, img_size=imgsz, stride=stride, auto=pt)
-    else:
-        dataset = LoadImages(source, img_size=imgsz, stride=stride, auto=pt, vid_stride=vid_stride)
-    vid_path, vid_writer = [None] * bs, [None] * bs
-
-    # Run inference
+    # [Run inference]>
     model.warmup(imgsz=(1 if pt or model.triton else bs, 3, *imgsz))  # warmup
     seen, windows, dt = 0, [], (Profile(), Profile(), Profile())
     for path, im, im0s, vid_cap, s in dataset:
-        with dt[0]:
-            im = torch.from_numpy(im).to(model.device)
-            im = im.half() if model.fp16 else im.float()  # uint8 to fp16/32
-            im /= 255  # 0 - 255 to 0.0 - 1.0
-            if len(im.shape) == 3:
-                im = im[None]  # expand for batch dim
+        try:
+            with dt[0]:
+                im = torch.from_numpy(im).to(model.device)
+                im = im.half() if model.fp16 else im.float()  # uint8 to fp16/32
+                im /= 255  # 0 - 255 to 0.0 - 1.0
+                if len(im.shape) == 3:
+                    im = im[None]  # expand for batch dim
 
-        # Inference
-        with dt[1]:
-            visualize = increment_path(save_dir / Path(path).stem, mkdir=True) if visualize else False
-            pred = model(im, augment=augment, visualize=visualize)
+            # Inference
+            with dt[1]:
+                pred = model(im, augment=augment, visualize=visualize)
 
-        # NMS
-        with dt[2]:
-            pred = non_max_suppression(pred, conf_thres, iou_thres, classes, agnostic_nms, max_det=max_det)
+            # NMS
+            with dt[2]:
+                pred = non_max_suppression(pred, conf_thres, iou_thres, classes, agnostic_nms, max_det=max_det)
 
-        # Second-stage classifier (optional)
-        # pred = utils.general.apply_classifier(pred, classifier_model, im, im0s)
+            # Second-stage classifier (optional)
+            # pred = utils.general.apply_classifier(pred, classifier_model, im, im0s)
 
-        # Define the path for the CSV file
-        csv_path = save_dir / 'predictions.csv'
+            # Process predictions
+            for i, det in enumerate(pred):  # per image
 
-        # Create or append to the CSV file
-        def write_to_csv(image_name, prediction, confidence):
-            data = {'Image Name': image_name, 'Prediction': prediction, 'Confidence': confidence}
-            with open(csv_path, mode='a', newline='') as f:
-                writer = csv.DictWriter(f, fieldnames=data.keys())
-                if not csv_path.is_file():
-                    writer.writeheader()
-                writer.writerow(data)
+                start_time = time.time()
 
-        # Process predictions
-        for i, det in enumerate(pred):  # per image
-            seen += 1
-            if webcam:  # batch_size >= 1
-                p, im0, frame = path[i], im0s[i].copy(), dataset.count
-                s += f'{i}: '
-            else:
-                p, im0, frame = path, im0s.copy(), getattr(dataset, 'frame', 0)
+                seen += 1
+                if webcam:  # batch_size >= 1
+                    p, im0, frame = path[i], im0s[i].copy(), dataset.count
+                    s += f'{i}: '
+                else:
+                    p, im0, frame = path, im0s.copy(), getattr(dataset, 'frame', 0)
 
-            p = Path(p)  # to Path
-            save_path = str(save_dir / p.name)  # im.jpg
-            txt_path = str(save_dir / 'labels' / p.stem) + ('' if dataset.mode == 'image' else f'_{frame}')  # im.txt
-            s += '%gx%g ' % im.shape[2:]  # print string
-            gn = torch.tensor(im0.shape)[[1, 0, 1, 0]]  # normalization gain whwh
-            imc = im0.copy() if identfy_car else im0  # for identfy_car
-            annotator = Annotator(im0, line_width=line_thickness, example=str(names))
-            if len(det):
-
+                p = Path(p)  # to Path
+                s += '%gx%g ' % im.shape[2:]  # print string
+                gn = torch.tensor(im0.shape)[[1, 0, 1, 0]]  # normalization gain whwh
+                imc = im0.copy() if identfy_car else im0  # for identfy_car
+                annotator = Annotator(im0, line_width=line_thickness, example=str(names))
                 pointslist = []
+                if len(det):
+                    
+                    # Rescale boxes from img_size to im0 size
+                    det[:, :4] = scale_boxes(im.shape[2:], det[:, :4], im0.shape).round()
 
-                # Rescale boxes from img_size to im0 size
-                det[:, :4] = scale_boxes(im.shape[2:], det[:, :4], im0.shape).round()
+                    # Print results
+                    for c in det[:, 5].unique():
+                        n = (det[:, 5] == c).sum()  # detections per class
+                        s += f"{n} {names[int(c)]}{'s' * (n > 1)}, "  # add to string
 
-                # Print results
-                for c in det[:, 5].unique():
-                    n = (det[:, 5] == c).sum()  # detections per class
-                    s += f"{n} {names[int(c)]}{'s' * (n > 1)}, "  # add to string
-
-                # Write results
-                for *xyxy, conf, cls in reversed(det):
-                    c = int(cls)  # integer class
-                    label = names[c] if hide_conf else f'{names[c]}'
-                    confidence = float(conf)
-                    confidence_str = f'{confidence:.2f}'
-
-                    if save_csv:
-                        write_to_csv(p.name, label, confidence_str)
-
-                    if save_txt:  # Write to file
-                        xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()  # normalized xywh
-                        line = (cls, *xywh, conf) if save_conf else (cls, *xywh)  # label format
-                        with open(f'{txt_path}.txt', 'a') as f:
-                            f.write(('%g ' * len(line)).rstrip() % line + '\n')
-
-                    if save_img or identfy_car or view_img:  # Add bbox to image
+                    # Write results
+                    for *xyxy, conf, cls in reversed(det):
                         c = int(cls)  # integer class
-                        # label = None if hide_labels else (names[c] if hide_conf else f'{names[c]} {conf:.2f}')
-                        # annotator.box_label(xyxy, label, color=colors(c, True))
-                    if identfy_car and label == "car":
-                        # ===========================================
-                        croped_image = imc[int(xyxy[1])+int((int(xyxy[3])-int(xyxy[1]))/3):int(xyxy[3]),int(xyxy[0]):int(xyxy[2])]
+                        label = names[c] if hide_conf else f'{names[c]}'
+                        confidence = float(conf)
 
-                        if croped_image.shape[0] > 0 and croped_image.shape[1] > 0:
-                            croped_image = cv.resize(croped_image,( ( round(croped_image.shape[1]/32) )* 32, ( round(croped_image.shape[1]/32) )* 32 ))
-                            car_image = torch.from_numpy(croped_image).to(device)
-                            car_image = car_image.to(torch.float32) # uint8 to fp32
-                            car_image = car_image / 255.0  # 0 - 255 to 0.0 - 1.0
-                            if len(car_image.shape) == 3:
-                                car_image = car_image[None]  # expand for batch dim
-                            car_image = car_image.transpose(2, 3)
-                            car_image = car_image.transpose(1, 2)
+                        if identfy_car or view_img:  # Add bbox to image
+                            c = int(cls)  # integer class
+                            # label = None if hide_labels else (names[c] if hide_conf else f'{names[c]} {conf:.2f}')
+                            # annotator.box_label(xyxy, label, color=colors(c, True))
+                        if identfy_car and label == "car":
 
-                            # Inference
-                            armor_pred = armor_model(car_image)[0]
+                            # [model2:装甲板识别网络]>>>>>>>>>
 
-                            # NMS
-                            armor_pred = non_max_suppression(armor_pred, conf_thres = 0.25, iou_thres = 0.45, classes = None, max_det = 1000)
+                            # [裁减装甲板图片]
+                            croped_image = imc[int(xyxy[1])+int((int(xyxy[3])-int(xyxy[1]))/3):int(xyxy[3]),int(xyxy[0]):int(xyxy[2])]
 
-                            # Process predictions
-                            for i, det in enumerate(armor_pred):  # detections per image
-                                armor_s = ''
-                                armor_annotator = Annotator(croped_image, line_width=line_thickness, example=str(names))
-                                if len(det):
-                                    # Rescale boxes from img_size to im0 size
-                                    det[:, :4] = scale_boxes(car_image.shape[2:], det[:, :4], croped_image.shape).round()
+                            if croped_image.shape[0] > 0 and croped_image.shape[1] > 0:
+                                # [转换格式]
+                                croped_image = cv.resize(croped_image,( ( round(croped_image.shape[1]/32) )* 32, ( round(croped_image.shape[1]/32) )* 32 ))
+                                car_image = torch.from_numpy(croped_image).to(device)
+                                car_image = car_image.to(torch.float32) # uint8 to fp32
+                                car_image = car_image / 255.0  # 0 - 255 to 0.0 - 1.0
+                                if len(car_image.shape) == 3:
+                                    car_image = car_image[None]  # expand for batch dim
+                                car_image = car_image.transpose(2, 3)
+                                car_image = car_image.transpose(1, 2)
 
-                                    # Print results
-                                    for c in det[:, -1].unique():
-                                        n = (det[:, -1] == c).sum()  # detections per class
-                                        armor_s += str(n.item()) + ' ' + str(armor_names[int(c)]) + ' '  # add to string
+                                # Inference
+                                armor_pred = armor_model(car_image)[0]
 
-                                    score = {}
-                                    # Write results
-                                    for *armor_xyxy, conf, cls in reversed(det):
-                                        c = int(cls)  # integer class
+                                # NMS
+                                armor_pred = non_max_suppression(armor_pred, conf_thres = 0.25, iou_thres = 0.45, classes = None, max_det = 1000)
 
-                                        if armor_names[c] in score:
-                                            score[armor_names[c]] += conf
+                                # Process predictions
+                                for i, det in enumerate(armor_pred):  # detections per image
+                                    armor_s = ''
+                                    armor_annotator = Annotator(croped_image, line_width=line_thickness, example=str(names))
+                                    if len(det):
+                                        # Rescale boxes from img_size to im0 size
+                                        det[:, :4] = scale_boxes(car_image.shape[2:], det[:, :4], croped_image.shape).round()
+
+                                        # Print results
+                                        for c in det[:, -1].unique():
+                                            n = (det[:, -1] == c).sum()  # detections per class
+                                            armor_s += str(n.item()) + ' ' + str(armor_names[int(c)]) + ' '  # add to string
+
+                                        # [对装甲板分类]>
+                                        score = {}
+                                        px_blue = 0
+                                        px_red = 0
+                                        
+                                        for *armor_xyxy, conf, cls in reversed(det):
+                                            c = int(cls)  # integer class
+
+                                            # [计算每种识别结果的总置信度]>
+                                            if armor_names[c] in score:
+                                                score[armor_names[c]] += conf
+                                            else:
+                                                score[armor_names[c]] = conf
+                                            # [计算每种识别结果的总置信度]<
+
+                                            # [筛选颜色]
+                                            armor_image = croped_image[int(armor_xyxy[1])+int((int(armor_xyxy[3])-int(armor_xyxy[1]))/3):int(armor_xyxy[3]),int(armor_xyxy[0]):int(armor_xyxy[2])]
+                                        
+                                            for x in range(armor_image.shape[0]):   # 图片的高
+                                                for y in range(armor_image.shape[1]):   # 图片的宽
+                                                    px = armor_image[x,y]
+                                                    px_blue += px[0]
+                                                    px_red += px[2]
+                                            
+
+                                        armor_color = ""
+                                        if px_blue >= px_red:
+                                            armor_color = "blue"  
                                         else:
-                                            score[armor_names[c]] = conf
-                                    
-                                    conf_max = 0
-                                    armor_max = ''
-                                    for armor_name in score:
-                                        if score[armor_name] > conf_max:
-                                            armor_max = armor_name
-                                            conf_max = score.get(armor_name)
+                                            armor_color = "red"  
 
+                                                                                
+                                        conf_max = 0
+                                        armor_max = ''
+                                        for armor_name in score:
+                                            if score[armor_name] > conf_max:
+                                                armor_max = armor_name
+                                                conf_max = score.get(armor_name)
+                                        # [对装甲板分类]<
 
-                                    center_x = (xyxy[0] + xyxy[2]) / 2
+                                        if (armor_color == "blue" and armor_names.index(armor_max) > 5) or (armor_color == "red" and armor_names.index(armor_max) <= 5):
+                                            center_x = (xyxy[0] + xyxy[2]) / 2
 
-                                    armor_label = armor_max
-                                    annotator.box_label(xyxy, armor_label, color=colors(c, True))
-                                    # armor_annotator.box_label(armor_xyxy, armor_label, color=colors(c, True))
-                                    # cv.putText(annotator.result(),armor_label,(int(center_x),(int(xyxy[3])+10)),1,3,(0,255,0),5)
-                                    pointslist.append(armor_names.index(armor_label))
-                                    # ===========================================                       
-                                   
-                                    # center_y = (xyxy[1] + xyxy[3]) / 2
-                                    # if xyxy[1] > xyxy[3]:
-                                    #     bottom_y = xyxy[1]
-                                    # else:
-                                    #     bottom_y = xyxy[3]
-                                    pointslist.append(center_x)
-                                    pointslist.append(xyxy[3])
+                                            armor_label = armor_max
+                                            annotator.box_label(xyxy, armor_label, color=colors(c, True))
+                                            # armor_annotator.box_label(armor_xyxy, armor_label, color=colors(c, True))
+                                            # cv.putText(croped_image,str(px_blue)+"|"+str(px_red),(0,20),1,1,(0,255,0),2)
+                                            # cv.imshow("armor_image",croped_image)
+                                            # cv.waitKey()
+                                                            
+                                            # [识别结果添加]
+                                            pointslist.append(armor_names.index(armor_label))
+                                            pointslist.append(center_x)
+                                            pointslist.append(xyxy[3])
+                            # [model2:装甲板识别网络]<<<<<<<
 
-                # points--------------------------------
-                points = array.array('f',pointslist)
-                PointsPublisher_obj.send_points(points)
-                # points--------------------------------
+                    # [填装数据]>
+                    points = array.array('f',pointslist)
+                    PointsPublisher_obj.send_points(points)
+                    # [填装数据]<
 
-            
-            # Stream results
-            im0 = annotator.result()
-            if view_img:
-                if platform.system() == 'Linux' and p not in windows:
-                    windows.append(p)
-                    cv2.namedWindow(str(p),0)  # allow window resize (Linux)
-                    cv2.resizeWindow(str(p), 800, 500)
-                cv2.imshow(str(p), im0)
-                cv2.waitKey(1)  # 1 millisecond
+                # [计算帧率]
+                end_time = time.time()
+                process_time = end_time - start_time
+                FPS = round(1.0/process_time) 
+                
+                # [显示结果]
+                im0 = annotator.result()
+                if view_img:
+                    if platform.system() == 'Linux' and p not in windows:
+                        windows.append(p)
+                        cv2.namedWindow(str(p),0)  # allow window resize (Linux)
+                        cv2.resizeWindow(str(p), 800, 500)
 
-            # Save results (image with detections)
-            if save_img:
-                if dataset.mode == 'image':
-                    cv2.imwrite(save_path, im0)
-                else:  # 'video' or 'stream'
-                    if vid_path[i] != save_path:  # new video
-                        vid_path[i] = save_path
-                        if isinstance(vid_writer[i], cv2.VideoWriter):
-                            vid_writer[i].release()  # release previous video writer
-                        if vid_cap:  # video
-                            fps = vid_cap.get(cv2.CAP_PROP_FPS)
-                            w = int(vid_cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-                            h = int(vid_cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-                        else:  # stream
-                            fps, w, h = 30, im0.shape[1], im0.shape[0]
-                        save_path = str(Path(save_path).with_suffix('.mp4'))  # force *.mp4 suffix on results videos
-                        vid_writer[i] = cv2.VideoWriter(save_path, cv2.VideoWriter_fourcc(*'mp4v'), fps, (w, h))
-                    vid_writer[i].write(im0)
+                    print("\033[32m>[识别结果数量]\033[0m" + str(len(pointslist)/3) 
+                        + "\n\033[32m>[每一帧用时]\033[0m" + str(round(process_time*1000))+"ms"
+                        + "\n\033[32m>[FPS]\033[0m" + str(FPS))
 
-        # Print time (inference-only)
-        # LOGGER.info(f"{s}{'' if len(det) else '(no detections), '}{dt[1].dt * 1E3:.1f}ms")
-        print("\033[32m>[识别结果数量]\033[0m" + str(len(pointslist)/3) + "\n\033[32m>[每一帧用时]\033[0m" + f"{dt[1].dt * 1E3:.1f}ms")
+                    cv2.imshow(str(p), im0)
+                    cv2.waitKey(1)  # 1 millisecond
+        except Exception as e:
+            print(">\033[31m[ERROR]\033[0m[模型识别过程运行错误]")
+            print(">\033[31m[ERROR]\033[0m[错误信息]" + str(e) + "\n")
+            continue
+        
 
-    # Print results
+    # [识别效果总结]
     t = tuple(x.t / seen * 1E3 for x in dt)  # speeds per image
     LOGGER.info(f'Speed: %.1fms pre-process, %.1fms inference, %.1fms NMS per image at shape {(1, 3, *imgsz)}' % t)
-    if save_txt or save_img:
-        s = f"\n{len(list(save_dir.glob('labels/*.txt')))} labels saved to {save_dir / 'labels'}" if save_txt else ''
-        LOGGER.info(f"Results saved to {colorstr('bold', save_dir)}{s}")
+
     if update:
         strip_optimizer(car_weights[0])  # update model (to fix SourceChangeWarning)
 
+# [YOLOv5识别网络主程序]<
 
 
 def main(args=None):
+    # [提示信息界面]>
     print("\033[1m[正在启动神经网络识别节点]\033[0m")
     print(">\033[33m[WORKING]\033[0m[初始化rclpy]")
     rclpy.init(args=args) # 初始化rclpy
@@ -337,10 +340,18 @@ def main(args=None):
     print(">\033[32m[DONE]\033[0m[初始化完成]")
     print(">\033[32m[DONE]\033[0m[节点启动]")
     print(">\033[33m[WORKING]\033[0m[正在启动YOLOv5]")
+    # [提示信息界面]<
     try:
-        run(node,car_weights=os.getcwd()+'/user_models/car_identfy.pt',armor_weights=os.getcwd()+'/user_models/armor_identfy.pt',source=os.getcwd()+'/videos/2.mp4',nosave=True,view_img=True,identfy_car=True)
-    except:
-        print(">\033[31m[ERROR]\033[0m[启动失败，请检查文件路径是否正确或是否存在]")
+        run(node,
+            car_weights=os.getcwd()+'/user_models/car_identfy.pt',
+            armor_weights=os.getcwd()+'/user_models/armor_identfy.pt',
+            source=os.getcwd()+'/videos/2.mp4',
+            nosave=True,
+            view_img=True,
+            identfy_car=True)
+    except Exception as e:
+        print(">\033[31m[ERROR]\033[0m[运行错误，请检查文件路径是否正确或环境是否存在问题]")
+        print(">\033[31m[ERROR]\033[0m[错误信息]" + str(e) + "\n")
 
     rclpy.spin(node) # 保持节点运行，检测是否收到退出指令（Ctrl+C）
     rclpy.shutdown() # 关闭rclpy
