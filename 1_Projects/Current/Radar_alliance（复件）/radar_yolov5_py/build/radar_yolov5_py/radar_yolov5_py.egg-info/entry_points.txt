@@ -1,0 +1,2 @@
+[console_scripts]
+points_publisher = radar_yolov5_py.points_publisher:main
