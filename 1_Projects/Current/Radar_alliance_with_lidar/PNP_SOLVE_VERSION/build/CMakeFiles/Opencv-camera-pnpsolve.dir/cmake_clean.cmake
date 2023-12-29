@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/Opencv-camera-pnpsolve.dir/pcl_test.cpp.o"
-  "CMakeFiles/Opencv-camera-pnpsolve.dir/pcl_test.cpp.o.d"
+  "CMakeFiles/Opencv-camera-pnpsolve.dir/pnp_solve.cpp.o"
+  "CMakeFiles/Opencv-camera-pnpsolve.dir/pnp_solve.cpp.o.d"
   "Opencv-camera-pnpsolve"
   "Opencv-camera-pnpsolve.pdb"
 )

@@ -129,29 +129,29 @@ Opencv-camera-pnpsolve/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Opencv-camera-pnpsolve.dir/build.make CMakeFiles/Opencv-camera-pnpsolve.dir/build
 .PHONY : Opencv-camera-pnpsolve/fast
 
-pcl_test.o: pcl_test.cpp.o
-.PHONY : pcl_test.o
+pnp_solve.o: pnp_solve.cpp.o
+.PHONY : pnp_solve.o
 
 # target to build an object file
-pcl_test.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Opencv-camera-pnpsolve.dir/build.make CMakeFiles/Opencv-camera-pnpsolve.dir/pcl_test.cpp.o
-.PHONY : pcl_test.cpp.o
+pnp_solve.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Opencv-camera-pnpsolve.dir/build.make CMakeFiles/Opencv-camera-pnpsolve.dir/pnp_solve.cpp.o
+.PHONY : pnp_solve.cpp.o
 
-pcl_test.i: pcl_test.cpp.i
-.PHONY : pcl_test.i
+pnp_solve.i: pnp_solve.cpp.i
+.PHONY : pnp_solve.i
 
 # target to preprocess a source file
-pcl_test.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Opencv-camera-pnpsolve.dir/build.make CMakeFiles/Opencv-camera-pnpsolve.dir/pcl_test.cpp.i
-.PHONY : pcl_test.cpp.i
+pnp_solve.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Opencv-camera-pnpsolve.dir/build.make CMakeFiles/Opencv-camera-pnpsolve.dir/pnp_solve.cpp.i
+.PHONY : pnp_solve.cpp.i
 
-pcl_test.s: pcl_test.cpp.s
-.PHONY : pcl_test.s
+pnp_solve.s: pnp_solve.cpp.s
+.PHONY : pnp_solve.s
 
 # target to generate assembly for a file
-pcl_test.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Opencv-camera-pnpsolve.dir/build.make CMakeFiles/Opencv-camera-pnpsolve.dir/pcl_test.cpp.s
-.PHONY : pcl_test.cpp.s
+pnp_solve.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Opencv-camera-pnpsolve.dir/build.make CMakeFiles/Opencv-camera-pnpsolve.dir/pnp_solve.cpp.s
+.PHONY : pnp_solve.cpp.s
 
 # Help Target
 help:
@@ -162,9 +162,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... Opencv-camera-pnpsolve"
-	@echo "... pcl_test.o"
-	@echo "... pcl_test.i"
-	@echo "... pcl_test.s"
+	@echo "... pnp_solve.o"
+	@echo "... pnp_solve.i"
+	@echo "... pnp_solve.s"
 .PHONY : help
 
 
