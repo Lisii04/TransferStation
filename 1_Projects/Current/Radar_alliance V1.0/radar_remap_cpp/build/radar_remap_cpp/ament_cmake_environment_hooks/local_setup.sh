@@ -2,7 +2,7 @@
 
 # since this file is sourced use either the provided AMENT_CURRENT_PREFIX
 # or fall back to the destination set at configure time
-: ${AMENT_CURRENT_PREFIX:="/home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/Radar_alliance/radar_remap_cpp/install/radar_remap_cpp"}
+: ${AMENT_CURRENT_PREFIX:="/workspaces/DockerExample/Radar_alliance V1.0/radar_remap_cpp/install/radar_remap_cpp"}
 if [ ! -d "$AMENT_CURRENT_PREFIX" ]; then
   if [ -z "$COLCON_CURRENT_PREFIX" ]; then
     echo "The compile time prefix path '$AMENT_CURRENT_PREFIX' doesn't " \

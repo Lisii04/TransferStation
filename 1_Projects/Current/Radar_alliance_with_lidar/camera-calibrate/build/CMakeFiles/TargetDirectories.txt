@@ -1,3 +1,0 @@
-/home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/RM_Radar/Opencv-camera-pnpsolve/build/CMakeFiles/radar.dir
-/home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/RM_Radar/Opencv-camera-pnpsolve/build/CMakeFiles/edit_cache.dir
-/home/lisii/Documents/Github-repos/TransferStation/1_Projects/Current/RM_Radar/Opencv-camera-pnpsolve/build/CMakeFiles/rebuild_cache.dir

@@ -223,7 +223,7 @@ def run(
                         if identfy_car or view_img:  # Add bbox to image
                             c = int(cls)  # integer class
                             # label = None if hide_labels else (names[c] if hide_conf else f'{names[c]} {conf:.2f}')
-                            # annotator.box_label(xyxy, label, color=colors(c, True))
+                            annotator.box_label(xyxy, label, color=colors(c, True))
                         if identfy_car and label == "car":
 
                             # [model2:装甲板识别网络]>>>>>>
@@ -305,7 +305,7 @@ def run(
                                                 center_x = (xyxy[0] + xyxy[2]) / 2
 
                                                 armor_label = armor_max
-                                                annotator.box_label(xyxy, armor_label, color=colors(c, True))
+                                                # annotator.box_label(xyxy, armor_label, color=colors(c, True))
                                                 # armor_annotator.box_label(armor_xyxy, armor_label, color=colors(c, True))
                                                 # cv.putText(croped_image,str(px_blue)+"|"+str(px_red),(0,20),1,1,(0,255,0),2)
                                                 # cv.imshow("armor_image",croped_image)
@@ -368,8 +368,8 @@ def main(args=None):
     node = PointsPublisher("points_publisher")  # 新建一个节点
 
 
-    image_subscriber = ImageSubscriber("image_subscriber")
-    rclpy.spin(image_subscriber)
+    # image_subscriber = ImageSubscriber("image_subscriber")
+    # rclpy.spin(image_subscriber)
 
 
 

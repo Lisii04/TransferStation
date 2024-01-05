@@ -23,6 +23,9 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
+install(DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME})
+
 ament_package()
 add_executable(points_subscriber src/points_subscriber.cpp)
 ament_target_dependencies(points_subscriber rclcpp std_msgs OpenCV)
