@@ -1,0 +1,36 @@
+[0.657s] Invoking command in '/workspaces/TransferStation/1_Projects/Current/Alliance-radar-dev/Radar_alliance V1.0/radar_yolov5_py': PYTHONPATH=/workspaces/TransferStation/1_Projects/Current/Alliance-radar-dev/Radar_alliance V1.0/radar_yolov5_py/build/radar_yolov5_py/prefix_override:/workspaces/TransferStation/1_Projects/Current/Alliance-radar-dev/Radar_alliance V1.0/radar_yolov5_py/install/radar_yolov5_py/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base build/radar_yolov5_py build --build-base /workspaces/TransferStation/1_Projects/Current/Alliance-radar-dev/Radar_alliance V1.0/radar_yolov5_py/build/radar_yolov5_py/build install --record /workspaces/TransferStation/1_Projects/Current/Alliance-radar-dev/Radar_alliance V1.0/radar_yolov5_py/build/radar_yolov5_py/install.log --single-version-externally-managed
+[0.826s] running egg_info
+[0.836s] writing build/radar_yolov5_py/radar_yolov5_py.egg-info/PKG-INFO
+[0.837s] writing dependency_links to build/radar_yolov5_py/radar_yolov5_py.egg-info/dependency_links.txt
+[0.837s] writing entry points to build/radar_yolov5_py/radar_yolov5_py.egg-info/entry_points.txt
+[0.837s] writing requirements to build/radar_yolov5_py/radar_yolov5_py.egg-info/requires.txt
+[0.837s] writing top-level names to build/radar_yolov5_py/radar_yolov5_py.egg-info/top_level.txt
+[0.859s] reading manifest file 'build/radar_yolov5_py/radar_yolov5_py.egg-info/SOURCES.txt'
+[0.861s] writing manifest file 'build/radar_yolov5_py/radar_yolov5_py.egg-info/SOURCES.txt'
+[0.861s] running build
+[0.861s] running build_py
+[0.861s] copying radar_yolov5_py/points_publisher.py -> /workspaces/TransferStation/1_Projects/Current/Alliance-radar-dev/Radar_alliance V1.0/radar_yolov5_py/build/radar_yolov5_py/build/lib/radar_yolov5_py
+[0.865s] running install
+[0.865s] /usr/local/lib/python3.10/dist-packages/setuptools/_distutils/cmd.py:66: SetuptoolsDeprecationWarning: setup.py install is deprecated.
+[0.865s] !!
+[0.865s] 
+[0.865s]         ********************************************************************************
+[0.865s]         Please avoid running ``setup.py`` directly.
+[0.865s]         Instead, use pypa/build, pypa/installer or other
+[0.865s]         standards-based tools.
+[0.865s] 
+[0.865s]         See https://blog.ganssle.io/articles/2021/10/setup-py-deprecated.html for details.
+[0.865s]         ********************************************************************************
+[0.865s] 
+[0.865s] !!
+[0.865s]   self.initialize_options()
+[0.870s] running install_lib
+[0.884s] running install_data
+[0.894s] copying launch/py.launch.py -> /workspaces/TransferStation/1_Projects/Current/Alliance-radar-dev/Radar_alliance V1.0/radar_yolov5_py/install/radar_yolov5_py/share/radar_yolov5_py/launch
+[0.894s] running install_egg_info
+[0.905s] removing '/workspaces/TransferStation/1_Projects/Current/Alliance-radar-dev/Radar_alliance V1.0/radar_yolov5_py/install/radar_yolov5_py/lib/python3.10/site-packages/radar_yolov5_py-0.0.0-py3.10.egg-info' (and everything under it)
+[0.905s] Copying build/radar_yolov5_py/radar_yolov5_py.egg-info to /workspaces/TransferStation/1_Projects/Current/Alliance-radar-dev/Radar_alliance V1.0/radar_yolov5_py/install/radar_yolov5_py/lib/python3.10/site-packages/radar_yolov5_py-0.0.0-py3.10.egg-info
+[0.906s] running install_scripts
+[0.998s] Installing points_publisher script to /workspaces/TransferStation/1_Projects/Current/Alliance-radar-dev/Radar_alliance V1.0/radar_yolov5_py/install/radar_yolov5_py/lib/radar_yolov5_py
+[0.999s] writing list of installed files to '/workspaces/TransferStation/1_Projects/Current/Alliance-radar-dev/Radar_alliance V1.0/radar_yolov5_py/build/radar_yolov5_py/install.log'
+[1.022s] Invoked command in '/workspaces/TransferStation/1_Projects/Current/Alliance-radar-dev/Radar_alliance V1.0/radar_yolov5_py' returned '0': PYTHONPATH=/workspaces/TransferStation/1_Projects/Current/Alliance-radar-dev/Radar_alliance V1.0/radar_yolov5_py/build/radar_yolov5_py/prefix_override:/workspaces/TransferStation/1_Projects/Current/Alliance-radar-dev/Radar_alliance V1.0/radar_yolov5_py/install/radar_yolov5_py/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 setup.py egg_info --egg-base build/radar_yolov5_py build --build-base /workspaces/TransferStation/1_Projects/Current/Alliance-radar-dev/Radar_alliance V1.0/radar_yolov5_py/build/radar_yolov5_py/build install --record /workspaces/TransferStation/1_Projects/Current/Alliance-radar-dev/Radar_alliance V1.0/radar_yolov5_py/build/radar_yolov5_py/install.log --single-version-externally-managed
