@@ -2,7 +2,6 @@
 #include <string>
 #include <math.h>
 #include "Logger.hpp"
-
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/float32_multi_array.hpp"
 #include <iostream>
@@ -140,17 +139,21 @@ public:
 		std::string topic = "";
 
 		// [创建订阅]
-		command_publish_ = this->create_publisher<std_msgs::msg::Float32MultiArray>(topic, 10);
+		command_publisher_ = this->create_publisher<std_msgs::msg::Float32MultiArray>(topic, 10);
 	}
 
 private:
-	rclcpp::Publisher<std_msgs::msg::Float32MultiArray>::SharedPtr command_publish_;
+	rclcpp::Publisher<std_msgs::msg::Float32MultiArray>::SharedPtr command_publisher_;
 };
 // [ROS2 数据收发类]<
 
 int main()
 {
 	Logger logger(Logger::file, Logger::debug, "./logs/yolo.log");
+
+	std_msgs::msg::Float32MultiArray message;
+
+	std::vector<float> msg = {2.1, 123.2, 124.5};
 
 	std::string classNames[1] = {"Car"};
 
@@ -186,6 +189,7 @@ int main()
 			cv::Rect box = dr.box;
 			cv::putText(frame, info.str(), cv::Point(box.tl().x, box.tl().y - 10), cv::FONT_HERSHEY_SIMPLEX, 2, cv::Scalar(0, 0, 255), 3);
 		}
+
 		cv::imshow("detect_window", frame);
 		char c = cv::waitKey(1);
 		if (c == 27)
