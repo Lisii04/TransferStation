@@ -136,24 +136,33 @@ public:
 	Points_publisher(std::string name)
 		: Node(name)
 	{
-		std::string topic = "";
+		std::string topic = "car_detect";
 
 		// [创建订阅]
-		command_publisher_ = this->create_publisher<std_msgs::msg::Float32MultiArray>(topic, 10);
+		publisher_ = this->create_publisher<std_msgs::msg::Float32MultiArray>(topic, 10);
+	}
+	void publish(std_msgs::msg::Float32MultiArray message)
+	{
+		publisher_->publish(message);
 	}
 
 private:
-	rclcpp::Publisher<std_msgs::msg::Float32MultiArray>::SharedPtr command_publisher_;
+	rclcpp::Publisher<std_msgs::msg::Float32MultiArray>::SharedPtr publisher_;
 };
 // [ROS2 数据收发类]<
 
-int main()
+int main(int argc, char **argv)
 {
 	Logger logger(Logger::file, Logger::debug, "./logs/yolo.log");
 
+	rclcpp::init(argc, argv);
+	//[创建对应节点的共享指针对象]
+	auto publisher = std::make_shared<Points_publisher>("detect_result");
+	//[运行节点，并检测退出信号]
+
 	std_msgs::msg::Float32MultiArray message;
 
-	std::vector<float> msg = {2.1, 123.2, 124.5};
+	publisher->publish(message);
 
 	std::string classNames[1] = {"Car"};
 
@@ -199,4 +208,6 @@ int main()
 		// reset for next frame
 		results.clear();
 	}
+	rclcpp::spin(node);
+	rclcpp::shutdown();
 }
