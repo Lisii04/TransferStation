@@ -16,6 +16,7 @@
             "type": "bind"
         }
     ],
+    "postCreateCommand": "mkdir -p /tmp/devcontainercli-$USER && touch /tmp/devcontainercli-$USER/control-manifest.json",
     "containerEnv": {
         "DISPLAY": ":1"
     },
@@ -23,5 +24,12 @@
         "--network",
         "host"
         // "--gpus=all" 
-    ]
+    ],
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-vscode.cpptools-extension-pack"
+            ]
+        }
+    }
 }
