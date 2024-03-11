@@ -1,7 +1,0 @@
-[
-{
-  "directory": "/workspaces/Train-travel-distance/Train-opencv/build",
-  "command": "/usr/bin/g++  -isystem /usr/include/opencv4 -g -std=gnu++17 -o CMakeFiles/Train-opencv.dir/Src/positive_flow.cpp.o -c /workspaces/Train-travel-distance/Train-opencv/Src/positive_flow.cpp",
-  "file": "/workspaces/Train-travel-distance/Train-opencv/Src/positive_flow.cpp"
-}
-]

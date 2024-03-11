@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/workspaces/TransferStation/1_Projects/Current/Train-travel-distance/build",
+  "command": "/usr/bin/g++  -isystem /usr/include/opencv4 -g -std=gnu++17 -o CMakeFiles/Train-opencv.dir/Src/positive_flow.cpp.o -c /workspaces/TransferStation/1_Projects/Current/Train-travel-distance/Src/positive_flow.cpp",
+  "file": "/workspaces/TransferStation/1_Projects/Current/Train-travel-distance/Src/positive_flow.cpp"
+}
+]

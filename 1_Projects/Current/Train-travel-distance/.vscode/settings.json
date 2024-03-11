@@ -1,4 +1,10 @@
 {
     "cmake.configureOnOpen": false,
-    "cmake.sourceDirectory": "/workspaces/Train-travel-distance/Train-opencv"
+    "cmake.sourceDirectory": "/workspaces/TransferStation/1_Projects/Current/Train-travel-distance",
+    "cmake.configureOnEdit": true,
+    "files.associations": {
+        "*.tcc": "cpp",
+        "string": "cpp",
+        "ostream": "cpp"
+    }
 }
